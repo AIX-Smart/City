@@ -16,7 +16,7 @@ public class User {
         return null;
     }
 
-    public Group getFavoritesGroup() {
+    public Group getFavoritesListing() {
         return null;
     }
 }

@@ -11,6 +11,11 @@ public class City implements ListingSource {
     private String name;
     private long cityID;
 
+    public City(String name, long cityID) {
+        this.name = name;
+        this.cityID = cityID;
+    }
+
     public String getName() {
         return name;
     }

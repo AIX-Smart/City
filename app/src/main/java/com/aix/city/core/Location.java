@@ -12,6 +12,12 @@ public class Location implements ListingSource {
     private String locationName;
     private City city;
 
+    public Location(long locationID, String locationName, City city) {
+        this.locationID = locationID;
+        this.locationName = locationName;
+        this.city = city;
+    }
+
     public long getLocationID() {
         return locationID;
     }
