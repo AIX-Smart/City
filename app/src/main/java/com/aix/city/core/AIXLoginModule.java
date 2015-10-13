@@ -7,7 +7,7 @@ package com.aix.city.core;
 public class AIxLoginModule {
 
     private static AIxLoginModule instance = new AIxLoginModule();
-    private User loggedUser; //Optional
+    private User loggedInUser = new User(0); //Optional
 
     private AIxLoginModule() {
     }
@@ -15,8 +15,9 @@ public class AIxLoginModule {
     public static AIxLoginModule getInstance() {
         return instance;
     }
-    public User getLoggedUser() {
-        return loggedUser;
+
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
 
     public void login() {

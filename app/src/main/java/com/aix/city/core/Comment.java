@@ -10,18 +10,21 @@ public class Comment extends Post {
 
     private Event event;
 
-    //Internal Use Only: use instead Event.create(...)
-    protected Comment(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, Event event) {
-        super(postID, message, creationTime, likeCount, author, likeStatus);
+    /**
+     * INTERNAL USE ONLY: use instead Event.createComment(...)
+     */
+    public Comment(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, boolean delete, Event event) {
+        super(postID, message, creationTime, likeCount, author, likeStatus, delete);
         this.event = event;
     }
 
     public Event getEvent() {
-        return null;
+        return event;
     }
 
     @Override
     public void update() {
+        super.update();
         //TODO: update post from database
     }
 }

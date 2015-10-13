@@ -12,15 +12,17 @@ public abstract class Post {
     private Timestamp creationTime;
     private int likeCount;
     private User author;
-    private boolean likeStatus;
+    private boolean liked;
+    private boolean deleted;
 
-    protected Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus) {
+    public Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean liked, boolean deleted) {
         this.postID = postID;
         this.message = message;
         this.creationTime = creationTime;
         this.likeCount = likeCount;
         this.author = author;
-        this.likeStatus = likeStatus;
+        this.liked = liked;
+        this.deleted = deleted;
     }
 
     public String getMessage() {
@@ -43,21 +45,25 @@ public abstract class Post {
         return postID;
     }
 
-    public boolean getLikeStatus() {
-        return likeStatus;
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public void like() {
-        if (!likeStatus) {
-            likeStatus = true;
+        if (!liked) {
+            liked = true;
             if (likeCount < Integer.MAX_VALUE) likeCount++;
             //TODO: Server Communication
         }
     }
 
     public void resetLike() {
-        if (likeStatus) {
-            likeStatus = false;
+        if (liked) {
+            liked = false;
             if (likeCount > 0) likeCount--;
             //TODO: Server Communication
         }
@@ -65,6 +71,13 @@ public abstract class Post {
 
     public void update() {
         //TODO: update post from database
+    }
+
+    /**
+     * INTERNAL USE ONLY:
+     */
+    public void rawDelete() {
+        deleted = true;
     }
 
     @Override

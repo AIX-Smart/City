@@ -11,45 +11,80 @@ public class Event extends Post implements ListingSource {
 
     private Location location;
     private int commentCount;
-    private Timestamp eventStartTime;
-    private Timestamp eventEndTime;
+    private boolean commented;
+    //private Timestamp eventStartTime;
+    //private Timestamp eventEndTime;
 
-    public static Event create(String message, Location location, Timestamp eventStartTime, Timestamp eventEndTime) {
-        User user = AIxLoginModule.getInstance().getLoggedUser();
+    //TODO: unter umständen stattdessen eine Factory zur Erstellung nutzen
+    public static Event create(String message, Location location) {
         long ID = 0; //TODO: getID from server
+        User user = AIxLoginModule.getInstance().getLoggedInUser();
         Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
-        Event event = new Event(ID, message, now, 0, user, false, location, 0, eventStartTime, eventEndTime);
+        Event event = new Event(ID, message, now, 0, user, false, false, location, 0, false);
         //TODO: Add Post to database
         return event;
     }
 
-    //Internal Use Only: use instead Event.create(...)
-    protected Event(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, Location location, int commentCount, Timestamp eventStartTime, Timestamp eventEndTime) {
-        super(postID, message, creationTime, likeCount, author, likeStatus);
+    /**
+     * INTERNAL USE ONLY: use instead Event.create(...)
+     */
+    public Event(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, boolean deleted, Location location, int commentCount, boolean commented) {
+        super(postID, message, creationTime, likeCount, author, likeStatus, deleted);
         this.location = location;
         this.commentCount = commentCount;
-        this.eventStartTime = eventStartTime;
-        this.eventEndTime = eventEndTime;
+        this.commented = commented;
     }
 
     public Location getLocation() {
         return location;
     }
 
-    public Timestamp getEventStartTime() {
-        return eventStartTime;
-    }
 
-    public Timestamp getEventEndTime() {
+    /*public Timestamp getEventStartTime() {
+        return eventStartTime;
+    }*/
+
+    /*public Timestamp getEventEndTime() {
         return eventEndTime;
-    }
+    }*/
 
     public int getCommentCount() {
         return commentCount;
     }
 
+    /**
+     * @return returns true if this event has been commented by the logged in user
+     */
+    public boolean isCommented() {
+        return commented;
+    }
+
+    public Comment createComment(String message) {
+        if (commented) {
+            //TODO: throw exception (falls die beschränkung auf 1 comment pro user existiert)
+        }
+        long ID = 1; //TODO: getID from server
+        User user = AIxLoginModule.getInstance().getLoggedInUser();
+        Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
+        Comment comment = new Comment(ID, message, now, 0, user, false, false, this);
+        commented = true;
+        commentCount++;
+        //TODO: Add Post to database
+        return comment;
+    }
+
+    public void removeComment(Comment comment) {
+        comment.rawDelete();
+        if (comment.getAuthor() == AIxLoginModule.getInstance().getLoggedInUser()) {
+            commented = false;
+        }
+        commentCount--;
+        //TODO: commit deletion to database
+    }
+
     @Override
     public void update() {
+        super.update();
         //TODO: update post from database
     }
 
@@ -70,5 +105,4 @@ public class Event extends Post implements ListingSource {
         //TODO: Implementation
         return null;
     }
-
 }
