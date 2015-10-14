@@ -11,6 +11,7 @@ public class Location implements ListingSource {
     private long locationID;
     private String locationName;
     private City city;
+    private ListingFromLocation listing;
 
     public Location(long locationID, String locationName, City city) {
         this.locationID = locationID;
@@ -41,8 +42,11 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public Listing getListing() {
-        return null;
+    public ListingFromLocation getListing() {
+        if (listing == null) {
+            Listing listing = new ListingFromLocation(this);
+        }
+        return listing;
     }
 
     @Override
@@ -51,12 +55,18 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location)) return false;
+
+        Location location = (Location) o;
+
+        return locationID == location.locationID;
+
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return (int) (locationID ^ (locationID >>> 32));
     }
 }

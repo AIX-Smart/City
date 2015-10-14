@@ -15,14 +15,14 @@ public abstract class Post {
     private boolean liked;
     private boolean deleted;
 
-    public Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean liked, boolean deleted) {
+    public Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean liked) {
         this.postID = postID;
         this.message = message;
         this.creationTime = creationTime;
         this.likeCount = likeCount;
         this.author = author;
         this.liked = liked;
-        this.deleted = deleted;
+        this.deleted = false;
     }
 
     public String getMessage() {

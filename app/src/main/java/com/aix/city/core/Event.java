@@ -12,24 +12,25 @@ public class Event extends Post implements ListingSource {
     private Location location;
     private int commentCount;
     private boolean commented;
+    private ListingFromEvent listing;
     //private Timestamp eventStartTime;
     //private Timestamp eventEndTime;
 
-    //TODO: unter umständen stattdessen eine Factory zur Erstellung nutzen
-    public static Event create(String message, Location location) {
+
+    /*public static Event create(String message, Location location) {
         long ID = 0; //TODO: getID from server
-        User user = AIxLoginModule.getInstance().getLoggedInUser();
+        User user = AIXLoginModule.getInstance().getLoggedInUser();
         Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
-        Event event = new Event(ID, message, now, 0, user, false, false, location, 0, false);
+        Event event = new Event(ID, message, now, 0, user, false, location, 0, false);
         //TODO: Add Post to database
         return event;
-    }
+    }*/
 
     /**
-     * INTERNAL USE ONLY: use instead Event.create(...)
+     * INTERNAL USE ONLY: use instead location.getListing().createEvent(String message)
      */
-    public Event(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, boolean deleted, Location location, int commentCount, boolean commented) {
-        super(postID, message, creationTime, likeCount, author, likeStatus, deleted);
+    public Event(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, Location location, int commentCount, boolean commented) {
+        super(postID, message, creationTime, likeCount, author, likeStatus);
         this.location = location;
         this.commentCount = commentCount;
         this.commented = commented;
@@ -38,15 +39,6 @@ public class Event extends Post implements ListingSource {
     public Location getLocation() {
         return location;
     }
-
-
-    /*public Timestamp getEventStartTime() {
-        return eventStartTime;
-    }*/
-
-    /*public Timestamp getEventEndTime() {
-        return eventEndTime;
-    }*/
 
     public int getCommentCount() {
         return commentCount;
@@ -59,28 +51,34 @@ public class Event extends Post implements ListingSource {
         return commented;
     }
 
-    public Comment createComment(String message) {
+    public void setCommented(boolean commented) {
+        this.commented = commented;
+    }
+
+    /*public Comment createComment(String message) {
         if (commented) {
             //TODO: throw exception (falls die beschränkung auf 1 comment pro user existiert)
         }
         long ID = 1; //TODO: getID from server
-        User user = AIxLoginModule.getInstance().getLoggedInUser();
+        User user = AIXLoginModule.getInstance().getLoggedInUser();
         Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
-        Comment comment = new Comment(ID, message, now, 0, user, false, false, this);
+        Comment comment = new Comment(ID, message, now, 0, user, false, this);
         commented = true;
         commentCount++;
         //TODO: Add Post to database
         return comment;
-    }
+    }*/
 
-    public void removeComment(Comment comment) {
-        comment.rawDelete();
-        if (comment.getAuthor() == AIxLoginModule.getInstance().getLoggedInUser()) {
-            commented = false;
+    /*public void removeComment(Comment comment) {
+        if(comment.getEvent().equals(this)) {
+            comment.rawDelete();
+            if (comment.getAuthor() == AIXLoginModule.getInstance().getLoggedInUser()) {
+                commented = false;
+            }
+            commentCount--;
+            //TODO: commit deletion to database
         }
-        commentCount--;
-        //TODO: commit deletion to database
-    }
+    }*/
 
     @Override
     public void update() {
@@ -101,8 +99,10 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public Listing getListing() {
-        //TODO: Implementation
-        return null;
+    public ListingFromEvent getListing() {
+        if (listing == null) {
+            Listing listing = new ListingFromEvent(this);
+        }
+        return listing;
     }
 }

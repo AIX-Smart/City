@@ -4,15 +4,15 @@ package com.aix.city.core;
  * Created by Thomas on 11.10.2015.
  */
 //TODO:
-public class AIxLoginModule {
+public class AIXLoginModule {
 
-    private static AIxLoginModule instance = new AIxLoginModule();
+    private static AIXLoginModule instance = new AIXLoginModule();
     private User loggedInUser = new User(0); //Optional
 
-    private AIxLoginModule() {
+    private AIXLoginModule() {
     }
 
-    public static AIxLoginModule getInstance() {
+    public static AIXLoginModule getInstance() {
         return instance;
     }
 

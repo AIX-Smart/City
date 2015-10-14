@@ -11,10 +11,10 @@ public class Comment extends Post {
     private Event event;
 
     /**
-     * INTERNAL USE ONLY: use instead Event.createComment(...)
+     * INTERNAL USE ONLY: use instead event.getListing().createComment(String message)
      */
-    public Comment(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, boolean delete, Event event) {
-        super(postID, message, creationTime, likeCount, author, likeStatus, delete);
+    public Comment(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, Event event) {
+        super(postID, message, creationTime, likeCount, author, likeStatus);
         this.event = event;
     }
 
