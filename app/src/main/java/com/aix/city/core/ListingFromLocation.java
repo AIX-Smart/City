@@ -30,7 +30,7 @@ public class ListingFromLocation extends Listing {
     public Event createEvent(String message) {
         long ID = 0; //TODO: getID from server
         User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         Event event = new Event(ID, message, now, 0, user, false, location, 0, false);
         getPosts().add(0, event);
         //TODO: Add Post to database

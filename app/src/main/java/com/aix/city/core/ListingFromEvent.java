@@ -30,7 +30,7 @@ public class ListingFromEvent extends Listing {
     public Comment createComment(String message) {
         long ID = 1; //TODO: getID from server
         User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         Comment comment = new Comment(ID, message, now, 0, user, false, event);
         //TODO: event modification?
         getPosts().add(0, comment);

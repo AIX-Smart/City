@@ -20,7 +20,7 @@ public class Event extends Post implements ListingSource {
     /*public static Event create(String message, Location location) {
         long ID = 0; //TODO: getID from server
         User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         Event event = new Event(ID, message, now, 0, user, false, location, 0, false);
         //TODO: Add Post to database
         return event;
@@ -61,7 +61,7 @@ public class Event extends Post implements ListingSource {
         }
         long ID = 1; //TODO: getID from server
         User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis() / 1000);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         Comment comment = new Comment(ID, message, now, 0, user, false, this);
         commented = true;
         commentCount++;
