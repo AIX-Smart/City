@@ -44,7 +44,7 @@ public class Location implements ListingSource {
     @Override
     public ListingFromLocation getListing() {
         if (listing == null) {
-            Listing listing = new ListingFromLocation(this);
+            listing = new ListingFromLocation(this);
         }
         return listing;
     }

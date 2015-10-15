@@ -101,7 +101,7 @@ public class Event extends Post implements ListingSource {
     @Override
     public ListingFromEvent getListing() {
         if (listing == null) {
-            Listing listing = new ListingFromEvent(this);
+            listing = new ListingFromEvent(this);
         }
         return listing;
     }
