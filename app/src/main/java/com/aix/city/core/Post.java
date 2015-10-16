@@ -12,7 +12,7 @@ public abstract class Post {
     private Timestamp creationTime;
     private int likeCount;
     private User author;
-    private boolean liked;
+    private boolean liked; //current user has already liked this post
     private boolean deleted;
 
     public Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean liked) {
