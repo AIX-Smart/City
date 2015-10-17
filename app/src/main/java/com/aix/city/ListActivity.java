@@ -11,10 +11,18 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends Activity {
+import com.aix.city.core.City;
+import com.aix.city.core.Event;
+import com.aix.city.core.ListingFromLocation;
+import com.aix.city.core.Location;
+import com.aix.city.core.Post;
+import com.aix.city.view.PostAdapter;
+import com.aix.city.view.PostView;
+
+public class ListActivity extends Activity {
 
     private ListView mainListView ;
-    private ArrayAdapter<String> listAdapter ;
+    private PostAdapter listAdapter ;
 
     /** Called when the activity is first created. */
     @Override
@@ -25,23 +33,25 @@ public class MainActivity extends Activity {
         // Find the ListView resource.
         mainListView = (ListView) findViewById( R.id.listView );
 
+        Location location = new Location(0, "GinBar", new City("Aachen", 0));
+        ListingFromLocation listing = location.getListing();
+
         // Create and populate a List of planet names.
-        String[] planets = new String[] { "post1", "post2", "post3", "post4",
-                "post5", "post6", "post7", "post8"};
-        ArrayList<String> planetList = new ArrayList<String>();
-        planetList.addAll( Arrays.asList(planets) );
+        Event[] posts = new Event[] {listing.createEvent("message1"), listing.createEvent("message2")};
+        /*ArrayList<String> planetList = new ArrayList<String>();
+        planetList.addAll( Arrays.asList(planets) );*/
 
         // Create ArrayAdapter using the planet list.
-        listAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, planetList);
+        listAdapter = new PostAdapter(this, posts);
 
         // Add more planets. If you passed a String[] instead of a List<String>
         // into the ArrayAdapter constructor, you must not add more items.
         // Otherwise an exception will occur.
-        listAdapter.add( "post9" );
+/*        listAdapter.add( "post9" );
         listAdapter.add( "post10" );
         listAdapter.add( "post11" );
         listAdapter.add( "post12" );
-        listAdapter.add( "post13" );
+        listAdapter.add( "post13" );*/
 
         // Set the ArrayAdapter as the ListView's adapter.
         mainListView.setAdapter( listAdapter );
