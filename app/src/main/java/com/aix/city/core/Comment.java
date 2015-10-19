@@ -27,4 +27,9 @@ public class Comment extends Post {
         super.update();
         //TODO: update post from database
     }
+
+    @Override
+    public Location getLocation() {
+        return event.getLocation();
+    }
 }

@@ -45,6 +45,8 @@ public abstract class Post {
         return postID;
     }
 
+    public abstract Location getLocation();
+
     public boolean isLiked() {
         return liked;
     }

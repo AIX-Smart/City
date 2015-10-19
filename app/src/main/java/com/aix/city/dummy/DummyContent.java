@@ -1,5 +1,11 @@
 package com.aix.city.dummy;
 
+import com.aix.city.core.City;
+import com.aix.city.core.ListingFromLocation;
+import com.aix.city.core.Listing;
+import com.aix.city.core.Location;
+import com.aix.city.core.Post;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +29,31 @@ public class DummyContent {
      */
     public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
+    public static Listing LISTING;
+
+    public static List<Post> POSTS;
+
+    public static City AACHEN = new City("Aachen", 1);
+
     static {
         // Add 3 sample items.
         addItem(new DummyItem("1", "Item 1"));
         addItem(new DummyItem("2", "Item 2"));
         addItem(new DummyItem("3", "Item 3"));
+
+        Location location = new Location(0, "GinBar", AACHEN);
+        ListingFromLocation listing = location.getListing();
+        listing.createEvent("Post 1: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib"); // 140 character
+        listing.createEvent("Post 2: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.");
+        listing.createEvent("Post 3: Lorem ipsum dolor sit amet, ");
+        listing.createEvent("Post 4: Lorem ipsum dolor sit amet, consectetuer adipiscing elit.");
+        listing.createEvent("Post 5: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib");
+        listing.createEvent("Post 6: ");
+        listing.createEvent("Post 7: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula ");
+        listing.createEvent("Post 8: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib");
+
+        LISTING = listing;
+        POSTS = listing.getPosts();
     }
 
     private static void addItem(DummyItem item) {

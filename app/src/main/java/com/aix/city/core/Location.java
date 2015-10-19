@@ -19,11 +19,11 @@ public class Location implements ListingSource {
         this.city = city;
     }
 
-    public long getLocationID() {
+    public long getID() {
         return locationID;
     }
 
-    public String getLocationName() {
+    public String getName() {
         return locationName;
     }
 
@@ -31,7 +31,7 @@ public class Location implements ListingSource {
         return city;
     }
 
-    public LocationData getLocationData() {
+    public LocationData getData() {
         return null;
     }
 

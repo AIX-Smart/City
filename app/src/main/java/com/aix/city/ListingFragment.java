@@ -13,6 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.aix.city.dummy.DummyContent;
+import com.aix.city.view.PostAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -73,9 +74,11 @@ public class ListingFragment extends Fragment implements AbsListView.OnItemClick
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        /*mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);*/
+
+        //TODO: replace DummyContent
+        mAdapter = new PostAdapter(getActivity(), DummyContent.LISTING.getPosts());
     }
 
     @Override

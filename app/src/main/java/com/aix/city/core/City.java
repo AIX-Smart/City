@@ -21,11 +21,11 @@ public class City implements ListingSource {
         return name;
     }
 
-    public long getCityID() {
+    public long getID() {
         return cityID;
     }
 
-    public CityData getCityData() {
+    public CityData getData() {
         return null;
     }
 

@@ -36,6 +36,7 @@ public class Event extends Post implements ListingSource {
         this.commented = commented;
     }
 
+    @Override
     public Location getLocation() {
         return location;
     }

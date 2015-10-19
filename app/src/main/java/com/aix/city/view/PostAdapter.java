@@ -6,24 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aix.city.R;
-import com.aix.city.core.Event;
 import com.aix.city.core.Post;
+
+import java.util.List;
 
 /**
  * Created by Thomas on 17.10.2015.
  */
-public class PostAdapter extends ArrayAdapter<Event> {
+public class PostAdapter extends ArrayAdapter<Post> {
     private final Context context;
-    private final Event[] values;
+    private final List<Post> posts;
 
-    public PostAdapter(Context context, Event[] values) {
-        super(context, -1, values);
+    public PostAdapter(Context context, List<Post> posts) {
+        super(context, -1, posts);
         this.context = context;
-        this.values = values;
+        this.posts = posts;
     }
 
     @Override
@@ -31,12 +31,13 @@ public class PostAdapter extends ArrayAdapter<Event> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.post, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.tv1);
-        TextView textView2 = (TextView) rowView.findViewById(R.id.tv2);
+
+        TextView message = (TextView) rowView.findViewById(R.id.tv1);
+        TextView locationName = (TextView) rowView.findViewById(R.id.tv2);
         Button button = (Button) rowView.findViewById(R.id.button);
-        textView.setText(values[position].getMessage());
-        textView2.setText(values[position].getLocation().getLocationName());
-        // change the icon for Windows and iPhone
+
+        message.setText(posts.get(position).getMessage());
+        locationName.setText(posts.get(position).getLocation().getName());
 
         return rowView;
     }
