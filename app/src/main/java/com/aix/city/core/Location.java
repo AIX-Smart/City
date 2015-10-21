@@ -11,7 +11,7 @@ public class Location implements ListingSource {
     private long locationID;
     private String locationName;
     private City city;
-    private ListingFromLocation listing;
+    private EditableEventListing listing;
 
     public Location(long locationID, String locationName, City city) {
         this.locationID = locationID;
@@ -42,9 +42,9 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public ListingFromLocation getListing() {
+    public EditableEventListing getListing() {
         if (listing == null) {
-            listing = new ListingFromLocation(this);
+            listing = new EditableEventListing(this);
         }
         return listing;
     }

@@ -41,11 +41,13 @@ public abstract class Post {
         return author;
     }
 
-    public long getPostID() {
+    public long getID() {
         return postID;
     }
 
     public abstract Location getLocation();
+
+    public abstract boolean isComment();
 
     public boolean isLiked() {
         return liked;

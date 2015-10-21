@@ -10,8 +10,12 @@ public class Group implements ListingSource {
 
     private GroupType type;
 
-    public GroupType getType() {
+    public GroupType getGroupType() {
         return type;
+    }
+
+    public String getName(){
+        return type.toString();
     }
 
     @Override
@@ -25,7 +29,7 @@ public class Group implements ListingSource {
     }
 
     @Override
-    public Listing getListing() {
+    public PostListing getListing() {
         return null;
     }
 

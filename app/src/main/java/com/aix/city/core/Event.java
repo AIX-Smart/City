@@ -12,19 +12,9 @@ public class Event extends Post implements ListingSource {
     private Location location;
     private int commentCount;
     private boolean commented;
-    private ListingFromEvent listing;
+    private EditableCommentListing listing;
     //private Timestamp eventStartTime;
     //private Timestamp eventEndTime;
-
-
-    /*public static Event create(String message, Location location) {
-        long ID = 0; //TODO: getID from server
-        User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Event event = new Event(ID, message, now, 0, user, false, location, 0, false);
-        //TODO: Add Post to database
-        return event;
-    }*/
 
     /**
      * INTERNAL USE ONLY: use instead location.getListing().createEvent(String message)
@@ -56,35 +46,15 @@ public class Event extends Post implements ListingSource {
         this.commented = commented;
     }
 
-    /*public Comment createComment(String message) {
-        if (commented) {
-            //TODO: throw exception (falls die beschränkung auf 1 comment pro user existiert)
-        }
-        long ID = 1; //TODO: getID from server
-        User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Comment comment = new Comment(ID, message, now, 0, user, false, this);
-        commented = true;
-        commentCount++;
-        //TODO: Add Post to database
-        return comment;
-    }*/
-
-    /*public void removeComment(Comment comment) {
-        if(comment.getEvent().equals(this)) {
-            comment.rawDelete();
-            if (comment.getAuthor() == AIXLoginModule.getInstance().getLoggedInUser()) {
-                commented = false;
-            }
-            commentCount--;
-            //TODO: commit deletion to database
-        }
-    }*/
-
     @Override
     public void update() {
         super.update();
         //TODO: update post from database
+    }
+
+    @Override
+    public boolean isComment(){
+        return false;
     }
 
     @Override
@@ -100,9 +70,9 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public ListingFromEvent getListing() {
+    public EditableCommentListing getListing() {
         if (listing == null) {
-            listing = new ListingFromEvent(this);
+            listing = new EditableCommentListing(this);
         }
         return listing;
     }

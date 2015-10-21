@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Thomas on 11.10.2015.
  */
 //TODO:
-public class Listing /*extends Observable*/ {
+public class PostListing /*extends Observable*/ {
 
     private List<Post> posts;
     private ListingSource listingSource;
@@ -22,20 +22,12 @@ public class Listing /*extends Observable*/ {
      *
      * @param listingSource
      */
-    public Listing(ListingSource listingSource) {
+    public PostListing(ListingSource listingSource) {
         this.listingSource = listingSource;
         posts = new ArrayList<Post>();
         request = listingSource.getDatabaseRequest();
         filter = listingSource.getFilter();
         finished = false;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public ListingSource getListingSource() {
-        return listingSource;
     }
 
     public DatabaseRequest getRequest() {
@@ -46,17 +38,41 @@ public class Listing /*extends Observable*/ {
         return filter;
     }
 
-    public List<Post> getNextPosts(int postCount) {
+    public ListingSource getListingSource() {
+        return listingSource;
+    }
+
+    /**
+     * INTERNAL USE ONLY: use location.getListing().createEvent(...) or event.getListing().createComment(...) instead
+     * @param post
+     */
+    public void addPost(Post post){
+        posts.add(post);
+    }
+
+    /**
+     * INTERNAL USE ONLY: use location.getListing().deleteEvent(...) or event.getListing().deleteComment(...) instead
+     * @param post
+     */
+    public void removePost(Post post){
+        posts.remove(post);
+    }
+
+    public Post[] getStoredPosts() {
+        return posts.toArray(new Post[posts.size()]);
+    }
+
+    public Post[] getNextPosts(int postCount) {
         List<Post> newPosts = new ArrayList<Post>(); //TODO load posts from database
         if (newPosts.isEmpty()) {
             finished = true;
         }
         posts.addAll(newPosts);
-        return newPosts;
+        return newPosts.toArray(new Post[newPosts.size()]);
     }
 
     //TODO:
-    public List<Post> getNextPosts() {
+    public Post[] getNextPosts() {
         return getNextPosts(20);
     }
 

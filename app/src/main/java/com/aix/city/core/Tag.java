@@ -9,7 +9,9 @@ import com.android.internal.util.Predicate;
 public class Tag extends Group {
 
     private String name;
+    private PostListing listing;
 
+    @Override
     public String getName() {
         return name;
     }
@@ -25,7 +27,10 @@ public class Tag extends Group {
     }
 
     @Override
-    public Listing getListing() {
-        return super.getListing();
+    public PostListing getListing() {
+        if (listing == null) {
+            listing = new PostListing(this);
+        }
+        return listing;
     }
 }

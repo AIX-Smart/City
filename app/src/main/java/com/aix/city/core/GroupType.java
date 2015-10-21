@@ -7,19 +7,19 @@ public enum GroupType {
     FAVORITES,
     COMMENTED,
     RATED,
-    OTHER;
+    TAG;
 
     @Override
     public String toString() {
         switch (this) {
             case FAVORITES:
-                return "favorites";
+                return "Favorites";
             case COMMENTED:
-                return "commented";
+                return "Commented";
             case RATED:
-                return "rated";
-            case OTHER:
-                return "other";
+                return "Rated";
+            case TAG:
+                return "Tag";
             default:
                 throw new IllegalArgumentException();
         }

@@ -10,7 +10,7 @@ public class City implements ListingSource {
 
     private String name;
     private long cityID;
-    private Listing listing;
+    private PostListing listing;
 
     public City(String name, long cityID) {
         this.name = name;
@@ -40,9 +40,9 @@ public class City implements ListingSource {
     }
 
     @Override
-    public Listing getListing() {
+    public PostListing getListing() {
         if (listing == null) {
-            listing = new Listing(this);
+            listing = new PostListing(this);
         }
         return listing;
     }

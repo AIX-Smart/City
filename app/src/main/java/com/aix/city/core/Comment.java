@@ -32,4 +32,9 @@ public class Comment extends Post {
     public Location getLocation() {
         return event.getLocation();
     }
+
+    @Override
+    public boolean isComment(){
+        return true;
+    }
 }

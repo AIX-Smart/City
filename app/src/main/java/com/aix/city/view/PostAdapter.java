@@ -18,9 +18,9 @@ import java.util.List;
  */
 public class PostAdapter extends ArrayAdapter<Post> {
     private final Context context;
-    private final List<Post> posts;
+    private final Post[] posts;
 
-    public PostAdapter(Context context, List<Post> posts) {
+    public PostAdapter(Context context, Post[] posts) {
         super(context, -1, posts);
         this.context = context;
         this.posts = posts;
@@ -36,8 +36,8 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView locationName = (TextView) rowView.findViewById(R.id.tv2);
         Button button = (Button) rowView.findViewById(R.id.button);
 
-        message.setText(posts.get(position).getMessage());
-        locationName.setText(posts.get(position).getLocation().getName());
+        message.setText(posts[position].getMessage());
+        locationName.setText(posts[position].getLocation().getName());
 
         return rowView;
     }

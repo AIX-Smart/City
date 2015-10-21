@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * Created by Thomas on 14.10.2015.
  */
-public class ListingFromEvent extends Listing {
+public class EditableCommentListing extends PostListing {
 
     private Event event;
 
@@ -14,12 +14,12 @@ public class ListingFromEvent extends Listing {
      *
      * @param listingSource
      */
-    public ListingFromEvent(ListingSource listingSource) {
+    public EditableCommentListing(ListingSource listingSource) {
         super(listingSource);
         if (listingSource instanceof Event) {
             event = (Event) getListingSource();
         } else {
-            //TODO: neuer Exceptiontyp und fehlermeldung erstellen. Wir brauchen auch noch einen ExceptionHandler.
+            //TODO: neuer Exceptiontyp und fehlermeldung erstellen. ExceptionHandler notwendig.
         }
     }
 
@@ -33,15 +33,14 @@ public class ListingFromEvent extends Listing {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Comment comment = new Comment(ID, message, now, 0, user, false, event);
         //TODO: event modification?
-        getPosts().add(0, comment);
+        this.addPost(comment);
         //TODO: Add Post to database
         return comment;
     }
 
-    public void removeComment(Comment comment) {
-        if (comment.getEvent().equals(this)) {
-            getPosts().remove(comment);
-            //TODO: event modification?
+    public void deleteComment(Comment comment) {
+        if (comment.getEvent().equals(event)) {
+            this.removePost(comment);
             comment.rawDelete();
             //TODO: commit deletion to database
         }
