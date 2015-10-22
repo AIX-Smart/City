@@ -24,7 +24,7 @@ import com.aix.city.view.PostAdapter;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ListingFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ListingFragmentTag extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,7 +62,7 @@ public class ListingFragment extends Fragment implements AbsListView.OnItemClick
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ListingFragment() {
+    public ListingFragmentTag() {
     }
 
     @Override
