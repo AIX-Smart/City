@@ -6,26 +6,30 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.aix.city.view.PostAdapter;
-
 public class ListActivity extends FragmentActivity implements ListingFragment.OnFragmentInteractionListener {
 
     private ListView mainListView ;
-    private ListView menue_list;
-    ArrayAdapter<String> listAdapter;
-    String[] institutions = {"post", "bars", "restaurtants"};
+    private ListView leftMenuList;
+    private ArrayAdapter<String> leftListAdapter;
+    private String[] leftListElements = {"post", "bars", "restaurants"};
+    private String[] rightListElements = {"favorites", "commented", "own business"};
+    private ListView rightMenuList;
+    private ArrayAdapter<String> rightListAdapter;
+
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-        menue_list = (ListView) findViewById(R.id.list_menue);
-        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,institutions);
-        menue_list.setAdapter(listAdapter);
+        /*leftMenuList = (ListView) findViewById(R.id.list_menue);
+        leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, leftListElements);
+        leftMenuList.setAdapter(leftListAdapter);
 
-
+        rightMenuList = (ListView) findViewById(R.id.list_userProfile);
+        rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, rightListElements);
+        rightMenuList.setAdapter(rightListAdapter);*/
 
     }
 
