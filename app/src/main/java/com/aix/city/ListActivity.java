@@ -10,9 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.aix.city.view.PostAdapter;
-
-public class ListActivity extends FragmentActivity implements ListingFragment.OnFragmentInteractionListener {
+public class ListActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener {
 
     private ListView mainListView ;
     private ListView leftMenuList;
@@ -32,12 +30,13 @@ public class ListActivity extends FragmentActivity implements ListingFragment.On
 
         Toast toast = Toast.makeText(this, string, Toast.LENGTH_LONG);
         toast.show();
-        
-        /*leftMenuList = (ListView) findViewById(R.id.list_menue);
-        leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, leftListElements);
-        leftMenuList.setAdapter(leftListAdapter);*/
-        /*rightMenuList = (ListView) findViewById(R.id.list_userProfile);
-        rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, rightListElements);
+
+        /*ListView leftMenuList = (ListView) findViewById(R.id.left_menu_list);
+        ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
+        leftMenuList.setAdapter(leftListAdapter);
+
+        ListView rightMenuList = (ListView) findViewById(R.id.right_menu_list);
+        ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
         rightMenuList.setAdapter(rightListAdapter);*/
 
 

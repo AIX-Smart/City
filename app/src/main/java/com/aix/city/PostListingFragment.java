@@ -2,13 +2,12 @@ package com.aix.city;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -24,7 +23,7 @@ import com.aix.city.view.PostAdapter;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ListingFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class PostListingFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,8 +48,8 @@ public class ListingFragment extends Fragment implements AbsListView.OnItemClick
     private ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static ListingFragment newInstance(String param1, String param2) {
-        ListingFragment fragment = new ListingFragment();
+    public static PostListingFragment newInstance(String param1, String param2) {
+        PostListingFragment fragment = new PostListingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -62,7 +61,7 @@ public class ListingFragment extends Fragment implements AbsListView.OnItemClick
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ListingFragment() {
+    public PostListingFragment() {
     }
 
     @Override

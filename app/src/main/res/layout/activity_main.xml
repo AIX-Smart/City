@@ -16,8 +16,8 @@
         tools:context=".ListActivity">
 
         <fragment
-            android:id="@+id/headlines_fragment"
-            android:name="com.aix.city.ListingFragment"
+            android:id="@+id/listing_fragment"
+            android:name="com.aix.city.PostListingFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

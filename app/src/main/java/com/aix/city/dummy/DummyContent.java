@@ -34,6 +34,10 @@ public class DummyContent {
 
     public static City AACHEN = new City("Aachen", 1);
 
+    public static String[] LEFT_MENU_ELEMENTS = {"post", "bars", "restaurants"};
+
+    public static String[] RIGHT_MENU_ELEMENTS = {"favorites", "commented", "own business"};
+
     static {
         // Add 3 sample items.
         addItem(new DummyItem("1", "Item 1"));

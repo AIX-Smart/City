@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -49,8 +48,8 @@ public class ListingBarFragment extends Fragment implements AbsListView.OnItemCl
     private ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static ListingFragment newInstance(String param1, String param2) {
-        ListingFragment fragment = new ListingFragment();
+    public static PostListingFragment newInstance(String param1, String param2) {
+        PostListingFragment fragment = new PostListingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
