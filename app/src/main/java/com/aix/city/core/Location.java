@@ -5,18 +5,15 @@ import com.android.internal.util.Predicate;
 /**
  * Created by Thomas on 11.10.2015.
  */
-//TODO:
 public class Location implements ListingSource {
 
     private long locationID;
     private String locationName;
-    private City city;
     private EditableEventListing listing;
 
-    public Location(long locationID, String locationName, City city) {
+    public Location(long locationID, String locationName) {
         this.locationID = locationID;
         this.locationName = locationName;
-        this.city = city;
     }
 
     public long getID() {
@@ -27,12 +24,8 @@ public class Location implements ListingSource {
         return locationName;
     }
 
-    public City getCity() {
-        return city;
-    }
-
     public LocationData getData() {
-        return null;
+        return DataManager.getInstance().getLocationData(this);
     }
 
 
@@ -42,7 +35,7 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public EditableEventListing getListing() {
+    public EditableEventListing getPostListing() {
         if (listing == null) {
             listing = new EditableEventListing(this);
         }

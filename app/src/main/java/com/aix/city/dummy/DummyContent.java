@@ -3,7 +3,6 @@ package com.aix.city.dummy;
 import com.aix.city.core.City;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Location;
-import com.aix.city.core.Post;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +29,9 @@ public class DummyContent {
 
     public static EditableEventListing LISTING;
 
-    public static Post[] POSTS;
+    public static City AACHEN = new City("Aachen", 235);
 
-    public static City AACHEN = new City("Aachen", 1);
+    public static Location GINBAR = new Location(75463, "GinBar");
 
     public static String[] LEFT_MENU_ELEMENTS = {"post", "bars", "restaurants"};
 
@@ -44,8 +43,7 @@ public class DummyContent {
         addItem(new DummyItem("2", "Item 2"));
         addItem(new DummyItem("3", "Item 3"));
 
-        Location location = new Location(0, "GinBar", AACHEN);
-        EditableEventListing listing = location.getListing();
+        EditableEventListing listing = GINBAR.getPostListing();
         listing.createEvent("Post 1: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib"); // 140 character
         listing.createEvent("Post 2: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.");
         listing.createEvent("Post 3: Lorem ipsum dolor sit amet, ");
@@ -56,7 +54,6 @@ public class DummyContent {
         listing.createEvent("Post 8: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib");
 
         LISTING = listing;
-        POSTS = listing.getStoredPosts();
     }
 
     private static void addItem(DummyItem item) {

@@ -10,7 +10,7 @@ public class EditableCommentListing extends PostListing {
     private Event event;
 
     /**
-     * INTERNAL USE ONLY: use instead event.getListing()
+     * INTERNAL USE ONLY: use instead event.getPostListing()
      *
      * @param listingSource
      */

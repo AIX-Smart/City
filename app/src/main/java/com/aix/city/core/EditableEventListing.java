@@ -10,7 +10,7 @@ public class EditableEventListing extends PostListing {
     private Location location;
 
     /**
-     * INTERNAL USE ONLY: use instead location.getListing()
+     * INTERNAL USE ONLY: use instead location.getPostListing()
      *
      * @param listingSource
      */

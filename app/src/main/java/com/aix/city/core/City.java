@@ -5,7 +5,6 @@ import com.android.internal.util.Predicate;
 /**
  * Created by Thomas on 11.10.2015.
  */
-//TODO:
 public class City implements ListingSource {
 
     private String name;
@@ -26,7 +25,7 @@ public class City implements ListingSource {
     }
 
     public CityData getData() {
-        return null;
+        return DataManager.getInstance().getCityData(this);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class City implements ListingSource {
     }
 
     @Override
-    public PostListing getListing() {
+    public PostListing getPostListing() {
         if (listing == null) {
             listing = new PostListing(this);
         }

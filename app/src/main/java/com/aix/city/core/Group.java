@@ -29,7 +29,7 @@ public class Group implements ListingSource {
     }
 
     @Override
-    public PostListing getListing() {
+    public PostListing getPostListing() {
         return null;
     }
 

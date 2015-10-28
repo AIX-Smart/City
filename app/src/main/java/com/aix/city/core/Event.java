@@ -17,7 +17,7 @@ public class Event extends Post implements ListingSource {
     //private Timestamp eventEndTime;
 
     /**
-     * INTERNAL USE ONLY: use instead location.getListing().createEvent(String message)
+     * INTERNAL USE ONLY: use instead location.getPostListing().createEvent(String message)
      */
     public Event(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean likeStatus, Location location, int commentCount, boolean commented) {
         super(postID, message, creationTime, likeCount, author, likeStatus);
@@ -70,7 +70,7 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public EditableCommentListing getListing() {
+    public EditableCommentListing getPostListing() {
         if (listing == null) {
             listing = new EditableCommentListing(this);
         }

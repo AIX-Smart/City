@@ -6,15 +6,18 @@ package com.aix.city.core;
 //TODO:
 public class AIXLoginModule {
 
-    private static AIXLoginModule instance = new AIXLoginModule();
-    private User loggedInUser = new User(0); //Optional
-
+    //Singleton
+    private static final class InstanceHolder {
+        static final AIXLoginModule INSTANCE = new AIXLoginModule();
+    }
     private AIXLoginModule() {
     }
-
     public static AIXLoginModule getInstance() {
-        return instance;
+        return InstanceHolder.INSTANCE;
     }
+    //
+
+    private User loggedInUser = new User(0); //Optional
 
     public User getLoggedInUser() {
         return loggedInUser;

@@ -27,7 +27,7 @@ public class Tag extends Group {
     }
 
     @Override
-    public PostListing getListing() {
+    public PostListing getPostListing() {
         if (listing == null) {
             listing = new PostListing(this);
         }

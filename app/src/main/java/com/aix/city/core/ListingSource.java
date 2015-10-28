@@ -11,6 +11,6 @@ public interface ListingSource {
 
     Predicate<Post> getFilter();
 
-    PostListing getListing();
+    PostListing getPostListing();
 
 }

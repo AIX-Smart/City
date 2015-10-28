@@ -18,7 +18,7 @@ public class PostListing /*extends Observable*/ {
     private boolean finished;
 
     /**
-     * INTERNAL USE ONLY: use instead listingSource.getListing()
+     * INTERNAL USE ONLY: use instead listingSource.getPostListing()
      *
      * @param listingSource
      */
@@ -43,7 +43,7 @@ public class PostListing /*extends Observable*/ {
     }
 
     /**
-     * INTERNAL USE ONLY: use location.getListing().createEvent(...) or event.getListing().createComment(...) instead
+     * INTERNAL USE ONLY: use location.getPostListing().createEvent(...) or event.getPostListing().createComment(...) instead
      * @param post
      */
     public void addPost(Post post){
@@ -51,7 +51,7 @@ public class PostListing /*extends Observable*/ {
     }
 
     /**
-     * INTERNAL USE ONLY: use location.getListing().deleteEvent(...) or event.getListing().deleteComment(...) instead
+     * INTERNAL USE ONLY: use location.getPostListing().deleteEvent(...) or event.getPostListing().deleteComment(...) instead
      * @param post
      */
     public void removePost(Post post){
