@@ -11,8 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.aix.city.core.PostListing;
 import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * A fragment representing a list of Items.
@@ -23,16 +27,18 @@ import com.aix.city.view.PostAdapter;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class PostListingFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class PostListingFragment extends Fragment implements AbsListView.OnItemClickListener, Observer {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /*// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM2 = "param2";*/
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    /**
+     * The PostListing-object which contains the posts. It is observed by this fragment.
+     */
+    private PostListing mParamListing = DummyContent.LISTING;
+    /*private String mParam1;
+    private String mParam2;*/
 
     private OnFragmentInteractionListener mListener;
 
@@ -45,21 +51,22 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private PostAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static PostListingFragment newInstance(String param1, String param2) {
+    public static PostListingFragment newInstance(PostListing listing) {
         PostListingFragment fragment = new PostListingFragment();
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
+        fragment.setPostListing(listing);
         return fragment;
     }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
+     * !!! use static method newInstance(...)!!!
      */
     public PostListingFragment() {
     }
@@ -68,16 +75,16 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
+        /*if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        }*/
 
         /*mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);*/
 
-        //TODO: replace DummyContent
-        mAdapter = new PostAdapter(getActivity(), DummyContent.LISTING.getStoredPosts());
+        mAdapter = new PostAdapter(getActivity(), mParamListing.getPosts());
+        mParamListing.addObserver(this);
     }
 
     @Override
@@ -93,6 +100,10 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
         mListView.setOnItemClickListener(this);
 
         return view;
+    }
+
+    public void setPostListing(PostListing listing){
+        mParamListing = listing;
     }
 
     @Override
@@ -149,4 +160,8 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
         public void onFragmentInteraction(String id);
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        mAdapter.notifyDataSetChanged();
+    }
 }

@@ -3,6 +3,7 @@ package com.aix.city.dummy;
 import com.aix.city.core.City;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Location;
+import com.aix.city.core.Tag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +30,18 @@ public class DummyContent {
 
     public static EditableEventListing LISTING;
 
-    public static City AACHEN = new City("Aachen", 235);
+    public static City AACHEN = new City(235, "Aachen");
 
     public static Location GINBAR = new Location(75463, "GinBar");
 
     public static String[] LEFT_MENU_ELEMENTS = {"post", "bars", "restaurants"};
 
     public static String[] RIGHT_MENU_ELEMENTS = {"favorites", "commented", "own business"};
+
+    public static Tag BAR_TAG = new Tag("Bar");
+
+    public static Tag RESTAURANT_TAG = new Tag("Restaurant");
+
 
     static {
         // Add 3 sample items.

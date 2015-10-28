@@ -77,7 +77,7 @@ public class ListingBarFragment extends Fragment implements AbsListView.OnItemCl
                 android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);*/
 
         //TODO: replace DummyContent
-        mAdapter = new PostAdapter(getActivity(), DummyContentBar.LISTING.getStoredPosts());
+        mAdapter = new PostAdapter(getActivity(), DummyContentBar.LISTING.getPosts());
     }
 
     @Override

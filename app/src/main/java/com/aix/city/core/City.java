@@ -11,7 +11,7 @@ public class City implements ListingSource {
     private long cityID;
     private PostListing listing;
 
-    public City(String name, long cityID) {
+    public City(long cityID, String name) {
         this.name = name;
         this.cityID = cityID;
     }
@@ -47,12 +47,18 @@ public class City implements ListingSource {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        return cityID == city.cityID;
+
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return (int) (cityID ^ (cityID >>> 32));
     }
 }

@@ -1,7 +1,6 @@
 package com.aix.city.core;
 
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -10,7 +9,7 @@ public class LocationData {
 
     private Location location;
     private Set<Tag> tags;
-    private String fullName;
+    private String description;
     private City city;
     private String address;
     private android.location.Location gps;
@@ -21,12 +20,12 @@ public class LocationData {
 
 
     /**
-     * INTERNAL USE ONLY: use instead DataManager.getInstance().createLocationData(...)
+     * INTERNAL USE ONLY: use instead location.getData() or DataManager.getInstance().createLocationData(...)
      */
-    public LocationData(Location location, Set<Tag> tags, String fullName, City city, String address, int likeCount, boolean liked) {
+    public LocationData(Location location, Set<Tag> tags, String description, City city, String address, int likeCount, boolean liked) {
         this.location = location;
         this.tags = tags;
-        this.fullName = fullName;
+        this.description = description;
         this.city = city;
         this.address = address;
         this.likeCount = likeCount;
@@ -45,8 +44,12 @@ public class LocationData {
         return city;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName(){
+        return location.getName();
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getAddress() {

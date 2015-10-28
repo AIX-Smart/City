@@ -15,7 +15,7 @@ public class UserData {
     private List<Post> writtenPosts;
 
     /**
-     * INTERNAL USE ONLY: use instead DataManager.getInstance().createUserData(...)
+     * INTERNAL USE ONLY: use instead user.getData() or DataManager.getInstance().createUserData(...)
      */
     public UserData(User user, Set<Location> favorites, Set<Location> ownBusinesses, Set<Long> likedPosts, List<Post> writtenPosts) {
         this.user = user;

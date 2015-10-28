@@ -87,7 +87,7 @@ public abstract class Post {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Post)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Post post = (Post) o;
 

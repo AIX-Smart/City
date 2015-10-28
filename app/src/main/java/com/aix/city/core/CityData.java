@@ -11,7 +11,7 @@ public class CityData {
     private Set<Location> locations;
 
     /**
-     * INTERNAL USE ONLY: use instead DataManager.getInstance().createCityData(...)
+     * INTERNAL USE ONLY: use instead city.getData() or DataManager.getInstance().createCityData(...)
      */
     public CityData(City city, Set<Location> locations) {
         this.city = city;
