@@ -2,7 +2,6 @@ package com.aix.city.comm;
 
 import android.content.Context;
 
-import com.aix.city.core.AIXLoginModule;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 //import com.android.volley.toolbox.ImageLoader;
@@ -16,9 +15,10 @@ import com.squareup.okhttp.OkHttpClient;
  */
 public class AIxNetworkManager {
 
-    private final String SCHEME = "https";
+    private final String SCHEME = "http";
     private final String HOST = "www.citevent.de";
     private final int PORT = 8080;
+    private HttpUrl url;
 
     private static AIxNetworkManager instance;
     private final Context context;
@@ -66,14 +66,16 @@ public class AIxNetworkManager {
         return context;
     }
 
-    public HttpUrl.Builder getUrlBuilder(){
-        HttpUrl.Builder urlBuilder = new HttpUrl.Builder();
-        urlBuilder.scheme(SCHEME)
-                .host(HOST)
-                .port(PORT)
-                .username(AIXLoginModule.getInstance().getLoggedInUser().toString())
-                .addPathSegment(URLNames.SERVICE_SEGMENT);
-        return urlBuilder;
+    public HttpUrl getUrl(){
+        if(url == null){
+            url = url.newBuilder()
+                    .scheme(SCHEME)
+                    .host(HOST)
+                    .port(PORT)
+                    .addPathSegment(URLSegments.SERVICE)
+                    .build();
+        }
+        return url;
     }
 
     /**

@@ -18,7 +18,6 @@ public class PostListing extends Observable {
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
-    private Request request;
     private Predicate<Post> filter;
     private boolean finished;
 
@@ -29,13 +28,8 @@ public class PostListing extends Observable {
      */
     public PostListing(ListingSource listingSource) {
         this.listingSource = listingSource;
-        request = listingSource.getRequest();
         filter = listingSource.getFilter();
         finished = false;
-    }
-
-    public Request getRequest() {
-        return request;
     }
 
     public Predicate<Post> getFilter() {

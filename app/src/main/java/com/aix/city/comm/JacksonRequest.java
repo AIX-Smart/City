@@ -1,5 +1,7 @@
 package com.aix.city.comm;
 
+
+import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
@@ -8,7 +10,8 @@ import com.android.volley.toolbox.JsonRequest;
 
 public class JacksonRequest<T> extends JsonRequest<T> {
 
-    private Class<T>    responseType;
+    private Class<T> responseType;
+    private boolean ignoreCache;
 
     /**
      * Creates a new request.
@@ -24,23 +27,32 @@ public class JacksonRequest<T> extends JsonRequest<T> {
      * @param errorListener
      *            Error listener, or null to ignore errors.
      */
-    public JacksonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener)
+    public JacksonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean ignoreCache)
     {
         super(method, url, (requestData == null) ? null : Mapper.string(requestData), listener, errorListener);
         this.responseType = responseType;
+        this. ignoreCache = ignoreCache;
     }
 
     @Override
-    protected Response<T> parseNetworkResponse(NetworkResponse response)
-    {
-        try
-        {
+    protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        try {
             String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(Mapper.objectOrThrow(jsonString, responseType), HttpHeaderParser.parseCacheHeaders(response));
+            Cache.Entry entry;
+            if(ignoreCache) entry = HttpHeaderParser.parseIgnoreCacheHeaders(response);
+            else entry = HttpHeaderParser.parseCacheHeaders(response);
+            return Response.success(Mapper.objectOrThrow(jsonString, responseType), entry);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return Response.error(new ParseError(e));
         }
+    }
+
+    public boolean isIgnoreCache() {
+        return ignoreCache;
+    }
+
+    public Class<T> getResponseType() {
+        return responseType;
     }
 }

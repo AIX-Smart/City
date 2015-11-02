@@ -2,11 +2,12 @@ package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
+import com.android.volley.Response;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class Tag extends Group {
+public class Tag implements ListingSource {
 
     private String name;
     private transient PostListing listing;
@@ -19,13 +20,12 @@ public class Tag extends Group {
         else this.name = name;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
     @Override
-    public Request getRequest() {
+    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
         return null;
     }
 

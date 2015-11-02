@@ -1,7 +1,9 @@
 package com.aix.city.core;
 
+import com.aix.city.comm.LocationEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
+import com.android.volley.Response;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -47,8 +49,8 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public Request getRequest() {
-        return null;
+    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
+        return new LocationEventRequest(listener, errorListener, postNum, lastPost, ignoreCache);
     }
 
     @Override

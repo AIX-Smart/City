@@ -2,6 +2,7 @@ package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
+import com.android.volley.Response;
 
 import java.sql.Timestamp;
 
@@ -62,8 +63,7 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public Request getRequest() {
-        //TODO: Implementation
+    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
         return null;
     }
 

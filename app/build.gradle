@@ -30,9 +30,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
-    compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+    compile project(':Volley')
 }

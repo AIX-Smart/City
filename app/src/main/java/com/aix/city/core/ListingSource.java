@@ -2,13 +2,14 @@ package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
+import com.android.volley.Response;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
 public interface ListingSource {
 
-    Request getRequest();
+    Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache);
 
     Predicate<Post> getFilter();
 
