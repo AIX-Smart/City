@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
+import com.android.volley.Request;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -9,7 +10,10 @@ public class City implements ListingSource {
 
     private String name;
     private long cityID;
-    private PostListing listing;
+    private transient PostListing listing;
+
+    //no-argument constructor for JSON
+    private City(){}
 
     public City(long cityID, String name) {
         this.name = name;
@@ -25,11 +29,11 @@ public class City implements ListingSource {
     }
 
     public CityData getData() {
-        return DataManager.getInstance().getCityData(this);
+        return AIxDataManager.getInstance().getCityData(this);
     }
 
     @Override
-    public DatabaseRequest getDatabaseRequest() {
+    public Request getRequest() {
         return null;
     }
 

@@ -1,11 +1,12 @@
 package com.aix.city.core;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public abstract class Post {
+public abstract class Post{
 
     private long postID;
     private String message;
@@ -13,7 +14,12 @@ public abstract class Post {
     private int likeCount;
     private User author;
     private boolean liked; //current user has already liked this post
-    private boolean deleted;
+    private transient boolean deleted;
+
+    //no-argument constructor for JSON
+    protected Post(){
+        deleted = false;
+    }
 
     public Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean liked) {
         this.postID = postID;

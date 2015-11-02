@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
+import com.android.volley.Request;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -8,7 +9,10 @@ import com.android.internal.util.Predicate;
 public class Tag extends Group {
 
     private String name;
-    private PostListing listing;
+    private transient PostListing listing;
+
+    //no-argument constructor for JSON
+    private Tag(){}
 
     public Tag(String name) {
         if(name == null) this.name = "";
@@ -21,7 +25,7 @@ public class Tag extends Group {
     }
 
     @Override
-    public DatabaseRequest getDatabaseRequest() {
+    public Request getRequest() {
         return null;
     }
 

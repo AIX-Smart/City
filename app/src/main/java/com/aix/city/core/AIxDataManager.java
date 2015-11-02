@@ -1,41 +1,60 @@
 package com.aix.city.core;
 
+import android.content.Context;
+
 import com.aix.city.dummy.DummyContent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class DataManager {
+public class AIxDataManager {
 
-    //Singleton
-    private static final class InstanceHolder {
-        static final DataManager INSTANCE = new DataManager();
-    }
-    private DataManager() {
-        allTags.add(DummyContent.BAR_TAG);
-        allTags.add(DummyContent.RESTAURANT_TAG);
-        allCities.add(DummyContent.AACHEN);
-    }
-    public static DataManager getInstance() {
-        return InstanceHolder.INSTANCE;
-    }
-    //
-
+    private static AIxDataManager instance;
+    private final Context context;
+    private City currentCity;
     private Set<Tag> allTags = new HashSet<Tag>();
     private Set<City> allCities = new HashSet<City>();
     private Map<Location, LocationData> storedLocationData = new HashMap<Location, LocationData>();
     private Map<User, UserData> storedUserData = new HashMap<User, UserData>();
     private Map<City, CityData> storedCityData = new HashMap<City, CityData>();
 
+
+    //Singleton methods and constructor
+    private AIxDataManager(Context context) {
+        this.context = context;
+        allTags.add(DummyContent.BAR_TAG);
+        allTags.add(DummyContent.RESTAURANT_TAG);
+        allCities.add(DummyContent.AACHEN);
+        currentCity = DummyContent.AACHEN;
+    }
+    public static synchronized void initInstance(Context context){
+        if(instance == null){
+            instance = new AIxDataManager(context);
+        }
+    }
+    public static AIxDataManager getInstance() {
+        return instance;
+    }
+    //
+
+    public Set<City> getCities() {
+        return allCities;
+    }
+
+    public Set<Tag> getTags() {
+        return allTags;
+    }
+
+    public City getCurrentCity() {
+        return currentCity;
+    }
 
     public LocationData createLocationData(Location location, Set<Tag> tags, String description, City city, String address, int likeCount, boolean liked) {
         LocationData data = new LocationData(location, tags, description, city, address, likeCount, liked);
@@ -55,25 +74,17 @@ public class DataManager {
         return data;
     }
 
-    public Set<City> getCities() {
-        return allCities;
-    }
-
-    public Set<Tag> getTags() {
-        return allTags;
-    }
-
     public LocationData getLocationData(Location location) {
-        LocationData data = storedLocationData.get(location.getID());
+        LocationData data = storedLocationData.get(location);
         if(data == null){
             //TODO: load from database instead
-            data = createLocationData(location, allTags, location.getName(), DummyContent.AACHEN, "Irgendwo-Straße 42", 0, false);
+            data = createLocationData(location, allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße 42", 0, false);
         }
         return data;
     }
 
     public CityData getCityData(City city) {
-        CityData data = storedCityData.get(city.getID());
+        CityData data = storedCityData.get(city);
         if(data == null){
             //TODO: load from database instead
             Set<Location> locations = new HashSet<Location>();
@@ -84,7 +95,7 @@ public class DataManager {
     }
 
     public UserData getUserData(User user) {
-        UserData data = storedUserData.get(user.getID());
+        UserData data = storedUserData.get(user);
         if(data == null){
             //TODO: load from database instead
             data = createUserData(user, new HashSet<Location>(), new HashSet<Location>(), new HashSet<Long>(), new ArrayList<Post>());

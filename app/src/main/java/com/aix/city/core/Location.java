@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
+import com.android.volley.Request;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -9,7 +10,10 @@ public class Location implements ListingSource {
 
     private long locationID;
     private String locationName;
-    private EditableEventListing listing;
+    private transient EditableEventListing listing;
+
+    //no-argument constructor for JSON
+    private Location(){}
 
     public Location(long locationID, String locationName) {
         this.locationID = locationID;
@@ -25,7 +29,7 @@ public class Location implements ListingSource {
     }
 
     public LocationData getData() {
-        return DataManager.getInstance().getLocationData(this);
+        return AIxDataManager.getInstance().getLocationData(this);
     }
 
 
@@ -43,14 +47,14 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public DatabaseRequest getDatabaseRequest() {
+    public Request getRequest() {
         return null;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Location)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Location location = (Location) o;
 

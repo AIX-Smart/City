@@ -1,5 +1,7 @@
 package com.aix.city.dummy;
 
+import com.aix.city.comm.AIxNetworkManager;
+import com.aix.city.comm.LocationEventRequest;
 import com.aix.city.core.City;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Location;

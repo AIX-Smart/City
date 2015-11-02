@@ -10,8 +10,11 @@ public class CityData {
     private City city;
     private Set<Location> locations;
 
+    //no-argument constructor for JSON
+    private CityData(){}
+
     /**
-     * INTERNAL USE ONLY: use instead city.getData() or DataManager.getInstance().createCityData(...)
+     * INTERNAL USE ONLY: use instead city.getData() or AIxDataManager.getInstance().createCityData(...)
      */
     public CityData(City city, Set<Location> locations) {
         this.city = city;

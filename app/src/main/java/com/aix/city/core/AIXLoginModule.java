@@ -1,23 +1,29 @@
 package com.aix.city.core;
 
+import android.content.Context;
+
 /**
  * Created by Thomas on 11.10.2015.
  */
-//TODO:
 public class AIXLoginModule {
 
-    //Singleton
-    private static final class InstanceHolder {
-        static final AIXLoginModule INSTANCE = new AIXLoginModule();
+    private static AIXLoginModule instance;
+    private final Context context;
+    private User loggedInUser = new User(0); //Optional
+
+    //Singleton methods and constructor
+    private AIXLoginModule(Context context) {
+        this.context = context;
     }
-    private AIXLoginModule() {
+    public static synchronized void initInstance(Context context){
+        if(instance == null){
+            instance = new AIXLoginModule(context);
+        }
     }
     public static AIXLoginModule getInstance() {
-        return InstanceHolder.INSTANCE;
+        return instance;
     }
     //
-
-    private User loggedInUser = new User(0); //Optional
 
     public User getLoggedInUser() {
         return loggedInUser;

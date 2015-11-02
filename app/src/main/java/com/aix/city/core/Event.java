@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
+import com.android.volley.Request;
 
 import java.sql.Timestamp;
 
@@ -12,9 +13,12 @@ public class Event extends Post implements ListingSource {
     private Location location;
     private int commentCount;
     private boolean commented;
-    private EditableCommentListing listing;
+    private transient EditableCommentListing listing;
     //private Timestamp eventStartTime;
     //private Timestamp eventEndTime;
+
+    //no-argument constructor for JSON
+    private Event(){}
 
     /**
      * INTERNAL USE ONLY: use instead location.getPostListing().createEvent(String message)
@@ -58,7 +62,7 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public DatabaseRequest getDatabaseRequest() {
+    public Request getRequest() {
         //TODO: Implementation
         return null;
     }

@@ -14,8 +14,11 @@ public class UserData {
     private Set<Long> likedPosts;
     private List<Post> writtenPosts;
 
+    //no-argument constructor for JSON
+    private UserData(){}
+
     /**
-     * INTERNAL USE ONLY: use instead user.getData() or DataManager.getInstance().createUserData(...)
+     * INTERNAL USE ONLY: use instead user.getData() or AIxDataManager.getInstance().createUserData(...)
      */
     public UserData(User user, Set<Location> favorites, Set<Location> ownBusinesses, Set<Long> likedPosts, List<Post> writtenPosts) {
         this.user = user;

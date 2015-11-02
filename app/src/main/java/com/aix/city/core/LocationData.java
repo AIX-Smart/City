@@ -18,9 +18,11 @@ public class LocationData {
     //TODO: öffnungszeiten
     //TODO: Bilder
 
+    //no-argument constructor for JSON
+    private LocationData(){}
 
     /**
-     * INTERNAL USE ONLY: use instead location.getData() or DataManager.getInstance().createLocationData(...)
+     * INTERNAL USE ONLY: use instead location.getData() or AIxDataManager.getInstance().createLocationData(...)
      */
     public LocationData(Location location, Set<Tag> tags, String description, City city, String address, int likeCount, boolean liked) {
         this.location = location;

@@ -10,6 +10,9 @@ public class Comment extends Post {
 
     private Event event;
 
+    //no-argument constructor for JSON
+    private Comment(){}
+
     /**
      * INTERNAL USE ONLY: use instead event.getPostListing().createComment(String message)
      */

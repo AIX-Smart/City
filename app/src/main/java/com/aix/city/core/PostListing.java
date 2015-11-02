@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import com.android.internal.util.Predicate;
+import com.android.volley.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class PostListing extends Observable {
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
-    private DatabaseRequest request;
+    private Request request;
     private Predicate<Post> filter;
     private boolean finished;
 
@@ -28,12 +29,12 @@ public class PostListing extends Observable {
      */
     public PostListing(ListingSource listingSource) {
         this.listingSource = listingSource;
-        request = listingSource.getDatabaseRequest();
+        request = listingSource.getRequest();
         filter = listingSource.getFilter();
         finished = false;
     }
 
-    public DatabaseRequest getRequest() {
+    public Request getRequest() {
         return request;
     }
 
