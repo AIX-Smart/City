@@ -28,10 +28,10 @@ public class EditableCommentListing extends PostListing {
     }
 
     public Comment createComment(String message) {
-        long ID = 1; //TODO: getID from server
+        long ID = 1; //TODO: getId from server
         User user = AIXLoginModule.getInstance().getLoggedInUser();
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Comment comment = new Comment(ID, message, now, 0, user, false, event);
+        long now = System.currentTimeMillis();
+        Comment comment = new Comment(ID, message, now, 0, user.getID(), false, event);
         //TODO: event modification?
         this.addPost(comment);
         //TODO: Add Post to database

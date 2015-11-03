@@ -5,17 +5,17 @@ package com.aix.city.core;
  */
 public class User {
 
-    private long userID;
+    private long id;
 
     //no-argument constructor for JSON
     private User(){}
 
-    public User(long userID) {
-        this.userID = userID;
+    public User(long id) {
+        this.id = id;
     }
 
     public long getID() {
-        return userID;
+        return id;
     }
 
     public UserData getData() {
@@ -29,17 +29,17 @@ public class User {
 
         User user = (User) o;
 
-        return userID == user.userID;
+        return id == user.id;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (userID ^ (userID >>> 32));
+        return (int) (id ^ (id >>> 32));
     }
 
     @Override
     public String toString() {
-        return String.valueOf(userID);
+        return String.valueOf(id);
     }
 }

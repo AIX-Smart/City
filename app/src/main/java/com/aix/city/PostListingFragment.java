@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.PostListing;
 import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
@@ -32,6 +33,7 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     /*// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";*/
+    public final static String ARG_LISTING_SOURCE = "listingSource";
 
     /**
      * The PostListing-object which contains the posts. It is observed by this fragment.
@@ -53,13 +55,11 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
      */
     private PostAdapter mAdapter;
 
-    public static PostListingFragment newInstance(PostListing listing) {
+    public static PostListingFragment newInstance(ListingSource listingSource) {
         PostListingFragment fragment = new PostListingFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
-        fragment.setPostListing(listing);
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_LISTING_SOURCE, listingSource);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -74,13 +74,12 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
-
-        /*mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);*/
+        if (getArguments() != null) {
+            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
+            if(obj != null && obj instanceof ListingSource){
+                mParamListing = ((ListingSource)obj).getPostListing();
+            }
+        }
 
         mAdapter = new PostAdapter(getActivity(), mParamListing.getPosts());
         mParamListing.addObserver(this);
@@ -99,10 +98,6 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
         mListView.setOnItemClickListener(this);
 
         return view;
-    }
-
-    public void setPostListing(PostListing listing){
-        mParamListing = listing;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.aix.city.comm.LocationEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
@@ -10,24 +13,29 @@ import com.android.volley.Response;
  */
 public class Location implements ListingSource {
 
-    private long locationID;
-    private String locationName;
-    private transient EditableEventListing listing;
+    private long id;
+    private String name;
 
     //no-argument constructor for JSON
     private Location(){}
 
-    public Location(long locationID, String locationName) {
-        this.locationID = locationID;
-        this.locationName = locationName;
+    //Parcelable constructor
+    public Location(Parcel in){
+        this.id = in.readLong();
+        this.name = in.readString();
     }
 
-    public long getID() {
-        return locationID;
+    public Location(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
-        return locationName;
+        return name;
     }
 
     public LocationData getData() {
@@ -42,15 +50,17 @@ public class Location implements ListingSource {
 
     @Override
     public EditableEventListing getPostListing() {
-        if (listing == null) {
-            listing = new EditableEventListing(this);
-        }
-        return listing;
+        return new EditableEventListing(this);
     }
 
     @Override
     public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new LocationEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
+    }
+
+    @Override
+    public ListingSourceType getType() {
+        return ListingSourceType.LOCATION;
     }
 
     @Override
@@ -60,12 +70,37 @@ public class Location implements ListingSource {
 
         Location location = (Location) o;
 
-        return locationID == location.locationID;
+        return id == location.id;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (locationID ^ (locationID >>> 32));
+        return (int) (id ^ (id >>> 32));
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+    }
+
+    public static final Parcelable.Creator<Location> CREATOR =
+            new Parcelable.Creator<Location>(){
+
+                @Override
+                public Location createFromParcel(Parcel source) {
+                    return new Location(source);
+                }
+
+                @Override
+                public Location[] newArray(int size) {
+                    return new Location[size];
+                }
+            };
 }

@@ -1,5 +1,8 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.aix.city.comm.CityEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
@@ -10,16 +13,21 @@ import com.android.volley.Response;
  */
 public class City implements ListingSource {
 
+    private long id;
     private String name;
-    private long cityID;
-    private transient PostListing listing;
 
     //no-argument constructor for JSON
     private City(){}
 
-    public City(long cityID, String name) {
+    //Parcelable constructor
+    public City(Parcel in){
+        this.id = in.readLong();
+        this.name = in.readString();
+    }
+
+    public City(long id, String name) {
         this.name = name;
-        this.cityID = cityID;
+        this.id = id;
     }
 
     public String getName() {
@@ -27,7 +35,7 @@ public class City implements ListingSource {
     }
 
     public long getID() {
-        return cityID;
+        return id;
     }
 
     public CityData getData() {
@@ -46,10 +54,12 @@ public class City implements ListingSource {
 
     @Override
     public PostListing getPostListing() {
-        if (listing == null) {
-            listing = new PostListing(this);
-        }
-        return listing;
+        return new PostListing(this);
+    }
+
+    @Override
+    public ListingSourceType getType() {
+        return ListingSourceType.CITY;
     }
 
     @Override
@@ -59,12 +69,37 @@ public class City implements ListingSource {
 
         City city = (City) o;
 
-        return cityID == city.cityID;
+        return id == city.id;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (cityID ^ (cityID >>> 32));
+        return (int) (id ^ (id >>> 32));
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+    }
+
+    public static final Parcelable.Creator<City> CREATOR =
+            new Parcelable.Creator<City>(){
+
+                @Override
+                public City createFromParcel(Parcel source) {
+                    return new City(source);
+                }
+
+                @Override
+                public City[] newArray(int size) {
+                    return new City[size];
+                }
+            };
 }

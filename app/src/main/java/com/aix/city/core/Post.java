@@ -1,6 +1,5 @@
 package com.aix.city.core;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -8,11 +7,11 @@ import java.sql.Timestamp;
  */
 public abstract class Post{
 
-    private long postID;
+    private long id;
     private String message;
-    private Timestamp creationTime;
+    private long creationTime;
     private int likeCount;
-    private User author;
+    private long authorId;
     private boolean liked; //current user has already liked this post
     private transient boolean deleted;
 
@@ -21,12 +20,12 @@ public abstract class Post{
         deleted = false;
     }
 
-    public Post(long postID, String message, Timestamp creationTime, int likeCount, User author, boolean liked) {
-        this.postID = postID;
+    public Post(long id, String message, long creationTime, int likeCount, long authorId, boolean liked) {
+        this.id = id;
         this.message = message;
         this.creationTime = creationTime;
         this.likeCount = likeCount;
-        this.author = author;
+        this.authorId = authorId;
         this.liked = liked;
         this.deleted = false;
     }
@@ -35,7 +34,7 @@ public abstract class Post{
         return message;
     }
 
-    public Timestamp getCreationTime() {
+    public long getCreationTime() {
         return creationTime;
     }
 
@@ -43,12 +42,12 @@ public abstract class Post{
         return likeCount;
     }
 
-    public User getAuthor() {
-        return author;
+    public long getAuthorId() {
+        return authorId;
     }
 
     public long getID() {
-        return postID;
+        return id;
     }
 
     public abstract Location getLocation();
@@ -97,12 +96,12 @@ public abstract class Post{
 
         Post post = (Post) o;
 
-        return postID == post.postID;
+        return id == post.id;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (postID ^ (postID >>> 32));
+        return (int) (id ^ (id >>> 32));
     }
 }

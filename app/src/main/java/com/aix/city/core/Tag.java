@@ -1,5 +1,8 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.aix.city.comm.TagEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
@@ -10,15 +13,20 @@ import com.android.volley.Response;
  */
 public class Tag implements ListingSource {
 
-    private int ID;
+    private long id;
     private String name;
-    private transient PostListing listing;
 
     //no-argument constructor for JSON
     private Tag(){}
 
-    public Tag(int ID, String name) {
-        this.ID = ID;
+    //Parcelable constructor
+    public Tag(Parcel in){
+        this.id = in.readLong();
+        this.name = in.readString();
+    }
+
+    public Tag(int id, String name) {
+        this.id = id;
         if(name == null) this.name = "";
         else this.name = name;
     }
@@ -27,8 +35,8 @@ public class Tag implements ListingSource {
         return name;
     }
 
-    public int getID() {
-        return ID;
+    public long getId() {
+        return id;
     }
 
     @Override
@@ -43,10 +51,12 @@ public class Tag implements ListingSource {
 
     @Override
     public PostListing getPostListing() {
-        if (listing == null) {
-            listing = new PostListing(this);
-        }
-        return listing;
+        return new PostListing(this);
+    }
+
+    @Override
+    public ListingSourceType getType() {
+        return ListingSourceType.TAG;
     }
 
     @Override
@@ -67,4 +77,29 @@ public class Tag implements ListingSource {
         result = 31 * result + name.hashCode();
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+    }
+
+    public static final Parcelable.Creator<Tag> CREATOR =
+            new Parcelable.Creator<Tag>(){
+
+                @Override
+                public Tag createFromParcel(Parcel source) {
+                    return new Tag(source);
+                }
+
+                @Override
+                public Tag[] newArray(int size) {
+                    return new Tag[size];
+                }
+            };
 }

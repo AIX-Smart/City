@@ -1,8 +1,6 @@
 package com.aix.city.comm;
 
 import com.aix.city.core.AIXLoginModule;
-import com.aix.city.core.Event;
-import com.aix.city.core.Location;
 import com.aix.city.core.Post;
 import com.aix.city.core.Tag;
 import com.android.volley.Request;
@@ -34,7 +32,7 @@ public class TagEventRequest extends JacksonRequest<Post[]> {
     private static String getURL(int postNum, Post lastPost, Tag tag){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.TAG)
-                .addPathSegment(String.valueOf(tag.getID()))
+                .addPathSegment(String.valueOf(tag.getId()))
                 .addPathSegment(String.valueOf(postNum))
                 .addPathSegment(String.valueOf(AIXLoginModule.getInstance().getLoggedInUser().getID()));
         if(lastPost != null){

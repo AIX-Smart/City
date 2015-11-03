@@ -8,7 +8,9 @@
     tools:context="com.aix.city.LocationProfileFragment"
     android:background="@color/accent_material_light">
 
-    <TextView android:text="@string/cityName" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <TextView android:text="@string/cityName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cityName"/>
 
 </RelativeLayout>

@@ -1,40 +1,47 @@
 package com.aix.city;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.City;
+import com.aix.city.core.ListingSource;
+import com.aix.city.core.Location;
 import com.aix.city.dummy.DummyContent;
 
 
 public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener {
+
+    public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.ListingSource";
 
     private Fragment listingSourceFragment;
     private PostListingFragment postListingFragment;
     private ListView searchMenuList;
     private ListView userMenuList;
 
+    private ListingSource listingSource;
 
-    /*public static BaseListingActivity newInstance(Fragment listingSourceFragment){
-        BaseListingActivity activity = new BaseListingActivity();
-        activity.setListingSourceFragment(listingSourceFragment);
-        return activity;
-    }*/
-
-    public BaseListingActivity(){
-        this.listingSourceFragment = new LocationProfileFragment();
-    }
+    public BaseListingActivity(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_base_listing);
+
+        Intent intent = getIntent();
+        listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
+        if(listingSource == null){
+            listingSource = AIxDataManager.getInstance().getCurrentCity();
+        }
+
+
         postListingFragment = (PostListingFragment)getSupportFragmentManager().findFragmentById(R.id.listing_fragment);
+        listingSourceFragment = createListingSourceFragment();
 
 
         searchMenuList = (ListView) findViewById(R.id.left_menu_list);
@@ -59,12 +66,23 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
     }
 
-    public Fragment getListingSourceFragment() {
-        return listingSourceFragment;
+    public Fragment createListingSourceFragment(){
+        switch(listingSource.getType()){
+            case CITY:
+                return CityFragment.newInstance((City)listingSource);
+            case LOCATION:
+                return LocationProfileFragment.newInstance((Location)listingSource);
+            case TAG:
+                return LocationProfileFragment.newInstance((Location)listingSource);
+            case EVENT:
+                return LocationProfileFragment.newInstance((Location)listingSource);
+            default:
+                return LocationProfileFragment.newInstance((Location)listingSource);
+        }
     }
 
-    public void setListingSourceFragment(Fragment listingSourceFragment) {
-        this.listingSourceFragment = listingSourceFragment;
+    public Fragment getListingSourceFragment() {
+        return listingSourceFragment;
     }
 
     public PostListingFragment getPostListingFragment() {
@@ -77,6 +95,10 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
     public ListView getUserMenuList() {
         return userMenuList;
+    }
+
+    public ListingSource getListingSource() {
+        return listingSource;
     }
 
     @Override
