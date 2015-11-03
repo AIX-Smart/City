@@ -4,38 +4,37 @@ import com.aix.city.core.AIXLoginModule;
 import com.aix.city.core.Event;
 import com.aix.city.core.Location;
 import com.aix.city.core.Post;
+import com.aix.city.core.Tag;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.squareup.okhttp.HttpUrl;
 
-import java.util.ArrayList;
-
 /**
- * Created by Thomas on 02.11.2015.
+ * Created by Thomas on 03.11.2015.
  */
-public class LocationEventRequest extends JacksonRequest<Post[]> {
+public class TagEventRequest extends JacksonRequest<Post[]> {
 
     private int postNum;
     private Post lastPost;
-    private Location location;
+    private Tag tag;
 
-    public LocationEventRequest(Response.Listener<Post[]> listener,
+    public TagEventRequest(Response.Listener<Post[]> listener,
                                 Response.ErrorListener errorListener,
                                 boolean ignoreCache,
                                 int postNum,
                                 Post lastPost,
-                                Location location){
-        super(Request.Method.GET, getURL(postNum, lastPost, location), null, Post[].class, listener, errorListener, ignoreCache);
+                                Tag tag){
+        super(Request.Method.GET, getURL(postNum, lastPost, tag), null, Post[].class, listener, errorListener, ignoreCache);
         this.postNum = postNum;
         this.lastPost = lastPost;
-        this.location = location;
+        this.tag = tag;
     }
 
 
-    private static String getURL(int postNum, Post lastPost, Location location){
+    private static String getURL(int postNum, Post lastPost, Tag tag){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
-                .addPathSegment(URLSegments.LOCATION)
-                .addPathSegment(String.valueOf(location.getID()))
+                .addPathSegment(URLSegments.TAG)
+                .addPathSegment(String.valueOf(tag.getID()))
                 .addPathSegment(String.valueOf(postNum))
                 .addPathSegment(String.valueOf(AIXLoginModule.getInstance().getLoggedInUser().getID()));
         if(lastPost != null){
@@ -52,7 +51,7 @@ public class LocationEventRequest extends JacksonRequest<Post[]> {
         return lastPost;
     }
 
-    public Location getLocation() {
-        return location;
+    public Tag getAIxTag(){
+        return  tag;
     }
 }

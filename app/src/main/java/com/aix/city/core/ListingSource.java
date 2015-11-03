@@ -9,7 +9,7 @@ import com.android.volley.Response;
  */
 public interface ListingSource {
 
-    Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache);
+    Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost);
 
     Predicate<Post> getFilter();
 

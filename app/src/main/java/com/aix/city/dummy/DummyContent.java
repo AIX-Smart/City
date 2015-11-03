@@ -40,9 +40,9 @@ public class DummyContent {
 
     public static String[] RIGHT_MENU_ELEMENTS = {"favorites", "commented", "own business"};
 
-    public static Tag BAR_TAG = new Tag("Bar");
+    public static Tag BAR_TAG = new Tag(7353, "Bar");
 
-    public static Tag RESTAURANT_TAG = new Tag("Restaurant");
+    public static Tag RESTAURANT_TAG = new Tag(322, "Restaurant");
 
 
     static {

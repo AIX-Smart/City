@@ -1,5 +1,6 @@
 package com.aix.city.core;
 
+import com.aix.city.comm.TagEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -9,13 +10,15 @@ import com.android.volley.Response;
  */
 public class Tag implements ListingSource {
 
+    private int ID;
     private String name;
     private transient PostListing listing;
 
     //no-argument constructor for JSON
     private Tag(){}
 
-    public Tag(String name) {
+    public Tag(int ID, String name) {
+        this.ID = ID;
         if(name == null) this.name = "";
         else this.name = name;
     }
@@ -24,9 +27,13 @@ public class Tag implements ListingSource {
         return name;
     }
 
+    public int getID() {
+        return ID;
+    }
+
     @Override
-    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
-        return null;
+    public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+        return new TagEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override

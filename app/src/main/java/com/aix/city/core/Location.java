@@ -49,8 +49,8 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
-        return new LocationEventRequest(listener, errorListener, postNum, lastPost, ignoreCache);
+    public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+        return new LocationEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override

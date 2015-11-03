@@ -15,14 +15,14 @@ import com.squareup.okhttp.OkHttpClient;
  */
 public class AIxNetworkManager {
 
-    private final String SCHEME = "http";
-    private final String HOST = "www.citevent.de";
-    private final int PORT = 8080;
-    private HttpUrl url;
-
     private static AIxNetworkManager instance;
     private final Context context;
     private RequestQueue requestQueue;
+
+    private final String SCHEME = "http";
+    private final String HOST = "www.citevent.de";
+    private final int PORT = 8080;
+    private HttpUrl serviceUrl;
 
 
     //Singleton methods and constructor
@@ -33,6 +33,7 @@ public class AIxNetworkManager {
     public static synchronized void initInstance(Context context){
         if(instance == null){
             instance = new AIxNetworkManager(context);
+            instance.getRequestQueue().start();
         }
     }
     public static AIxNetworkManager getInstance() {
@@ -66,16 +67,16 @@ public class AIxNetworkManager {
         return context;
     }
 
-    public HttpUrl getUrl(){
-        if(url == null){
-            url = url.newBuilder()
+    public HttpUrl getServiceUrl(){
+        if(serviceUrl == null){
+            serviceUrl = serviceUrl.newBuilder()
                     .scheme(SCHEME)
                     .host(HOST)
                     .port(PORT)
                     .addPathSegment(URLSegments.SERVICE)
                     .build();
         }
-        return url;
+        return serviceUrl;
     }
 
     /**
@@ -112,5 +113,4 @@ public class AIxNetworkManager {
             getRequestQueue().cancelAll(tag);
         }
     }
-
 }

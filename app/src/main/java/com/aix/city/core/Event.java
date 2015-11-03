@@ -1,5 +1,6 @@
 package com.aix.city.core;
 
+import com.aix.city.comm.EventCommentRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -63,8 +64,8 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
-        return null;
+    public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+        return new EventCommentRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override

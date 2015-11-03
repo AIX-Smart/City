@@ -9,7 +9,7 @@ public class AIXLoginModule {
 
     private static AIXLoginModule instance;
     private final Context context;
-    private User loggedInUser = new User(0); //Optional
+    private User loggedInUser;
 
     //Singleton methods and constructor
     private AIXLoginModule(Context context) {
@@ -26,6 +26,9 @@ public class AIXLoginModule {
     //
 
     public User getLoggedInUser() {
+        if(loggedInUser == null){
+            loggedInUser = new User(0);
+        }
         return loggedInUser;
     }
 

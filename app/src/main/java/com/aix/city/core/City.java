@@ -1,5 +1,6 @@
 package com.aix.city.core;
 
+import com.aix.city.comm.CityEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,8 +35,8 @@ public class City implements ListingSource {
     }
 
     @Override
-    public Request getRequest(Response.Listener<Event> listener, Response.ErrorListener errorListener, int postNum, Event lastPost, boolean ignoreCache) {
-        return null;
+    public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+        return new CityEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override
