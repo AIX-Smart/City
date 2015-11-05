@@ -3,7 +3,7 @@ package com.aix.city;
 import android.app.Application;
 
 import com.aix.city.comm.AIxNetworkManager;
-import com.aix.city.core.AIXLoginModule;
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.AIxDataManager;
 
 /**
@@ -22,7 +22,7 @@ public class CityApplication extends Application {
 
     public void initSingletons() {
         AIxNetworkManager.initInstance(this);
-        AIXLoginModule.initInstance(this);
+        AIxLoginModule.initInstance(this);
         AIxDataManager.initInstance(this);
     }
 

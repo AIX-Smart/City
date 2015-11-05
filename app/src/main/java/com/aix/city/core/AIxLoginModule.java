@@ -13,23 +13,23 @@ import com.android.volley.toolbox.StringRequest;
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class AIXLoginModule {
+public class AIxLoginModule {
 
-    private static AIXLoginModule instance;
+    private static AIxLoginModule instance;
     private final Context context;
     private User loggedInUser;
 
     //Singleton methods and constructor
-    private AIXLoginModule(Context context) {
+    private AIxLoginModule(Context context) {
         this.context = context;
     }
     public static synchronized void initInstance(Context context){
         if(instance == null){
-            instance = new AIXLoginModule(context);
+            instance = new AIxLoginModule(context);
             instance.getLoggedInUser();
         }
     }
-    public static AIXLoginModule getInstance() {
+    public static AIxLoginModule getInstance() {
         return instance;
     }
     //

@@ -1,7 +1,5 @@
 package com.aix.city.core;
 
-import java.sql.Timestamp;
-
 /**
  * Created by Thomas on 14.10.2015.
  */
@@ -30,7 +28,7 @@ public class EditableEventListing extends PostListing {
 
     public Event createEvent(String message) {
         long ID = 0; //TODO: getId from server
-        User user = AIXLoginModule.getInstance().getLoggedInUser();
+        User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
         Event event = new Event(ID, message, now, 0, user.getID(), false, location, 0, false);
         this.addPost(event);

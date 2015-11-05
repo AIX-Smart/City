@@ -1,7 +1,5 @@
 package com.aix.city.core;
 
-import java.sql.Timestamp;
-
 /**
  * Created by Thomas on 14.10.2015.
  */
@@ -29,7 +27,7 @@ public class EditableCommentListing extends PostListing {
 
     public Comment createComment(String message) {
         long ID = 1; //TODO: getId from server
-        User user = AIXLoginModule.getInstance().getLoggedInUser();
+        User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
         Comment comment = new Comment(ID, message, now, 0, user.getID(), false, event);
         //TODO: event modification?

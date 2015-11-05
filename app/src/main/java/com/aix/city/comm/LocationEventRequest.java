@@ -1,6 +1,6 @@
 package com.aix.city.comm;
 
-import com.aix.city.core.AIXLoginModule;
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.Location;
 import com.aix.city.core.Post;
 import com.android.volley.Request;
@@ -34,7 +34,7 @@ public class LocationEventRequest extends JacksonRequest<Post[]> {
                 .addPathSegment(URLSegments.LOCATION)
                 .addPathSegment(String.valueOf(location.getId()))
                 .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIXLoginModule.getInstance().getLoggedInUser().getID()));
+                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getID()));
         if(lastPost != null){
             urlBuilder.addPathSegment(String.valueOf(lastPost.getID()));
         }
