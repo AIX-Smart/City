@@ -39,7 +39,7 @@ public class JacksonRequest<T> extends JsonRequest<T> {
         try {
             String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             Cache.Entry entry;
-            if(ignoreCache) entry = HttpHeaderParser.parseIgnoreCacheHeaders(response);
+            if(ignoreCache) entry = HttpHeaderParser.parseCacheHeaders(response); //TODO:HttpHeaderParser.parseIgnoreCacheHeaders(response);
             else entry = HttpHeaderParser.parseCacheHeaders(response);
             return Response.success(Mapper.objectOrThrow(jsonString, responseType), entry);
         }
