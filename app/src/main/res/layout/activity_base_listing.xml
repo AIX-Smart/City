@@ -18,19 +18,27 @@
         tools:context=".LocationActivity">
 
         <FrameLayout
-            android:id="@+id/fragment_container"
+            android:id="@+id/fragment_container_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical"
+            tools:layout="@layout/fragment_city"/>
 
-        <fragment
+        <FrameLayout
+            android:id="@+id/fragment_container_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/fragment_container_top"
+            tools:layout="@layout/fragment_listing_list"/>
+
+        <!--<fragment
             android:id="@+id/listing_fragment"
             android:name="com.aix.city.PostListingFragment"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/fragment_container"
-            tools:layout="@layout/fragment_listing_list"/>
-
+            android:layout_below="@id/fragment_container_top"
+            tools:layout="@layout/fragment_listing_list"/>-->
 
     </RelativeLayout>
 

@@ -9,4 +9,5 @@ public interface URLSegments {
     String CITY = "city";
     String TAG = "tag";
     String EVENT = "event";
+    String USER = "user";
 }

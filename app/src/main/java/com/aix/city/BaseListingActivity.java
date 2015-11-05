@@ -40,10 +40,6 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         }
 
 
-        postListingFragment = (PostListingFragment)getSupportFragmentManager().findFragmentById(R.id.listing_fragment);
-        listingSourceFragment = createListingSourceFragment();
-
-
         searchMenuList = (ListView) findViewById(R.id.left_menu_list);
         ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
         searchMenuList.setAdapter(leftListAdapter);
@@ -53,12 +49,17 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         userMenuList.setAdapter(rightListAdapter);
 
 
+        //create fragments with data
+        postListingFragment = PostListingFragment.newInstance(listingSource);
+        listingSourceFragment = createListingSourceFragment();
+
         // Create transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack if needed
-        transaction.replace(R.id.fragment_container, listingSourceFragment);
+        transaction.replace(R.id.fragment_container_top, listingSourceFragment);
+        transaction.replace(R.id.fragment_container_bottom, postListingFragment);
         transaction.addToBackStack(null);
 
         // Commit the transaction

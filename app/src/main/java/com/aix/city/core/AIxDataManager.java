@@ -29,14 +29,14 @@ public class AIxDataManager {
     //Singleton methods and constructor
     private AIxDataManager(Context context) {
         this.context = context;
-        allTags.add(DummyContent.BAR_TAG);
-        allTags.add(DummyContent.RESTAURANT_TAG);
-        allCities.add(DummyContent.AACHEN);
-        currentCity = DummyContent.AACHEN;
     }
     public static synchronized void initInstance(Context context){
         if(instance == null){
             instance = new AIxDataManager(context);
+            instance.allTags.add(DummyContent.BAR_TAG);
+            instance.allTags.add(DummyContent.RESTAURANT_TAG);
+            instance.allCities.add(DummyContent.AACHEN);
+            instance.currentCity = DummyContent.AACHEN;
         }
     }
     public static AIxDataManager getInstance() {

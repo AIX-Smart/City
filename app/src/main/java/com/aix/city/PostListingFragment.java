@@ -12,10 +12,13 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.Post;
 import com.aix.city.core.PostListing;
 import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -38,7 +41,7 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     /**
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
-    private PostListing mParamListing = DummyContent.LISTING;
+    private PostListing mParamListing;
     /*private String mParam1;
     private String mParam2;*/
 
@@ -74,6 +77,7 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //get instance data
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
             if(obj != null && obj instanceof ListingSource){
@@ -81,8 +85,17 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
             }
         }
 
-        mAdapter = new PostAdapter(getActivity(), mParamListing.getPosts());
-        mParamListing.addObserver(this);
+        //create postview-adapter
+        if(mParamListing == null){
+            mAdapter = new PostAdapter(getActivity(), DummyContent.LISTING.getPosts());
+        }
+        else{
+            mAdapter = new PostAdapter(getActivity(), mParamListing.getPosts());
+            mParamListing.addObserver(this);
+
+            //load posts
+            mParamListing.loadMorePosts();
+        }
     }
 
     @Override

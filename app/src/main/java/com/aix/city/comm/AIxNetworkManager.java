@@ -28,7 +28,6 @@ public class AIxNetworkManager {
     //Singleton methods and constructor
     private AIxNetworkManager(Context context) {
         this.context = context;
-        requestQueue = getRequestQueue();
     }
     public static synchronized void initInstance(Context context){
         if(instance == null){
@@ -69,7 +68,7 @@ public class AIxNetworkManager {
 
     public HttpUrl getServiceUrl(){
         if(serviceUrl == null){
-            serviceUrl = serviceUrl.newBuilder()
+            serviceUrl = new HttpUrl.Builder()
                     .scheme(SCHEME)
                     .host(HOST)
                     .port(PORT)
