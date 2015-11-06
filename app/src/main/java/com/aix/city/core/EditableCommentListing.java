@@ -29,7 +29,7 @@ public class EditableCommentListing extends PostListing {
         long ID = 1; //TODO: getId from server
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
-        Comment comment = new Comment(ID, message, now, 0, user.getID(), false, event);
+        Comment comment = new Comment(ID, message, now, 0, user.getId(), false, event.getId());
         //TODO: event modification?
         this.addPost(comment);
         //TODO: Add Post to database
@@ -37,7 +37,7 @@ public class EditableCommentListing extends PostListing {
     }
 
     public void deleteComment(Comment comment) {
-        if (comment.getEvent().equals(event)) {
+        if (comment.getEventId() == event.getId()) {
             this.removePost(comment);
             comment.rawDelete();
             //TODO: commit deletion to database

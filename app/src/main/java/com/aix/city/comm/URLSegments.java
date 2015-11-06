@@ -6,6 +6,7 @@ package com.aix.city.comm;
 public interface URLSegments {
     String SERVICE = "service";
     String LOCATION = "location";
+    String LOCATIONS = "locations";
     String CITY = "city";
     String TAG = "tag";
     String EVENT = "event";

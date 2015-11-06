@@ -12,13 +12,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.aix.city.core.ListingSource;
-import com.aix.city.core.Post;
 import com.aix.city.core.PostListing;
 import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 

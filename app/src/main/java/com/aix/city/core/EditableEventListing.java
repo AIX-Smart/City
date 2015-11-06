@@ -30,14 +30,14 @@ public class EditableEventListing extends PostListing {
         long ID = 0; //TODO: getId from server
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
-        Event event = new Event(ID, message, now, 0, user.getID(), false, location, 0, false);
+        Event event = new Event(ID, message, now, 0, user.getId(), false, location, 0);
         this.addPost(event);
         //TODO: Add Post to database
         return event;
     }
 
     public void deleteEvent(Event event) {
-        if (event.getLocation().equals(location)) {
+        if (event.getSourceName().equals(location)) {
             this.removePost(event);
             event.rawDelete();
             //TODO: commit deletion to database

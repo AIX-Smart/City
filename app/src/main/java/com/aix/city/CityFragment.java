@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aix.city.core.City;
-import com.aix.city.core.Location;
 import com.aix.city.dummy.DummyContent;
 
 /**

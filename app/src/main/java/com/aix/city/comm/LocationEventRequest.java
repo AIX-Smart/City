@@ -34,9 +34,9 @@ public class LocationEventRequest extends JacksonRequest<Post[]> {
                 .addPathSegment(URLSegments.LOCATION)
                 .addPathSegment(String.valueOf(location.getId()))
                 .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getID()));
+                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getID()));
+            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
         }
         return urlBuilder.build().toString();
     }

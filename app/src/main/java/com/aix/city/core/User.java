@@ -1,5 +1,7 @@
 package com.aix.city.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by Thomas on 11.10.2015.
  */
@@ -14,10 +16,11 @@ public class User {
         this.id = id;
     }
 
-    public long getID() {
+    public long getId() {
         return id;
     }
 
+    @JsonIgnore
     public UserData getData() {
         return AIxDataManager.getInstance().getUserData(this);
     }

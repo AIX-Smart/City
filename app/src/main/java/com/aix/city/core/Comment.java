@@ -1,14 +1,12 @@
 package com.aix.city.core;
 
-import java.sql.Timestamp;
-
 /**
  * Created by Thomas on 11.10.2015.
  */
 //TODO:
 public class Comment extends Post {
 
-    private Event event;
+    long eventId;
 
     //no-argument constructor for JSON
     private Comment(){}
@@ -16,13 +14,13 @@ public class Comment extends Post {
     /**
      * INTERNAL USE ONLY: use instead event.getPostListing().createComment(String message)
      */
-    public Comment(long postID, String message, long creationTime, int likeCount, long authorId, boolean likeStatus, Event event) {
+    public Comment(long postID, String message, long creationTime, int likeCount, long authorId, boolean likeStatus, long eventId) {
         super(postID, message, creationTime, likeCount, authorId, likeStatus);
-        this.event = event;
+        this.eventId = eventId;
     }
 
-    public Event getEvent() {
-        return event;
+    public long getEventId() {
+        return eventId;
     }
 
     @Override
@@ -32,12 +30,12 @@ public class Comment extends Post {
     }
 
     @Override
-    public Location getLocation() {
-        return event.getLocation();
+    public boolean isComment(){
+        return true;
     }
 
     @Override
-    public boolean isComment(){
-        return true;
+    public String getSourceName() {
+        return String.valueOf(eventId);
     }
 }

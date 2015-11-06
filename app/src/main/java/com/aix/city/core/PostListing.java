@@ -1,7 +1,6 @@
 package com.aix.city.core;
 
 import com.aix.city.comm.AIxNetworkManager;
-import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;

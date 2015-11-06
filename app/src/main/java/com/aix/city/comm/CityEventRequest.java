@@ -32,11 +32,11 @@ public class CityEventRequest extends JacksonRequest<Post[]> {
     private static String getURL(int postNum, Post lastPost, City city){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.CITY)
-                .addPathSegment(String.valueOf(city.getID()))
+                .addPathSegment(String.valueOf(city.getId()))
                 .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getID()));
+                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getID()));
+            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
         }
         return urlBuilder.build().toString();
     }

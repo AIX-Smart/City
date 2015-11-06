@@ -1,5 +1,6 @@
 package com.aix.city.comm;
 
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.Post;
 import com.aix.city.core.Tag;
@@ -33,10 +34,11 @@ public class TagEventRequest extends JacksonRequest<Post[]> {
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.TAG)
                 .addPathSegment(String.valueOf(tag.getId()))
+                .addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()))
                 .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getID()));
+                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getID()));
+            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
         }
         return urlBuilder.build().toString();
     }

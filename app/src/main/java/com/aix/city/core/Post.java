@@ -1,10 +1,12 @@
 package com.aix.city.core;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Post{
 
     private long id;
@@ -46,18 +48,21 @@ public abstract class Post{
         return authorId;
     }
 
-    public long getID() {
+    public long getId() {
         return id;
     }
 
-    public abstract Location getLocation();
+    @JsonIgnore
+    public abstract String getSourceName();
 
+    @JsonIgnore
     public abstract boolean isComment();
 
     public boolean isLiked() {
         return liked;
     }
 
+    @JsonIgnore
     public boolean isDeleted() {
         return deleted;
     }

@@ -7,6 +7,7 @@ import com.aix.city.comm.LocationEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -38,6 +39,7 @@ public class Location implements ListingSource {
         return name;
     }
 
+    @JsonIgnore
     public LocationData getData() {
         return AIxDataManager.getInstance().getLocationData(this);
     }

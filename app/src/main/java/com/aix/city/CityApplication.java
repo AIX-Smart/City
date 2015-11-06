@@ -3,8 +3,8 @@ package com.aix.city;
 import android.app.Application;
 
 import com.aix.city.comm.AIxNetworkManager;
-import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.AIxLoginModule;
 
 /**
  * Created by Thomas on 02.11.2015.

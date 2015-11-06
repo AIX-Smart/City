@@ -7,6 +7,7 @@ import com.aix.city.comm.CityEventRequest;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -34,10 +35,11 @@ public class City implements ListingSource {
         return name;
     }
 
-    public long getID() {
+    public long getId() {
         return id;
     }
 
+    @JsonIgnore
     public CityData getData() {
         return AIxDataManager.getInstance().getCityData(this);
     }
