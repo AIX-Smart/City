@@ -9,9 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.City;
+import com.aix.city.core.data.City;
 import com.aix.city.core.ListingSource;
-import com.aix.city.core.Location;
+import com.aix.city.core.data.Location;
 import com.aix.city.dummy.DummyContent;
 
 

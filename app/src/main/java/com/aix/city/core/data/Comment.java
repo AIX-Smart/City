@@ -1,4 +1,4 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -6,7 +6,7 @@ package com.aix.city.core;
 //TODO:
 public class Comment extends Post {
 
-    long eventId;
+    int eventId;
 
     //no-argument constructor for JSON
     private Comment(){}
@@ -14,12 +14,12 @@ public class Comment extends Post {
     /**
      * INTERNAL USE ONLY: use instead event.getPostListing().createComment(String message)
      */
-    public Comment(long postID, String message, long creationTime, int likeCount, long authorId, boolean likeStatus, long eventId) {
+    public Comment(int postID, String message, long creationTime, int likeCount, int authorId, boolean likeStatus, int eventId) {
         super(postID, message, creationTime, likeCount, authorId, likeStatus);
         this.eventId = eventId;
     }
 
-    public long getEventId() {
+    public int getEventId() {
         return eventId;
     }
 

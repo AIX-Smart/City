@@ -2,6 +2,7 @@ package com.aix.city.core;
 
 import android.os.Parcelable;
 
+import com.aix.city.core.data.Post;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;

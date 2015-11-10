@@ -1,6 +1,7 @@
 package com.aix.city.comm;
 
-import com.aix.city.core.Location;
+import com.aix.city.core.AIxNetworkManager;
+import com.aix.city.core.data.Location;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.squareup.okhttp.HttpUrl;

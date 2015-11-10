@@ -2,7 +2,7 @@ package com.aix.city;
 
 import android.app.Application;
 
-import com.aix.city.comm.AIxNetworkManager;
+import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxLoginModule;
 

@@ -1,52 +1,50 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.aix.city.comm.CityEventRequest;
+import com.aix.city.comm.TagEventRequest;
+import com.aix.city.core.ListingSource;
+import com.aix.city.core.ListingSourceType;
+import com.aix.city.core.PostListing;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class City implements ListingSource {
+public class Tag implements ListingSource {
 
-    private long id;
+    private int id;
     private String name;
 
     //no-argument constructor for JSON
-    private City(){}
+    private Tag(){}
 
     //Parcelable constructor
-    public City(Parcel in){
-        this.id = in.readLong();
+    public Tag(Parcel in){
+        this.id = in.readInt();
         this.name = in.readString();
     }
 
-    public City(long id, String name) {
-        this.name = name;
+    public Tag(int id, String name) {
         this.id = id;
+        if(name == null) this.name = "";
+        else this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
-    }
-
-    @JsonIgnore
-    public CityData getData() {
-        return AIxDataManager.getInstance().getCityData(this);
     }
 
     @Override
     public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
-        return new CityEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
+        return new TagEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override
@@ -61,23 +59,26 @@ public class City implements ListingSource {
 
     @Override
     public ListingSourceType getType() {
-        return ListingSourceType.CITY;
+        return ListingSourceType.TAG;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
-        City city = (City) o;
+        Tag tag = (Tag) o;
 
-        return id == city.id;
+        return name.equals(tag.name);
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override
@@ -87,21 +88,21 @@ public class City implements ListingSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeInt(id);
         dest.writeString(name);
     }
 
-    public static final Parcelable.Creator<City> CREATOR =
-            new Parcelable.Creator<City>(){
+    public static final Parcelable.Creator<Tag> CREATOR =
+            new Parcelable.Creator<Tag>(){
 
                 @Override
-                public City createFromParcel(Parcel source) {
-                    return new City(source);
+                public Tag createFromParcel(Parcel source) {
+                    return new Tag(source);
                 }
 
                 @Override
-                public City[] newArray(int size) {
-                    return new City[size];
+                public Tag[] newArray(int size) {
+                    return new Tag[size];
                 }
             };
 }

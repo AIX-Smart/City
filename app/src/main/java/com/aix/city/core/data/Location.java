@@ -1,9 +1,13 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.aix.city.comm.LocationEventRequest;
+import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.EditableEventListing;
+import com.aix.city.core.ListingSource;
+import com.aix.city.core.ListingSourceType;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -14,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class Location implements ListingSource {
 
-    private long id;
+    private int id;
     private String name;
 
     //no-argument constructor for JSON
@@ -22,16 +26,16 @@ public class Location implements ListingSource {
 
     //Parcelable constructor
     public Location(Parcel in){
-        this.id = in.readLong();
+        this.id = in.readInt();
         this.name = in.readString();
     }
 
-    public Location(long id, String name) {
+    public Location(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -88,7 +92,7 @@ public class Location implements ListingSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeInt(id);
         dest.writeString(name);
     }
 

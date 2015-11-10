@@ -1,5 +1,9 @@
 package com.aix.city.core;
 
+import com.aix.city.core.data.Comment;
+import com.aix.city.core.data.Event;
+import com.aix.city.core.data.User;
+
 /**
  * Created by Thomas on 14.10.2015.
  */
@@ -26,7 +30,7 @@ public class EditableCommentListing extends PostListing {
     }
 
     public Comment createComment(String message) {
-        long ID = 1; //TODO: getId from server
+        int ID = 1; //TODO: getId from server
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
         Comment comment = new Comment(ID, message, now, 0, user.getId(), false, event.getId());

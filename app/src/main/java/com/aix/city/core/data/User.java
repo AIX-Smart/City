@@ -1,5 +1,6 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
+import com.aix.city.core.AIxDataManager;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -7,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class User {
 
-    private long id;
+    private int id;
 
     //no-argument constructor for JSON
     private User(){}
 
-    public User(long id) {
+    public User(int id) {
         this.id = id;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

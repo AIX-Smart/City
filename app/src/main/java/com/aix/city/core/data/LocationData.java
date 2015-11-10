@@ -1,4 +1,4 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
 import java.util.Set;
 

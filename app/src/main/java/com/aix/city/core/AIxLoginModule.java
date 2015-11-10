@@ -3,8 +3,8 @@ package com.aix.city.core;
 import android.content.Context;
 import android.provider.Settings;
 
-import com.aix.city.comm.AIxNetworkManager;
 import com.aix.city.comm.LoginRequest;
+import com.aix.city.core.data.User;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,12 +23,14 @@ public class AIxLoginModule {
     private AIxLoginModule(Context context) {
         this.context = context;
     }
+
     public static synchronized void initInstance(Context context){
         if(instance == null){
             instance = new AIxLoginModule(context);
             instance.getLoggedInUser();
         }
     }
+
     public static AIxLoginModule getInstance() {
         return instance;
     }
@@ -63,24 +65,6 @@ public class AIxLoginModule {
         Request<User> request = new LoginRequest(listener, errorListener, deviceId);
 
         //add login request to request queue
-        AIxNetworkManager.getInstance().addRequest(request);
-    }
-
-    public void test(){
-        Response.Listener listener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                loggedInUser = new User((long) Integer.parseInt(response));
-                //login confirmation
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //login failure
-            }
-        };
-        Request<String> request = new StringRequest("http://178.254.32.8:8080/service/city", listener, errorListener);
         AIxNetworkManager.getInstance().addRequest(request);
     }
 }

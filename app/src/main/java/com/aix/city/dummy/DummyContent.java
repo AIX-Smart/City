@@ -1,11 +1,9 @@
 package com.aix.city.dummy;
 
-import com.aix.city.comm.AIxNetworkManager;
-import com.aix.city.comm.LocationEventRequest;
-import com.aix.city.core.City;
+import com.aix.city.core.data.City;
 import com.aix.city.core.EditableEventListing;
-import com.aix.city.core.Location;
-import com.aix.city.core.Tag;
+import com.aix.city.core.data.Location;
+import com.aix.city.core.data.Tag;
 
 import java.util.ArrayList;
 import java.util.HashMap;

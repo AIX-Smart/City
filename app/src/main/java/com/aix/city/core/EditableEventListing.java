@@ -1,5 +1,9 @@
 package com.aix.city.core;
 
+import com.aix.city.core.data.Event;
+import com.aix.city.core.data.Location;
+import com.aix.city.core.data.User;
+
 /**
  * Created by Thomas on 14.10.2015.
  */
@@ -27,7 +31,7 @@ public class EditableEventListing extends PostListing {
 
 
     public Event createEvent(String message) {
-        long ID = 0; //TODO: getId from server
+        int ID = 0; //TODO: getId from server
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
         Event event = new Event(ID, message, now, 0, user.getId(), false, location, 0);

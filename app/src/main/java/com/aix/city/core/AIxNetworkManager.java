@@ -1,7 +1,9 @@
-package com.aix.city.comm;
+package com.aix.city.core;
 
 import android.content.Context;
 
+import com.aix.city.comm.OkHttpStack;
+import com.aix.city.comm.URLSegments;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -30,12 +32,14 @@ public class AIxNetworkManager {
     private AIxNetworkManager(Context context) {
         this.context = context;
     }
+
     public static synchronized void initInstance(Context context){
         if(instance == null){
             instance = new AIxNetworkManager(context);
             instance.getRequestQueue().start();
         }
     }
+
     public static AIxNetworkManager getInstance() {
         return instance;
     }
@@ -49,18 +53,6 @@ public class AIxNetworkManager {
         }
 
         return requestQueue;
-    }
-
-    public String getSCHEME() {
-        return SCHEME;
-    }
-
-    public String getHOST() {
-        return HOST;
-    }
-
-    public int getPORT() {
-        return PORT;
     }
 
     public Context getContext() {

@@ -1,6 +1,6 @@
 package com.aix.city.core;
 
-import com.aix.city.comm.AIxNetworkManager;
+import com.aix.city.core.data.Post;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -86,7 +86,6 @@ public class PostListing extends Observable {
 
         Request<Post> request = listingSource.getRequest(listener, errorListener, false, postNum, lastPost);
         AIxNetworkManager.getInstance().addRequest(request);
-        AIxNetworkManager.getInstance().getRequestQueue().start();
     }
 
     public void loadMorePosts() {

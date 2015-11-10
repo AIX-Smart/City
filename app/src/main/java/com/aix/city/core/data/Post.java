@@ -1,4 +1,4 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Post{
 
-    private long id;
+    private int id;
     private String message;
     private long creationTime;
     private int likeCount;
-    private long authorId;
+    private int authorId;
     private boolean liked; //current user has already liked this post
     private transient boolean deleted;
 
@@ -22,7 +22,7 @@ public abstract class Post{
         deleted = false;
     }
 
-    public Post(long id, String message, long creationTime, int likeCount, long authorId, boolean liked) {
+    public Post(int id, String message, long creationTime, int likeCount, int authorId, boolean liked) {
         this.id = id;
         this.message = message;
         this.creationTime = creationTime;
@@ -44,11 +44,11 @@ public abstract class Post{
         return likeCount;
     }
 
-    public long getAuthorId() {
+    public int getAuthorId() {
         return authorId;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

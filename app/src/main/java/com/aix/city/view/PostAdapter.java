@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.aix.city.R;
-import com.aix.city.core.Post;
+import com.aix.city.core.data.Post;
 
 import java.util.List;
 

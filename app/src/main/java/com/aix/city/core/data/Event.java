@@ -1,9 +1,12 @@
-package com.aix.city.core;
+package com.aix.city.core.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.aix.city.comm.EventCommentRequest;
+import com.aix.city.core.EditableCommentListing;
+import com.aix.city.core.ListingSource;
+import com.aix.city.core.ListingSourceType;
 import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,7 +24,7 @@ public class Event extends Post implements ListingSource {
 
     //Parcelable constructor
     public Event(Parcel in){
-        super(in.readLong(), in.readString(), in.readLong(), in.readInt(), in.readLong(), (in.readInt() != 0));
+        super(in.readInt(), in.readString(), in.readLong(), in.readInt(), in.readInt(), (in.readInt() != 0));
         this.location = in.readParcelable(Location.class.getClassLoader());
         this.commentCount = in.readInt();
     }
@@ -29,7 +32,7 @@ public class Event extends Post implements ListingSource {
     /**
      * INTERNAL USE ONLY: use instead location.getPostListing().createEvent(String message)
      */
-    public Event(long postID, String message, long creationTime, int likeCount, long authorId, boolean likeStatus, Location location, int commentCount) {
+    public Event(int postID, String message, long creationTime, int likeCount, int authorId, boolean likeStatus, Location location, int commentCount) {
         super(postID, message, creationTime, likeCount, authorId, likeStatus);
         this.location = location;
         this.commentCount = commentCount;
@@ -86,11 +89,11 @@ public class Event extends Post implements ListingSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(getId());
+        dest.writeInt(getId());
         dest.writeString(getMessage());
         dest.writeLong(getCreationTime());
         dest.writeInt(getLikeCount());
-        dest.writeLong(getAuthorId());
+        dest.writeInt(getAuthorId());
         dest.writeInt(isLiked() ? 1 : 0);
         dest.writeParcelable(getLocation(), flags);
         dest.writeInt(getCommentCount());

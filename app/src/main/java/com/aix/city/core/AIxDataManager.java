@@ -2,6 +2,14 @@ package com.aix.city.core;
 
 import android.content.Context;
 
+import com.aix.city.core.data.City;
+import com.aix.city.core.data.CityData;
+import com.aix.city.core.data.Location;
+import com.aix.city.core.data.LocationData;
+import com.aix.city.core.data.Post;
+import com.aix.city.core.data.Tag;
+import com.aix.city.core.data.User;
+import com.aix.city.core.data.UserData;
 import com.aix.city.dummy.DummyContent;
 
 import java.util.ArrayList;
@@ -30,6 +38,7 @@ public class AIxDataManager {
     private AIxDataManager(Context context) {
         this.context = context;
     }
+
     public static synchronized void initInstance(Context context){
         if(instance == null){
             instance = new AIxDataManager(context);
@@ -39,6 +48,7 @@ public class AIxDataManager {
             instance.currentCity = DummyContent.AACHEN;
         }
     }
+
     public static AIxDataManager getInstance() {
         return instance;
     }
@@ -68,7 +78,7 @@ public class AIxDataManager {
         return data;
     }
 
-    public UserData createUserData(User user, Set<Location> favorites, Set<Location> ownBusinesses, Set<Long> likedPosts, List<Post> writtenPosts) {
+    public UserData createUserData(User user, Set<Location> favorites, Set<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
         UserData data = new UserData(user, favorites, ownBusinesses, likedPosts, writtenPosts);
         storedUserData.put(user, data);
         return data;
@@ -98,7 +108,7 @@ public class AIxDataManager {
         UserData data = storedUserData.get(user);
         if(data == null){
             //TODO: load from database instead
-            data = createUserData(user, new HashSet<Location>(), new HashSet<Location>(), new HashSet<Long>(), new ArrayList<Post>());
+            data = createUserData(user, new HashSet<Location>(), new HashSet<Location>(), new HashSet<Integer>(), new ArrayList<Post>());
         }
         return data;
     }

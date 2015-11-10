@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aix.city.core.Location;
+import com.aix.city.core.data.Location;
 import com.aix.city.dummy.DummyContent;
 
 /**
