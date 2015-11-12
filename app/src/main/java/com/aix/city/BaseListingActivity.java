@@ -36,7 +36,8 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         Intent intent = getIntent();
         listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
         if(listingSource == null){
-            listingSource = AIxDataManager.getInstance().getCurrentCity();
+            //TODO: kommentar entfernen
+            /*listingSource = AIxDataManager.getInstance().getCurrentCity();*/
         }
 
 
@@ -60,7 +61,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         // and add the transaction to the back stack if needed
         transaction.replace(R.id.fragment_container_top, listingSourceFragment);
         transaction.replace(R.id.fragment_container_bottom, postListingFragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
 
         // Commit the transaction
         transaction.commit();
@@ -68,18 +69,21 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     }
 
     public Fragment createListingSourceFragment(){
-        switch(listingSource.getType()){
+        if(listingSource == null) return CityFragment.newInstance((City) listingSource);
+
+        switch (listingSource.getType()) {
             case CITY:
-                return CityFragment.newInstance((City)listingSource);
+                return CityFragment.newInstance((City) listingSource);
             case LOCATION:
-                return LocationProfileFragment.newInstance((Location)listingSource);
+                return LocationProfileFragment.newInstance((Location) listingSource);
             case TAG:
-                return LocationProfileFragment.newInstance((Location)listingSource);
+                return LocationProfileFragment.newInstance((Location) listingSource);
             case EVENT:
-                return LocationProfileFragment.newInstance((Location)listingSource);
+                return LocationProfileFragment.newInstance((Location) listingSource);
             default:
-                return LocationProfileFragment.newInstance((Location)listingSource);
+                return LocationProfileFragment.newInstance((Location) listingSource);
         }
+
     }
 
     public Fragment getListingSourceFragment() {

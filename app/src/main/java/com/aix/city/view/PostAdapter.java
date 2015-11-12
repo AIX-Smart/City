@@ -1,14 +1,19 @@
 package com.aix.city.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.aix.city.BaseListingActivity;
+import com.aix.city.PostListingFragment;
 import com.aix.city.R;
+import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 
 import java.util.List;
@@ -30,17 +35,31 @@ public class PostAdapter extends ArrayAdapter<Post> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.post, parent, false);
+        PostView postView = (PostView) inflater.inflate(R.layout.post, parent, false);
+        final Post post = posts.get(position);
 
-        TextView message = (TextView) rowView.findViewById(R.id.tv1);
-        TextView locationName = (TextView) rowView.findViewById(R.id.tv2);
-        Button button = (Button) rowView.findViewById(R.id.button);
+        TextView message = (TextView) postView.findViewById(R.id.tv1);
+        TextView locationName = (TextView) postView.findViewById(R.id.tv2);
+        Button button = (Button) postView.findViewById(R.id.button);
 
-        message.setText(posts.get(position).getMessage());
-        locationName.setText(posts.get(position).getSourceName());
+        message.setText(post.getMessage());
+        locationName.setText(post.getSourceName());
+        /*locationName.setOnClickListener(postView);*/
 
-        return rowView;
+        locationName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(post instanceof Event){
+                    Intent intent = new Intent(getContext(), BaseListingActivity.class);
+                    intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, ((Event) post).getLocation());
+                    getContext().startActivity(intent);
+                }
+            }
+        });
+
+        return postView;
     }
+
 }
 
 
