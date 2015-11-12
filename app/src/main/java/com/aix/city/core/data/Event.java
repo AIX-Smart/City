@@ -90,7 +90,7 @@ public class Event extends Post implements ListingSource {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(getId());
-        dest.writeString(getMessage());
+        dest.writeString(getContent());
         dest.writeLong(getCreationTime());
         dest.writeInt(getLikeCount());
         dest.writeInt(getAuthorId());

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Post{
 
     private int id;
-    private String message;
+    private String content;
     private long creationTime;
     private int likeCount;
     private int authorId;
@@ -22,9 +22,9 @@ public abstract class Post{
         deleted = false;
     }
 
-    public Post(int id, String message, long creationTime, int likeCount, int authorId, boolean liked) {
+    public Post(int id, String content, long creationTime, int likeCount, int authorId, boolean liked) {
         this.id = id;
-        this.message = message;
+        this.content = content;
         this.creationTime = creationTime;
         this.likeCount = likeCount;
         this.authorId = authorId;
@@ -32,8 +32,8 @@ public abstract class Post{
         this.deleted = false;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
     public long getCreationTime() {

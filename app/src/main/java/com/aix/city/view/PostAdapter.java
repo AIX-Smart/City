@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
-import com.aix.city.PostListingFragment;
 import com.aix.city.R;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
@@ -38,18 +36,17 @@ public class PostAdapter extends ArrayAdapter<Post> {
         PostView postView = (PostView) inflater.inflate(R.layout.post, parent, false);
         final Post post = posts.get(position);
 
-        TextView message = (TextView) postView.findViewById(R.id.tv1);
-        TextView locationName = (TextView) postView.findViewById(R.id.tv2);
-        Button button = (Button) postView.findViewById(R.id.button);
+        TextView contentView = (TextView) postView.findViewById(R.id.content);
+        TextView locationNameView = (TextView) postView.findViewById(R.id.locationName);
+        Button buttonView = (Button) postView.findViewById(R.id.button);
 
-        message.setText(post.getMessage());
-        locationName.setText(post.getSourceName());
-        /*locationName.setOnClickListener(postView);*/
+        contentView.setText(post.getContent());
+        locationNameView.setText(post.getSourceName());
 
-        locationName.setOnClickListener(new View.OnClickListener() {
+        locationNameView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(post instanceof Event){
+                if (post instanceof Event) {
                     Intent intent = new Intent(getContext(), BaseListingActivity.class);
                     intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, ((Event) post).getLocation());
                     getContext().startActivity(intent);

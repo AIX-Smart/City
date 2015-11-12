@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.aix.city.core.data.Location;
 import com.aix.city.dummy.DummyContent;
@@ -16,7 +17,8 @@ public class LocationProfileFragment extends Fragment {
 
     public final static String ARG_LOCATION = "location";
 
-    private Location location = DummyContent.GINBAR;
+    private Location location;
+    private TextView locationNameView;
 
     public static LocationProfileFragment newInstance(Location location) {
         LocationProfileFragment fragment = new LocationProfileFragment();
@@ -32,7 +34,10 @@ public class LocationProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_location, container, false);
+        locationNameView = (TextView) view.findViewById(R.id.locationName);
+        locationNameView.setText(location.getName());
+        return view;
     }
 
     @Override
