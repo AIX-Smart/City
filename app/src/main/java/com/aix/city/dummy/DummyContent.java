@@ -30,7 +30,7 @@ public class DummyContent {
 
     public static EditableEventListing LISTING;
 
-    public static City AACHEN = new City(235, "Aachen");
+    public static City AACHEN = new City(1, "Aachen");
 
     public static Location GINBAR = new Location(75463, "GinBar");
 
