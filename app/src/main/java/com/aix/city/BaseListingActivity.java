@@ -36,7 +36,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         Intent intent = getIntent();
         listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
         if(listingSource == null){
-           /* listingSource = AIxDataManager.getInstance().getCurrentCity();*/
+           listingSource = AIxDataManager.getInstance().getCurrentCity();
         }
 
 

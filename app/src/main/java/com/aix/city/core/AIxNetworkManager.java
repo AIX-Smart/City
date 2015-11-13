@@ -23,7 +23,7 @@ public class AIxNetworkManager {
     private RequestQueue requestQueue;
 
     private final String SCHEME = "http";
-    private final String HOST = "www.citevent.de";
+    private final String HOST = "www.citevents.de";
     private final int PORT = 8080;
     private HttpUrl serviceUrl;
 

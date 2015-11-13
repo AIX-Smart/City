@@ -21,7 +21,7 @@ public class PostListing extends Observable {
     private boolean finished = false;
 
     /** Defines the default number of posts for a database GET-request */
-    private int postRequestNum = 20;
+    private int postRequestNum = 1;
 
     /**
      * INTERNAL USE ONLY: use instead listingSource.getPostListing()
@@ -38,10 +38,17 @@ public class PostListing extends Observable {
 
     /**
      * INTERNAL USE ONLY: use location.getPostListing().createEvent(...) or event.getPostListing().createComment(...) instead
-     * @param post
+     * @param posts
      */
+    public void addPosts(Post[] posts){
+        getPosts().addAll(Arrays.asList(posts));
+        setChanged();
+        notifyObservers();
+    }
+
     public void addPost(Post post){
-        posts.add(post);
+        getPosts().add(post);
+        setChanged();
         notifyObservers();
     }
 
@@ -51,6 +58,7 @@ public class PostListing extends Observable {
      */
     public void removePost(Post post){
         posts.remove(post);
+        setChanged();
         notifyObservers();
     }
 
@@ -72,8 +80,7 @@ public class PostListing extends Observable {
         Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
             @Override
             public void onResponse(Post[] response) {
-                getPosts().addAll(Arrays.asList(response));
-                notifyObservers();
+                addPosts(response);
             }
         };
 
