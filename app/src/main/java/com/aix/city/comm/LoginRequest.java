@@ -24,7 +24,7 @@ public class LoginRequest extends JacksonRequest<User>{
     private static String getURL(String deviceId){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.USER)
-                /*.addPathSegment(deviceId)*/;
+                .addPathSegment(deviceId);
         return urlBuilder.build().toString();
     }
 }

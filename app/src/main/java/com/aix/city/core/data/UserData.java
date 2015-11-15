@@ -1,8 +1,6 @@
 package com.aix.city.core.data;
 
-import com.aix.city.core.data.Location;
-import com.aix.city.core.data.Post;
-import com.aix.city.core.data.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 import java.util.Set;
@@ -13,10 +11,9 @@ import java.util.Set;
 public class UserData {
 
     private User user;
-    private Set<Location> favorites;
-    private Set<Location> ownBusinesses;
-    private Set<Integer> likedPosts;
-    private List<Post> writtenPosts;
+    private transient Set<Location> favorites;
+    private List<Location> ownLocations;
+    private int permission;
 
     //no-argument constructor for JSON
     private UserData(){}
@@ -24,31 +21,26 @@ public class UserData {
     /**
      * INTERNAL USE ONLY: use instead user.getData() or AIxDataManager.getInstance().createUserData(...)
      */
-    public UserData(User user, Set<Location> favorites, Set<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
+    public UserData(User user, Set<Location> favorites, List<Location> ownLocations) {
         this.user = user;
         this.favorites = favorites;
-        this.ownBusinesses = ownBusinesses;
-        this.likedPosts = likedPosts;
-        this.writtenPosts = writtenPosts;
+        this.ownLocations = ownLocations;
     }
 
     public User getUser() {
         return user;
     }
 
+    @JsonIgnore
     public Set<Location> getFavorites() {
         return favorites;
     }
 
-    public Set<Location> getOwnBusinesses() {
-        return ownBusinesses;
+    public List<Location> getOwnLocations() {
+        return ownLocations;
     }
 
-    public Set<Integer> getLikedPosts() {
-        return likedPosts;
-    }
-
-    public List<Post> getWrittenPosts() {
-        return writtenPosts;
+    public int getPermission() {
+        return permission;
     }
 }

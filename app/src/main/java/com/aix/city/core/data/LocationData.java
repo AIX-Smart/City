@@ -1,6 +1,6 @@
 package com.aix.city.core.data;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -8,11 +8,13 @@ import java.util.Set;
 public class LocationData {
 
     private Location location;
-    private Set<Tag> tags;
+    private List<Tag> tags;
     private String description;
-    private City city;
-    private String address;
-    private android.location.Location gps;
+    private int cityId;
+    private String street;
+    private String houseNumber;
+    private String phoneNumber;
+    private String gps;
     private int likeCount;
     private boolean liked;
     //TODO: öffnungszeiten
@@ -24,26 +26,29 @@ public class LocationData {
     /**
      * INTERNAL USE ONLY: use instead location.getData() or AIxDataManager.getInstance().createLocationData(...)
      */
-    public LocationData(Location location, Set<Tag> tags, String description, City city, String address, int likeCount, boolean liked) {
+    public LocationData(Location location, List<Tag> tags, String description, int cityId, String street, String houseNumber, int likeCount, boolean liked, String gps) {
         this.location = location;
         this.tags = tags;
         this.description = description;
-        this.city = city;
-        this.address = address;
+        this.cityId = cityId;
+        this.street = street;
+        this.houseNumber = houseNumber;
         this.likeCount = likeCount;
         this.liked = liked;
+        this.gps = gps;
     }
+
 
     public Location getLocation() {
         return location;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public City getCity() {
-        return city;
+    public int getCityId() {
+        return cityId;
     }
 
     public String getName(){
@@ -54,11 +59,23 @@ public class LocationData {
         return description;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreet() {
+        return street;
     }
 
-    public android.location.Location getGps() {
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getGps() {
         return gps;
     }
 

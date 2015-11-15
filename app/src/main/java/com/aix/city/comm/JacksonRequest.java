@@ -37,7 +37,7 @@ public class JacksonRequest<T> extends JsonRequest<T> {
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data/*, HttpHeaderParser.parseCharset(response.headers)*/);
+            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             Cache.Entry entry;
             if(ignoreCache) entry = HttpHeaderParser.parseCacheHeaders(response); //TODO:HttpHeaderParser.parseIgnoreCacheHeaders(response);
             else entry = HttpHeaderParser.parseCacheHeaders(response);

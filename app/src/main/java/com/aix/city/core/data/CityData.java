@@ -1,5 +1,6 @@
 package com.aix.city.core.data;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Set;
 public class CityData {
 
     private City city;
-    private Set<Location> locations;
+    private List<Location> locations;
 
     //no-argument constructor for JSON
     private CityData(){}
@@ -16,7 +17,7 @@ public class CityData {
     /**
      * INTERNAL USE ONLY: use instead city.getData() or AIxDataManager.getInstance().createCityData(...)
      */
-    public CityData(City city, Set<Location> locations) {
+    public CityData(City city, List<Location> locations) {
         this.city = city;
         this.locations = locations;
     }
@@ -25,7 +26,7 @@ public class CityData {
         return city;
     }
 
-    public Set<Location> getLocations() {
+    public List<Location> getLocations() {
         return locations;
     }
 }
