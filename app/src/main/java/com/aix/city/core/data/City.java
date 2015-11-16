@@ -45,7 +45,7 @@ public class City implements ListingSource {
 
     @JsonIgnore
     public CityData getData() {
-        return AIxDataManager.getInstance().getCityData(this);
+        return AIxDataManager.getInstance().getCityData(id);
     }
 
     @Override

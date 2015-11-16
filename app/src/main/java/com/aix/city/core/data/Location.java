@@ -45,7 +45,7 @@ public class Location implements ListingSource {
 
     @JsonIgnore
     public LocationData getData() {
-        return AIxDataManager.getInstance().getLocationData(this);
+        return AIxDataManager.getInstance().getLocationData(id);
     }
 
 

@@ -15,13 +15,13 @@ import java.util.Observable;
  */
 public class PostListing extends Observable {
 
+    /** Defines the default number of posts for a database GET-request */
+    public final int postRequestNum = 1;
+
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
     private boolean finished = false;
-
-    /** Defines the default number of posts for a database GET-request */
-    private int postRequestNum = 1;
 
     /**
      * INTERNAL USE ONLY: use instead listingSource.getPostListing()
@@ -53,7 +53,7 @@ public class PostListing extends Observable {
     }
 
     /**
-     * INTERNAL USE ONLY: use location.getPostListing().deleteEvent(...) or event.getPostListing().deleteComment(...) instead
+     * INTERNAL USE ONLY: use deletePost(Post post) instead
      * @param post
      */
     public void removePost(Post post){
@@ -70,7 +70,11 @@ public class PostListing extends Observable {
         return posts;
     }
 
-    public void loadMorePosts(int postNum) {
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void loadMorePosts(final int postNum) {
 
         Post lastPost = null;
         if(!posts.isEmpty()){
@@ -80,6 +84,9 @@ public class PostListing extends Observable {
         Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
             @Override
             public void onResponse(Post[] response) {
+                if(response.length < postNum){
+                    finished = true;
+                }
                 addPosts(response);
             }
         };
@@ -102,5 +109,23 @@ public class PostListing extends Observable {
     public void refresh() {
         //TODO:
         notifyObservers();
+    }
+
+    /**
+     *  creates a new Post in this listing and sends it to the server.
+        Does nothing if posts cannot be created in this context.
+     * @param content content/message of the created Post
+     * @return returns the created Post or null
+     */
+    public Post createPost(String content){
+        return null;
+    }
+
+    public boolean deletePost(Post post){
+        return false;
+    }
+
+    public boolean isEditable(){
+        return false;
     }
 }

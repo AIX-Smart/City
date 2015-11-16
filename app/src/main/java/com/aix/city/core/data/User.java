@@ -23,7 +23,7 @@ public class User {
 
     @JsonIgnore
     public UserData getData() {
-        return AIxDataManager.getInstance().getUserData(this);
+        return AIxDataManager.getInstance().getUserData(id);
     }
 
     @Override

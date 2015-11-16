@@ -2,12 +2,13 @@ package com.aix.city.core;
 
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
+import com.aix.city.core.data.Post;
 import com.aix.city.core.data.User;
 
 /**
  * Created by Thomas on 14.10.2015.
  */
-public class EditableCommentListing extends PostListing {
+public class EditableCommentListing extends EditableListing {
 
     private Event event;
 
@@ -20,8 +21,6 @@ public class EditableCommentListing extends PostListing {
         super(listingSource);
         if (listingSource instanceof Event) {
             event = (Event) getListingSource();
-        } else {
-            //TODO: neuer Exceptiontyp und fehlermeldung erstellen. ExceptionHandler notwendig.
         }
     }
 
@@ -40,11 +39,30 @@ public class EditableCommentListing extends PostListing {
         return comment;
     }
 
-    public void deleteComment(Comment comment) {
+    public boolean deleteComment(Comment comment) {
         if (comment.getEventId() == event.getId()) {
             this.removePost(comment);
             comment.rawDelete();
             //TODO: commit deletion to database
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    @Override
+    public Post createPost(String content) {
+        return createComment(content);
+    }
+
+    @Override
+    public boolean deletePost(Post post) {
+        if(post instanceof Comment){
+            return deleteComment((Comment) post);
+        }
+        else{
+            return false;
         }
     }
 }

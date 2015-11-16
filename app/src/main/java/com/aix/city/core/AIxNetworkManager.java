@@ -22,9 +22,6 @@ public class AIxNetworkManager {
     private final Context context;
     private RequestQueue requestQueue;
 
-    private final String SCHEME = "http";
-    private final String HOST = "www.citevents.de";
-    private final int PORT = 8080;
     private HttpUrl serviceUrl;
 
 
@@ -62,9 +59,9 @@ public class AIxNetworkManager {
     public HttpUrl getServiceUrl(){
         if(serviceUrl == null){
             serviceUrl = new HttpUrl.Builder()
-                    .scheme(SCHEME)
-                    .host(HOST)
-                    .port(PORT)
+                    .scheme(URLSegments.SCHEME)
+                    .host(URLSegments.HOST)
+                    .port(URLSegments.PORT)
                     .addPathSegment(URLSegments.SERVICE)
                     .build();
         }

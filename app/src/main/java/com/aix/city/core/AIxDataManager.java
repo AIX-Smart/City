@@ -29,9 +29,9 @@ public class AIxDataManager {
     private City currentCity;
     private List<Tag> allTags = new ArrayList<Tag>();
     private Set<City> allCities = new HashSet<>();
-    private Map<Location, LocationData> storedLocationData = new HashMap<Location, LocationData>();
-    private Map<User, UserData> storedUserData = new HashMap<User, UserData>();
-    private Map<City, CityData> storedCityData = new HashMap<City, CityData>();
+    private Map<Integer, LocationData> storedLocationData = new HashMap<Integer, LocationData>();
+    private Map<Integer, UserData> storedUserData = new HashMap<Integer, UserData>();
+    private Map<Integer, CityData> storedCityData = new HashMap<Integer, CityData>();
 
 
     //Singleton methods and constructor
@@ -66,49 +66,49 @@ public class AIxDataManager {
         return currentCity;
     }
 
-    public LocationData createLocationData(Location location, List<Tag> tags, String description, City city, String street, String houseNumber, int likeCount, boolean liked, String gps) {
-        LocationData data = new LocationData(location, tags, description, city.getId(), street, houseNumber, likeCount, liked, gps);
-        storedLocationData.put(location, data);
+    public LocationData createLocationData(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, int likeCount, boolean liked, String gps) {
+        LocationData data = new LocationData(new Location(locationId, name), tags, description, city.getId(), street, houseNumber, likeCount, liked, gps);
+        storedLocationData.put(locationId, data);
         return data;
     }
 
-    public CityData createCityData(City city, List<Location> locations) {
-        CityData data = new CityData(city, locations);
-        storedCityData.put(city, data);
+    public CityData createCityData(int cityId, String name, List<Location> locations) {
+        CityData data = new CityData(new City(cityId, name), locations);
+        storedCityData.put(cityId, data);
         return data;
     }
 
-    public UserData createUserData(User user, Set<Location> favorites, List<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
-        UserData data = new UserData(user, favorites, ownBusinesses);
-        storedUserData.put(user, data);
+    public UserData createUserData(int userId, Set<Location> favorites, List<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
+        UserData data = new UserData(new User(userId), favorites, ownBusinesses);
+        storedUserData.put(userId, data);
         return data;
     }
 
-    public LocationData getLocationData(Location location) {
-        LocationData data = storedLocationData.get(location);
+    public LocationData getLocationData(int locationId) {
+        LocationData data = storedLocationData.get(locationId);
         if(data == null){
             //TODO: load from database instead
-            data = createLocationData(location, allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", 0, false, "gps");
+            data = createLocationData(locationId, "GinBar", allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", 0, false, "gps");
         }
         return data;
     }
 
-    public CityData getCityData(City city) {
-        CityData data = storedCityData.get(city);
+    public CityData getCityData(int cityId) {
+        CityData data = storedCityData.get(cityId);
         if(data == null){
             //TODO: load from database instead
             List<Location> locations = new ArrayList<Location>();
             locations.add(DummyContent.GINBAR);
-            data = createCityData(city, locations);
+            data = createCityData(cityId, "Aachen", locations);
         }
         return data;
     }
 
-    public UserData getUserData(User user) {
-        UserData data = storedUserData.get(user);
+    public UserData getUserData(int userId) {
+        UserData data = storedUserData.get(userId);
         if(data == null){
             //TODO: load from database instead
-            data = createUserData(user, new HashSet<Location>(), new ArrayList<Location>(), new HashSet<Integer>(), new ArrayList<Post>());
+            data = createUserData(userId, new HashSet<Location>(), new ArrayList<Location>(), new HashSet<Integer>(), new ArrayList<Post>());
         }
         return data;
     }
