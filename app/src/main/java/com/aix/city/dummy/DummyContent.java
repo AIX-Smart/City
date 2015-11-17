@@ -49,7 +49,7 @@ public class DummyContent {
         addItem(new DummyItem("2", "Item 2"));
         addItem(new DummyItem("3", "Item 3"));
 
-        EditableEventListing listing = GINBAR.getPostListing();
+        EditableEventListing listing = GINBAR.createPostListing();
         listing.createEvent("Post 1: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib"); // 140 character
         listing.createEvent("Post 2: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.");
         listing.createEvent("Post 3: Lorem ipsum dolor sit amet, ");

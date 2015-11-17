@@ -12,7 +12,7 @@ public class Comment extends Post {
     private Comment(){}
 
     /**
-     * INTERNAL USE ONLY: use instead event.getPostListing().createComment(String message)
+     * INTERNAL USE ONLY: use instead event.createPostListing().createComment(String message)
      */
     public Comment(int postID, String message, long creationTime, int likeCount, int authorId, boolean likeStatus, int eventId) {
         super(postID, message, creationTime, likeCount, authorId, likeStatus);

@@ -24,7 +24,7 @@ public class LocationData {
     private LocationData(){}
 
     /**
-     * INTERNAL USE ONLY: use instead location.getData() or AIxDataManager.getInstance().createLocationData(...)
+     * INTERNAL USE ONLY: use instead location.getData() or AIxDataManager.getInstance().createLocation(...)
      */
     public LocationData(Location location, List<Tag> tags, String description, int cityId, String street, String houseNumber, int likeCount, boolean liked, String gps) {
         this.location = location;

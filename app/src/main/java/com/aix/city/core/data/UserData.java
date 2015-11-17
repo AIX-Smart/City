@@ -19,7 +19,7 @@ public class UserData {
     private UserData(){}
 
     /**
-     * INTERNAL USE ONLY: use instead user.getData() or AIxDataManager.getInstance().createUserData(...)
+     * INTERNAL USE ONLY: use instead user.getData() or AIxDataManager.getInstance().createUser(...)
      */
     public UserData(User user, Set<Location> favorites, List<Location> ownLocations) {
         this.user = user;

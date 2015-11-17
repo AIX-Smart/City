@@ -7,7 +7,6 @@ import com.aix.city.comm.TagEventRequest;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
-import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
 
@@ -43,17 +42,12 @@ public class Tag implements ListingSource {
     }
 
     @Override
-    public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public Request createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new TagEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override
-    public Predicate<Post> getFilter() {
-        return null;
-    }
-
-    @Override
-    public PostListing getPostListing() {
+    public PostListing createPostListing() {
         return new PostListing(this);
     }
 

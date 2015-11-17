@@ -28,7 +28,7 @@ public class AIxDataManager {
     private final Context context;
     private City currentCity;
     private List<Tag> allTags = new ArrayList<Tag>();
-    private Set<City> allCities = new HashSet<>();
+    private List<City> allCities = new ArrayList<City>();
     private Map<Integer, LocationData> storedLocationData = new HashMap<Integer, LocationData>();
     private Map<Integer, UserData> storedUserData = new HashMap<Integer, UserData>();
     private Map<Integer, CityData> storedCityData = new HashMap<Integer, CityData>();
@@ -54,7 +54,7 @@ public class AIxDataManager {
     }
     //
 
-    public Set<City> getCities() {
+    public List<City> getCities() {
         return allCities;
     }
 
@@ -66,19 +66,19 @@ public class AIxDataManager {
         return currentCity;
     }
 
-    public LocationData createLocationData(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, int likeCount, boolean liked, String gps) {
+    public LocationData createLocation(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, int likeCount, boolean liked, String gps) {
         LocationData data = new LocationData(new Location(locationId, name), tags, description, city.getId(), street, houseNumber, likeCount, liked, gps);
         storedLocationData.put(locationId, data);
         return data;
     }
 
-    public CityData createCityData(int cityId, String name, List<Location> locations) {
+    public CityData createCity(int cityId, String name, List<Location> locations) {
         CityData data = new CityData(new City(cityId, name), locations);
         storedCityData.put(cityId, data);
         return data;
     }
 
-    public UserData createUserData(int userId, Set<Location> favorites, List<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
+    public UserData createUser(int userId, Set<Location> favorites, List<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
         UserData data = new UserData(new User(userId), favorites, ownBusinesses);
         storedUserData.put(userId, data);
         return data;
@@ -88,7 +88,7 @@ public class AIxDataManager {
         LocationData data = storedLocationData.get(locationId);
         if(data == null){
             //TODO: load from database instead
-            data = createLocationData(locationId, "GinBar", allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", 0, false, "gps");
+            data = createLocation(locationId, "GinBar", allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", 0, false, "gps");
         }
         return data;
     }
@@ -99,7 +99,7 @@ public class AIxDataManager {
             //TODO: load from database instead
             List<Location> locations = new ArrayList<Location>();
             locations.add(DummyContent.GINBAR);
-            data = createCityData(cityId, "Aachen", locations);
+            data = createCity(cityId, "Aachen", locations);
         }
         return data;
     }
@@ -108,7 +108,7 @@ public class AIxDataManager {
         UserData data = storedUserData.get(userId);
         if(data == null){
             //TODO: load from database instead
-            data = createUserData(userId, new HashSet<Location>(), new ArrayList<Location>(), new HashSet<Integer>(), new ArrayList<Post>());
+            data = createUser(userId, new HashSet<Location>(), new ArrayList<Location>(), new HashSet<Integer>(), new ArrayList<Post>());
         }
         return data;
     }

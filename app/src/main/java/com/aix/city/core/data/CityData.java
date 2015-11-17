@@ -15,7 +15,7 @@ public class CityData {
     private CityData(){}
 
     /**
-     * INTERNAL USE ONLY: use instead city.getData() or AIxDataManager.getInstance().createCityData(...)
+     * INTERNAL USE ONLY: use instead city.getData() or AIxDataManager.getInstance().createCity(...)
      */
     public CityData(City city, List<Location> locations) {
         this.city = city;

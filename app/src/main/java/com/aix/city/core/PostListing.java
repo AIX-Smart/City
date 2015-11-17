@@ -24,7 +24,7 @@ public class PostListing extends Observable {
     private boolean finished = false;
 
     /**
-     * INTERNAL USE ONLY: use instead listingSource.getPostListing()
+     * INTERNAL USE ONLY: use instead listingSource.createPostListing()
      *
      * @param listingSource
      */
@@ -37,7 +37,7 @@ public class PostListing extends Observable {
     }
 
     /**
-     * INTERNAL USE ONLY: use location.getPostListing().createEvent(...) or event.getPostListing().createComment(...) instead
+     * INTERNAL USE ONLY: use location.createPostListing().createEvent(...) or event.createPostListing().createComment(...) instead
      * @param posts
      */
     public void addPosts(Post[] posts){
@@ -98,7 +98,7 @@ public class PostListing extends Observable {
             }
         };
 
-        Request<Post> request = listingSource.getRequest(listener, errorListener, false, postNum, lastPost);
+        Request<Post> request = listingSource.createRequest(listener, errorListener, false, postNum, lastPost);
         AIxNetworkManager.getInstance().addRequest(request);
     }
 

@@ -9,7 +9,7 @@ import com.aix.city.core.AIxLoginModule;
 /**
  * Created by Thomas on 02.11.2015.
  */
-public class CityApplication extends Application {
+public class AIxApplication extends Application {
 
     @Override
     public void onCreate() {

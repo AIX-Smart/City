@@ -14,13 +14,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public interface ListingSource extends Parcelable {
 
     @JsonIgnore
-    Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost);
+    Request createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost);
 
     @JsonIgnore
-    Predicate<Post> getFilter();
-
-    @JsonIgnore
-    PostListing getPostListing();
+    PostListing createPostListing();
 
     @JsonIgnore
     ListingSourceType getType();

@@ -7,7 +7,6 @@ import com.aix.city.comm.EventCommentRequest;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
-import com.android.internal.util.Predicate;
 import com.android.volley.Request;
 import com.android.volley.Response;
 
@@ -30,7 +29,7 @@ public class Event extends Post implements ListingSource {
     }
 
     /**
-     * INTERNAL USE ONLY: use instead location.getPostListing().createEvent(String message)
+     * INTERNAL USE ONLY: use instead location.createPostListing().createEvent(String message)
      */
     public Event(int postID, String message, long creationTime, int likeCount, int authorId, boolean likeStatus, Location location, int commentCount) {
         super(postID, message, creationTime, likeCount, authorId, likeStatus);
@@ -63,17 +62,12 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public Request getRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public Request createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new EventCommentRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
     @Override
-    public Predicate<Post> getFilter() {
-        return null;
-    }
-
-    @Override
-    public EditableCommentListing getPostListing() {
+    public EditableCommentListing createPostListing() {
         return new EditableCommentListing(this);
     }
 

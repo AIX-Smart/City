@@ -29,18 +29,13 @@ import java.util.Observer;
  * interface.
  */
 public class PostListingFragment extends Fragment implements AbsListView.OnItemClickListener, Observer {
-
-    /*// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";*/
+    
     public final static String ARG_LISTING_SOURCE = "listingSource";
 
     /**
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
-    private PostListing mParamListing;
-    /*private String mParam1;
-    private String mParam2;*/
+    private PostListing postListing;
 
     private OnFragmentInteractionListener mListener;
 
@@ -78,20 +73,20 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
             if(obj != null && obj instanceof ListingSource){
-                mParamListing = ((ListingSource)obj).getPostListing();
+                postListing = ((ListingSource)obj).createPostListing();
             }
         }
 
         //create postview-adapter
-        if(mParamListing == null){
+        if(postListing == null){
             mAdapter = new PostAdapter(getActivity(), DummyContent.LISTING.getPosts());
         }
         else{
-            mAdapter = new PostAdapter(getActivity(), mParamListing.getPosts());
-            mParamListing.addObserver(this);
+            mAdapter = new PostAdapter(getActivity(), postListing.getPosts());
+            postListing.addObserver(this);
 
             //load posts
-            mParamListing.loadMorePosts();
+            postListing.loadMorePosts();
         }
     }
 
