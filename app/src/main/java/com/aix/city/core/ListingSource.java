@@ -2,9 +2,8 @@ package com.aix.city.core;
 
 import android.os.Parcelable;
 
+import com.aix.city.comm.AIxJacksonRequest;
 import com.aix.city.core.data.Post;
-import com.android.internal.util.Predicate;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public interface ListingSource extends Parcelable {
 
     @JsonIgnore
-    Request createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost);
+    AIxJacksonRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost);
 
     @JsonIgnore
     PostListing createPostListing();

@@ -8,7 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 
-public class JacksonRequest<T> extends JsonRequest<T> {
+public class AIxJacksonRequest<T> extends JsonRequest<T> {
 
     private Class<T> responseType;
     private boolean ignoreCache;
@@ -27,7 +27,7 @@ public class JacksonRequest<T> extends JsonRequest<T> {
      * @param errorListener
      *            Error listener, or null to ignore errors.
      */
-    public JacksonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean ignoreCache)
+    public AIxJacksonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean ignoreCache)
     {
         super(method, url, (requestData == null) ? null : Mapper.string(requestData), listener, errorListener);
         this.responseType = responseType;

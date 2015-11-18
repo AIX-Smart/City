@@ -1,5 +1,6 @@
 package com.aix.city.dummy;
 
+import com.aix.city.core.PostListing;
 import com.aix.city.core.data.City;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.data.Location;
@@ -28,7 +29,8 @@ public class DummyContent {
      */
     public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    public static EditableEventListing LISTING;
+    public static EditableEventListing GINBAR_LISTING;
+    public static PostListing AACHEN_LISTING;
 
     public static City AACHEN = new City(1, "Aachen");
 
@@ -59,7 +61,11 @@ public class DummyContent {
         listing.createEvent("Post 7: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula ");
         listing.createEvent("Post 8: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib");
 
-        LISTING = listing;
+        PostListing listing2 = AACHEN.createPostListing();
+        listing2.getPosts().addAll(listing.getPosts());
+
+        GINBAR_LISTING = listing;
+        AACHEN_LISTING = listing2;
     }
 
     private static void addItem(DummyItem item) {

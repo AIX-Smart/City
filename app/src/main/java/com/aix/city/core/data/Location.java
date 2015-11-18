@@ -3,12 +3,12 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aix.city.comm.AIxJacksonRequest;
 import com.aix.city.comm.LocationEventRequest;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -54,7 +54,7 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public Request createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public AIxJacksonRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new LocationEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 

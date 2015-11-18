@@ -74,8 +74,7 @@ public class AIxNetworkManager {
      * @param request is the request to be added
      * @param tag is the tag identifying the request
      */
-    public void addRequest(Request<?> request, String tag)
-    {
+    public void addRequest(Request<?> request, String tag) {
         request.setTag(tag);
         addRequest(request);
     }
@@ -85,8 +84,7 @@ public class AIxNetworkManager {
      *
      * @param request is the request to add to the Volley queue
      */
-    public void addRequest(Request<?> request)
-    {
+    public void addRequest(Request<?> request) {
         getRequestQueue().add(request);
     }
 
@@ -95,11 +93,10 @@ public class AIxNetworkManager {
      *
      * @param tag associated with the Volley requests to be cancelled
      */
-    public void cancelAllRequests(String tag)
-    {
-        if (getRequestQueue() != null)
-        {
+    public void cancelAllRequests(String tag) {
+        if (getRequestQueue() != null) {
             getRequestQueue().cancelAll(tag);
         }
     }
+
 }

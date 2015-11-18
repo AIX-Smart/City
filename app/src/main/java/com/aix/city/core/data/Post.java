@@ -9,17 +9,19 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Post{
 
+    public static final int MAX_CONTENT_LENGTH = 140;
+
     private int id;
     private String content;
     private long creationTime;
     private int likeCount;
     private int authorId;
     private boolean liked; //current user has already liked this post
-    private transient boolean deleted;
+    private transient boolean deleted = false;
+    private transient boolean locallyStored = false;
 
     //no-argument constructor for JSON
     protected Post(){
-        deleted = false;
     }
 
     public Post(int id, String content, long creationTime, int likeCount, int authorId, boolean liked) {
@@ -29,7 +31,6 @@ public abstract class Post{
         this.likeCount = likeCount;
         this.authorId = authorId;
         this.liked = liked;
-        this.deleted = false;
     }
 
     public String getContent() {
@@ -65,6 +66,10 @@ public abstract class Post{
     @JsonIgnore
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public boolean isLocallyStored() {
+        return locallyStored;
     }
 
     public void like() {

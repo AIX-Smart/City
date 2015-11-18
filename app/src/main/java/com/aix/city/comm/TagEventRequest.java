@@ -12,7 +12,7 @@ import com.squareup.okhttp.HttpUrl;
 /**
  * Created by Thomas on 03.11.2015.
  */
-public class TagEventRequest extends JacksonRequest<Post[]> {
+public class TagEventRequest extends AIxJacksonRequest<Post[]> {
 
     private int postNum;
     private Post lastPost;

@@ -9,7 +9,7 @@ import com.squareup.okhttp.HttpUrl;
 /**
  * Created by Thomas on 05.11.2015.
  */
-public class LoginRequest extends JacksonRequest<User>{
+public class LoginRequest extends AIxJacksonRequest<User> {
 
     private String deviceId;
 

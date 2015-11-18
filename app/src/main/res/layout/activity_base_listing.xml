@@ -11,10 +11,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
         tools:context=".LocationActivity">
 
         <FrameLayout
@@ -22,7 +22,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_alignParentTop="true"
             tools:layout="@layout/fragment_city"/>
+
+        <fragment
+            android:id="@+id/postCreationLayout"
+            android:name="com.aix.city.PostCreationFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            tools:layout="@layout/fragment_post_creation" />
 
         <FrameLayout
             android:id="@+id/fragment_container_bottom"
@@ -30,15 +39,8 @@
             android:layout_height="fill_parent"
             android:orientation="vertical"
             android:layout_below="@id/fragment_container_top"
+            android:layout_above="@id/postCreationLayout"
             tools:layout="@layout/fragment_listing_list"/>
-
-        <!--<fragment
-            android:id="@+id/listing_fragment"
-            android:name="com.aix.city.PostListingFragment"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/fragment_container_top"
-            tools:layout="@layout/fragment_listing_list"/>-->
 
     </RelativeLayout>
 

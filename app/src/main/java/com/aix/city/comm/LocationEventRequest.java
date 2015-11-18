@@ -11,7 +11,7 @@ import com.squareup.okhttp.HttpUrl;
 /**
  * Created by Thomas on 02.11.2015.
  */
-public class LocationEventRequest extends JacksonRequest<Post[]> {
+public class LocationEventRequest extends AIxJacksonRequest<Post[]> {
 
     private int postNum;
     private Post lastPost;

@@ -1,10 +1,12 @@
 package com.aix.city;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,14 +17,17 @@ import com.aix.city.core.data.Location;
 import com.aix.city.dummy.DummyContent;
 
 
-public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener {
+public class BaseListingActivity extends FragmentActivity implements PostListingFragment.PostListingFragmentListener, PostCreationFragment.OnFragmentInteractionListener {
 
     public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.ListingSource";
 
     private Fragment listingSourceFragment;
     private PostListingFragment postListingFragment;
+    private Fragment postCreationFragment;
+
     private ListView searchMenuList;
     private ListView userMenuList;
+    private View postCreationView;
 
     private ListingSource listingSource;
 
@@ -36,9 +41,8 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         Intent intent = getIntent();
         listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
         if(listingSource == null){
-           listingSource = AIxDataManager.getInstance().getCurrentCity();
+           /*listingSource = AIxDataManager.getInstance().getCurrentCity();*/
         }
-
 
         searchMenuList = (ListView) findViewById(R.id.left_menu_list);
         ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
@@ -48,6 +52,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
         userMenuList.setAdapter(rightListAdapter);
 
+        postCreationFragment = getSupportFragmentManager().findFragmentById(R.id.postCreationLayout);
 
         //create fragments with data
         postListingFragment = PostListingFragment.newInstance(listingSource);
@@ -60,12 +65,16 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         // and add the transaction to the back stack if needed
         transaction.replace(R.id.fragment_container_top, listingSourceFragment);
         transaction.replace(R.id.fragment_container_bottom, postListingFragment);
-        //transaction.addToBackStack(null);
+        /*if(!listingSource.createPostListing().isEditable()){
+            transaction.hide(postCreationFragment);
+        }*/
 
         // Commit the transaction
         transaction.commit();
 
     }
+
+
 
     public Fragment createListingSourceFragment(){
         if(listingSource == null) return CityFragment.newInstance((City) listingSource);
@@ -106,7 +115,17 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
+    public void changePostCreationVisibility(boolean isEditable) {
+        if(isEditable){
+            postCreationFragment.getView().setVisibility(View.VISIBLE);
+        }
+        else{
+            postCreationFragment.getView().setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }

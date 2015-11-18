@@ -10,7 +10,7 @@ import com.squareup.okhttp.HttpUrl;
 /**
  * Created by Thomas on 06.11.2015.
  */
-public class CityLocationRequest extends JacksonRequest<Location[]> {
+public class CityLocationRequest extends AIxJacksonRequest<Location[]> {
 
     private City city;
 

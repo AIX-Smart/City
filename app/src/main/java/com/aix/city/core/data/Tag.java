@@ -3,11 +3,11 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aix.city.comm.AIxJacksonRequest;
 import com.aix.city.comm.TagEventRequest;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
-import com.android.volley.Request;
 import com.android.volley.Response;
 
 /**
@@ -42,7 +42,7 @@ public class Tag implements ListingSource {
     }
 
     @Override
-    public Request createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public AIxJacksonRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new TagEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 

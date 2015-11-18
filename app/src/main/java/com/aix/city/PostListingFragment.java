@@ -2,7 +2,7 @@ package com.aix.city;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +25,33 @@ import java.util.Observer;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link PostListingFragmentListener}
  * interface.
  */
-public class PostListingFragment extends Fragment implements AbsListView.OnItemClickListener, Observer {
+public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer {
     
     public final static String ARG_LISTING_SOURCE = "listingSource";
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface PostListingFragmentListener {
+        public void changePostCreationVisibility(boolean isEditable);
+    }
 
     /**
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
     private PostListing postListing;
 
-    private OnFragmentInteractionListener mListener;
+    private PostListingFragmentListener mListener;
 
     /**
      * The fragment's ListView/GridView.
@@ -69,6 +83,8 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mListener = (PostListingFragmentListener) getActivity();
+
         //get instance data
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
@@ -77,17 +93,19 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
             }
         }
 
-        //create postview-adapter
         if(postListing == null){
-            mAdapter = new PostAdapter(getActivity(), DummyContent.LISTING.getPosts());
+            postListing = DummyContent.AACHEN_LISTING;
         }
-        else{
-            mAdapter = new PostAdapter(getActivity(), postListing.getPosts());
-            postListing.addObserver(this);
 
-            //load posts
-            postListing.loadMorePosts();
-        }
+        //create postview-adapter
+        mAdapter = new PostAdapter(getActivity(), postListing.getPosts());
+        postListing.addObserver(this);
+
+        /*mListener.changePostCreationVisibility(postListing.isEditable());*/
+
+        //load posts
+        postListing.loadMorePosts();
+
     }
 
     @Override
@@ -108,13 +126,24 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mListener.changePostCreationVisibility(postListing.isEditable());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (PostListingFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement PostListingFragmentListener");
         }
     }
 
@@ -129,7 +158,6 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
         }
     }
 
@@ -144,21 +172,6 @@ public class PostListingFragment extends Fragment implements AbsListView.OnItemC
         if (emptyView instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);
         }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
     }
 
     @Override
