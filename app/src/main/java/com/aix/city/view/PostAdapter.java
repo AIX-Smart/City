@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
+import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 
@@ -39,20 +40,41 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView contentView = (TextView) postView.findViewById(R.id.content);
         TextView locationNameView = (TextView) postView.findViewById(R.id.locationName);
         Button buttonView = (Button) postView.findViewById(R.id.button);
+        TextView commentCounterView = (TextView) postView.findViewById(R.id.commentCounter);
 
         contentView.setText(post.getContent());
-        locationNameView.setText(post.getSourceName());
 
-        locationNameView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (post instanceof Event) {
+
+        if(post instanceof Event){
+            final Event event = (Event) post;
+
+            locationNameView.setText(post.getSourceName());
+            locationNameView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Intent intent = new Intent(getContext(), BaseListingActivity.class);
-                    intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, ((Event) post).getLocation());
+                    intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, event.getLocation());
                     getContext().startActivity(intent);
                 }
-            }
-        });
+            });
+
+            commentCounterView.setText(String.valueOf(event.getCommentCount()));
+            commentCounterView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), BaseListingActivity.class);
+                    intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, event);
+                    getContext().startActivity(intent);
+                }
+            });
+        }
+        else{
+            final Comment comment = (Comment) post;
+            locationNameView.setVisibility(View.GONE);
+            commentCounterView.setVisibility(View.GONE);
+            buttonView.setVisibility(View.GONE);
+        }
+
 
         return postView;
     }

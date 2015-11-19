@@ -47,7 +47,7 @@ public class EventFragment extends Fragment {
 
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_EVENT);
-            if (obj != null && obj instanceof Tag) {
+            if (obj != null && obj instanceof Event) {
                 event = ((Event) obj);
             }
         }

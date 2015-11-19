@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.data.City;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
+import com.aix.city.core.data.Tag;
 import com.aix.city.dummy.DummyContent;
 
 
@@ -76,11 +79,11 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
             case LOCATION:
                 return LocationProfileFragment.newInstance((Location) listingSource);
             case TAG:
-                return LocationProfileFragment.newInstance((Location) listingSource);
+                return TagFragment.newInstance((Tag) listingSource);
             case EVENT:
-                return LocationProfileFragment.newInstance((Location) listingSource);
+                return EventFragment.newInstance((Event) listingSource);
             default:
-                return LocationProfileFragment.newInstance((Location) listingSource);
+                return CityFragment.newInstance(AIxDataManager.getInstance().getCurrentCity());
         }
 
     }
