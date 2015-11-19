@@ -16,7 +16,7 @@ import java.util.Observable;
 public class PostListing extends Observable {
 
     /** Defines the default number of posts for a database GET-request */
-    public final int postRequestNum = 1;
+    public static final int postRequestNum = 1;
 
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
@@ -107,18 +107,21 @@ public class PostListing extends Observable {
     }
 
     public void refresh() {
-        //TODO:
-        notifyObservers();
+        if(posts.isEmpty()){
+            loadMorePosts();
+            setChanged();
+            notifyObservers();
+        }
     }
 
     /**
      *  creates a new Post in this listing and sends it to the server.
         Does nothing if posts cannot be created in this context.
      * @param content content/message of the created Post
-     * @return returns the created Post or null
+     * @return returns true if the post was successfully created
      */
-    public Post createPost(String content){
-        return null;
+    public boolean createPost(String content){
+        return false;
     }
 
     public boolean deletePost(Post post){

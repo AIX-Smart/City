@@ -1,7 +1,6 @@
 package com.aix.city;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,24 +9,21 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.data.City;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
 import com.aix.city.dummy.DummyContent;
 
 
-public class BaseListingActivity extends FragmentActivity implements PostListingFragment.PostListingFragmentListener, PostCreationFragment.OnFragmentInteractionListener {
+public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener {
 
     public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.ListingSource";
 
     private Fragment listingSourceFragment;
     private PostListingFragment postListingFragment;
-    private Fragment postCreationFragment;
 
     private ListView searchMenuList;
     private ListView userMenuList;
-    private View postCreationView;
 
     private ListingSource listingSource;
 
@@ -52,8 +48,6 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
         userMenuList.setAdapter(rightListAdapter);
 
-        postCreationFragment = getSupportFragmentManager().findFragmentById(R.id.postCreationLayout);
-
         //create fragments with data
         postListingFragment = PostListingFragment.newInstance(listingSource);
         listingSourceFragment = createListingSourceFragment();
@@ -65,9 +59,6 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         // and add the transaction to the back stack if needed
         transaction.replace(R.id.fragment_container_top, listingSourceFragment);
         transaction.replace(R.id.fragment_container_bottom, postListingFragment);
-        /*if(!listingSource.createPostListing().isEditable()){
-            transaction.hide(postCreationFragment);
-        }*/
 
         // Commit the transaction
         transaction.commit();
@@ -115,17 +106,6 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     }
 
     @Override
-    public void changePostCreationVisibility(boolean isEditable) {
-        if(isEditable){
-            postCreationFragment.getView().setVisibility(View.VISIBLE);
-        }
-        else{
-            postCreationFragment.getView().setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onFragmentInteraction(boolean isEditable) {
     }
 }

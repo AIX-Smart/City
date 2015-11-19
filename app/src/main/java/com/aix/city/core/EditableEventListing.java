@@ -52,8 +52,8 @@ public class EditableEventListing extends EditableListing {
     }
 
     @Override
-    public Post createPost(String content) {
-        return createEvent(content);
+    public boolean createPost(String content) {
+        return createEvent(content) != null;
     }
 
     @Override

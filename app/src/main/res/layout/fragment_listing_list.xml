@@ -1,17 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.aix.city.ListingFragment">
+    android:layout_height="fill_parent" tools:context="com.aix.city.ListingFragment">
 
-    <ListView android:id="@android:id/list"
+    <FrameLayout
+        android:id="@+id/postCreationLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:background="@drawable/shape_outline_edit"
+        android:paddingBottom="3dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="3dp"
+        android:focusable="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:layout_alignParentBottom="true">
 
-    <TextView android:id="@android:id/empty"
+        <EditText
+            android:id="@+id/postCreationTextField"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:maxHeight="160dp"
+            android:maxLength="140"
+            android:hint="@string/postContentHint"
+            android:inputType="textImeMultiLine"
+            android:scrollbars="vertical"/>
+
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Empty"
-        android:textSize="48sp"/>
+        android:layout_height="fill_parent"
+        android:layout_above="@id/postCreationLayout">
+        <ListView android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" />
 
-</FrameLayout>
+        <TextView android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="Empty"
+            android:textSize="48sp"/>
+    </FrameLayout>
+
+
+</RelativeLayout>

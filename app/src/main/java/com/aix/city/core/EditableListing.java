@@ -12,7 +12,7 @@ public abstract class EditableListing extends PostListing {
     }
 
     @Override
-    public abstract Post createPost(String content);
+    public abstract boolean createPost(String content);
 
     @Override
     public abstract boolean deletePost(Post post);

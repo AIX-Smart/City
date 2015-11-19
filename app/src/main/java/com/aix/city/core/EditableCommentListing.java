@@ -52,8 +52,8 @@ public class EditableCommentListing extends EditableListing {
     }
 
     @Override
-    public Post createPost(String content) {
-        return createComment(content);
+    public boolean createPost(String content) {
+        return createComment(content) != null;
     }
 
     @Override

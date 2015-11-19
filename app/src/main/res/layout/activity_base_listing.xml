@@ -25,21 +25,12 @@
             android:layout_alignParentTop="true"
             tools:layout="@layout/fragment_city"/>
 
-        <fragment
-            android:id="@+id/postCreationLayout"
-            android:name="com.aix.city.PostCreationFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            tools:layout="@layout/fragment_post_creation" />
-
         <FrameLayout
             android:id="@+id/fragment_container_bottom"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
             android:layout_below="@id/fragment_container_top"
-            android:layout_above="@id/postCreationLayout"
             tools:layout="@layout/fragment_listing_list"/>
 
     </RelativeLayout>
