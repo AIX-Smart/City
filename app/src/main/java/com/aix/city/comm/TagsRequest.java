@@ -13,11 +13,11 @@ public class TagsRequest extends AIxJacksonRequest<Location[]> {
 
     public TagsRequest(Response.Listener<Location[]> listener,
                                Response.ErrorListener errorListener){
-        super(Request.Method.GET, getURL(), null, Location[].class, listener, errorListener, false);
+        super(Request.Method.GET, createURL(), null, Location[].class, listener, errorListener, false);
     }
 
 
-    private static String getURL(){
+    private static String createURL(){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.TAG);
         return urlBuilder.build().toString();

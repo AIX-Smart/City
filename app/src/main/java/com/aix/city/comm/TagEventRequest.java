@@ -24,14 +24,14 @@ public class TagEventRequest extends AIxJacksonRequest<Post[]> {
                                 int postNum,
                                 Post lastPost,
                                 Tag tag){
-        super(Request.Method.GET, getURL(postNum, lastPost, tag), null, Post[].class, listener, errorListener, ignoreCache);
+        super(Request.Method.GET, createURL(postNum, lastPost, tag), null, Post[].class, listener, errorListener, ignoreCache);
         this.postNum = postNum;
         this.lastPost = lastPost;
         this.tag = tag;
     }
 
 
-    private static String getURL(int postNum, Post lastPost, Tag tag){
+    private static String createURL(int postNum, Post lastPost, Tag tag){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.TAG)
                 .addPathSegment(String.valueOf(tag.getId()))

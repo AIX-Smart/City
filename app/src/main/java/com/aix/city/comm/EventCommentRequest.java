@@ -23,14 +23,14 @@ public class EventCommentRequest extends AIxJacksonRequest<Post[]> {
                                 int postNum,
                                 Post lastPost,
                                 Event event){
-        super(Request.Method.GET, getURL(postNum, lastPost, event), null, Post[].class, listener, errorListener, ignoreCache);
+        super(Request.Method.GET, createURL(postNum, lastPost, event), null, Post[].class, listener, errorListener, ignoreCache);
         this.postNum = postNum;
         this.lastPost = lastPost;
         this.event = event;
     }
 
 
-    private static String getURL(int postNum, Post lastPost, Event event){
+    private static String createURL(int postNum, Post lastPost, Event event){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.EVENT)
                 .addPathSegment(String.valueOf(event.getId()))

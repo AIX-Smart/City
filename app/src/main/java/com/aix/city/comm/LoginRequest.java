@@ -16,12 +16,12 @@ public class LoginRequest extends AIxJacksonRequest<User> {
     public LoginRequest(Response.Listener<User> listener,
                         Response.ErrorListener errorListener,
                         String deviceId){
-        super(Request.Method.GET, getURL(deviceId), null, User.class, listener, errorListener, false);
+        super(Request.Method.GET, createURL(deviceId), null, User.class, listener, errorListener, false);
         this.deviceId = deviceId;
     }
 
 
-    private static String getURL(String deviceId){
+    private static String createURL(String deviceId){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.USER)
                 .addPathSegment(deviceId);

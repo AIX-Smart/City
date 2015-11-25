@@ -3,6 +3,7 @@ package com.aix.city;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.InputFilter;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.data.Post;
 import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
 
@@ -114,12 +116,13 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
+
 
         //initialize post creation view (text field)
         postCreationView = view.findViewById(R.id.postCreationLayout);
@@ -128,20 +131,12 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         final EditText editText = (EditText)view.findViewById(R.id.postCreationTextField);
         editText.setHorizontallyScrolling(false);
         editText.setMaxLines(5);
+        editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
         editText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-
-                    boolean postCreated = postListing.createPost(editText.getText().toString());
+                    createPost(editText.getText().toString());
                     editText.setText("");
-
-                    final String creationMessage;
-                    if (postCreated)
-                        creationMessage = getResources().getString(R.string.postCreationMessage_successful);
-                    else
-                        creationMessage = getResources().getString(R.string.postCreationMessage_failed);
-
-                    Toast.makeText(getContext(), creationMessage, Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -151,12 +146,25 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         return view;
     }
 
+    public void createPost(String postContent) {
+        boolean postCreated = postListing.createPost(postContent);
+
+        final String creationMessage;
+        if (postCreated) {
+            creationMessage = getResources().getString(R.string.postCreationMessage_successful);
+        }
+        else{
+            creationMessage = getResources().getString(R.string.postCreationMessage_failed);
+        }
+        Toast.makeText(getContext(), creationMessage, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
 
         //load posts
-        postListing.refresh();
+        postListing.loadMorePosts();
     }
 
     @Override

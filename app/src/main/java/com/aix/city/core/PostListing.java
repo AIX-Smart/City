@@ -16,7 +16,7 @@ import java.util.Observable;
 public class PostListing extends Observable {
 
     /** Defines the default number of posts for a database GET-request */
-    public static final int postRequestNum = 1;
+    public static final int POST_REQUEST_NUM = 1;
 
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
@@ -103,15 +103,13 @@ public class PostListing extends Observable {
     }
 
     public void loadMorePosts() {
-        loadMorePosts(postRequestNum);
+        loadMorePosts(POST_REQUEST_NUM);
     }
 
     public void refresh() {
-        if(posts.isEmpty()){
-            loadMorePosts();
-            setChanged();
-            notifyObservers();
-        }
+        int postNum = posts.size();
+        posts.clear();
+        loadMorePosts(postNum);
     }
 
     /**

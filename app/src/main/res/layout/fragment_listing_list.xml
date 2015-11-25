@@ -23,7 +23,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:maxHeight="160dp"
-            android:maxLength="140"
             android:hint="@string/postContentHint"
             android:inputType="textImeMultiLine"
             android:scrollbars="vertical"/>

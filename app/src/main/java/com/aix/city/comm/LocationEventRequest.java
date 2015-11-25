@@ -23,14 +23,14 @@ public class LocationEventRequest extends AIxJacksonRequest<Post[]> {
                                 int postNum,
                                 Post lastPost,
                                 Location location){
-        super(Request.Method.GET, getURL(postNum, lastPost, location), null, Post[].class, listener, errorListener, ignoreCache);
+        super(Request.Method.GET, createURL(postNum, lastPost, location), null, Post[].class, listener, errorListener, ignoreCache);
         this.postNum = postNum;
         this.lastPost = lastPost;
         this.location = location;
     }
 
 
-    private static String getURL(int postNum, Post lastPost, Location location){
+    private static String createURL(int postNum, Post lastPost, Location location){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.LOCATION)
                 .addPathSegment(String.valueOf(location.getId()))

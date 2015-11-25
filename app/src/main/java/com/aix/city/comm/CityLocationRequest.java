@@ -17,12 +17,12 @@ public class CityLocationRequest extends AIxJacksonRequest<Location[]> {
     public CityLocationRequest(Response.Listener<Location[]> listener,
                             Response.ErrorListener errorListener,
                             City city){
-        super(Request.Method.GET, getURL(city), null, Location[].class, listener, errorListener, false);
+        super(Request.Method.GET, createURL(city), null, Location[].class, listener, errorListener, false);
         this.city = city;
     }
 
 
-    private static String getURL(City city){
+    private static String createURL(City city){
         HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
                 .addPathSegment(URLSegments.LOCATIONS)
                 .addPathSegment(String.valueOf(city.getId()));

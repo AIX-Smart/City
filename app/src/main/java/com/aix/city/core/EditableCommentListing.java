@@ -1,5 +1,7 @@
 package com.aix.city.core;
 
+import com.aix.city.comm.AIxJacksonRequest;
+import com.aix.city.comm.CreateCommentRequest;
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
@@ -28,14 +30,16 @@ public class EditableCommentListing extends EditableListing {
         return event;
     }
 
-    public Comment createComment(String message) {
+    public Comment createComment(String content) {
         int ID = 1; //TODO: getId from server
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
-        Comment comment = new Comment(ID, message, now, 0, user.getId(), false, event.getId());
-        //TODO: event modification?
+        Comment comment = new Comment(ID, content, now, 0, user.getId(), false, event.getId());
         this.addPost(comment);
-        //TODO: Add Post to database
+
+        //Add Post to database
+        AIxJacksonRequest request = new CreateCommentRequest(this, content);
+        AIxNetworkManager.getInstance().addRequest(request);
         return comment;
     }
 
