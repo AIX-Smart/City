@@ -32,10 +32,10 @@ public class EditableEventListing extends EditableListing {
 
 
     public Event createEvent(String content) {
-        int ID = 0; //TODO: getId from server
+        int id = 0;
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
-        Event event = new Event(ID, content, now, 0, user.getId(), false, location, 0);
+        Event event = new Event(Post.LOCALE_ID, content, now, 0, user.getId(), false, location, 0);
         this.addPost(event);
 
         //Add Post to database

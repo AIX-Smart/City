@@ -31,10 +31,9 @@ public class EditableCommentListing extends EditableListing {
     }
 
     public Comment createComment(String content) {
-        int ID = 1; //TODO: getId from server
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
-        Comment comment = new Comment(ID, content, now, 0, user.getId(), false, event.getId());
+        Comment comment = new Comment(Post.LOCALE_ID, content, now, 0, user.getId(), false, event.getId());
         this.addPost(comment);
 
         //Add Post to database

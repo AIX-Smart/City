@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Post{
 
     public static final int MAX_CONTENT_LENGTH = 140;
+    public static final int LOCALE_ID = -1;
 
     private int id;
     private String content;
@@ -31,6 +32,7 @@ public abstract class Post{
         this.likeCount = likeCount;
         this.authorId = authorId;
         this.liked = liked;
+        this.locallyStored = true;
     }
 
     public String getContent() {
@@ -68,6 +70,7 @@ public abstract class Post{
         return deleted;
     }
 
+    @JsonIgnore
     public boolean isLocallyStored() {
         return locallyStored;
     }

@@ -1,9 +1,12 @@
 package com.aix.city.dummy;
 
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.City;
 import com.aix.city.core.EditableEventListing;
+import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
+import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
 
 import java.util.ArrayList;
@@ -52,14 +55,23 @@ public class DummyContent {
         addItem(new DummyItem("3", "Item 3"));
 
         EditableEventListing listing = GINBAR.createPostListing();
-        listing.createEvent("Post 1: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib"); // 140 character
-        listing.createEvent("Post 2: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.");
-        listing.createEvent("Post 3: Lorem ipsum dolor sit amet, ");
-        listing.createEvent("Post 4: Lorem ipsum dolor sit amet, consectetuer adipiscing elit.");
-        listing.createEvent("Post 5: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib");
-        listing.createEvent("Post 6: ");
-        listing.createEvent("Post 7: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula ");
-        listing.createEvent("Post 8: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib");
+
+        String content = "Post 1: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 2: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 3: Lorem ipsum dolor sit amet, ";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 4: Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 5: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 6: ";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 7: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula ";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
+        content = "Post 8: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib";
+        listing.addPost(new Event(Post.LOCALE_ID, content, System.currentTimeMillis(), 0, AIxLoginModule.getInstance().getLoggedInUser().getId(), false, GINBAR, 0));
 
         PostListing listing2 = AACHEN.createPostListing();
         listing2.getPosts().addAll(listing.getPosts());
