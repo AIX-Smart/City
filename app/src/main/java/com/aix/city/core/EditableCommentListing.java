@@ -1,6 +1,6 @@
 package com.aix.city.core;
 
-import com.aix.city.comm.AIxJacksonRequest;
+import com.aix.city.comm.AIxRequest;
 import com.aix.city.comm.CreateCommentRequest;
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
@@ -37,7 +37,7 @@ public class EditableCommentListing extends EditableListing {
         this.addPost(comment);
 
         //Add Post to database
-        AIxJacksonRequest request = new CreateCommentRequest(this, content);
+        AIxRequest request = new CreateCommentRequest(this, content);
         AIxNetworkManager.getInstance().addRequest(request);
         return comment;
     }

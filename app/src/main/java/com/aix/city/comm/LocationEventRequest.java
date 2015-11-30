@@ -1,17 +1,14 @@
 package com.aix.city.comm;
 
-import com.aix.city.core.AIxLoginModule;
-import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.squareup.okhttp.HttpUrl;
 
 /**
  * Created by Thomas on 02.11.2015.
  */
-public class LocationEventRequest extends AIxJacksonRequest<Post[]> {
+public class LocationEventRequest extends AIxRequest<Post[]> {
 
     private int postNum;
     private Post lastPost;
@@ -23,23 +20,10 @@ public class LocationEventRequest extends AIxJacksonRequest<Post[]> {
                                 int postNum,
                                 Post lastPost,
                                 Location location){
-        super(Request.Method.GET, createURL(postNum, lastPost, location), null, Post[].class, listener, errorListener, ignoreCache);
+        super(Request.Method.GET, URLFactory.get().createGetLocationEventsURL(postNum, lastPost, location), null, Post[].class, listener, errorListener, ignoreCache);
         this.postNum = postNum;
         this.lastPost = lastPost;
         this.location = location;
-    }
-
-
-    private static String createURL(int postNum, Post lastPost, Location location){
-        HttpUrl.Builder urlBuilder = AIxNetworkManager.getInstance().getServiceUrl().newBuilder()
-                .addPathSegment(URLSegments.LOCATION)
-                .addPathSegment(String.valueOf(location.getId()))
-                .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
-        if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
-        }
-        return urlBuilder.build().toString();
     }
 
     public int getPostNum() {

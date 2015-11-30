@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.aix.city.comm.EventCommentRequest;
-import com.aix.city.comm.AIxJacksonRequest;
+import com.aix.city.comm.AIxRequest;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
@@ -62,7 +62,7 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public AIxJacksonRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public AIxRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new EventCommentRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 

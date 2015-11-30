@@ -3,7 +3,7 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.aix.city.comm.AIxJacksonRequest;
+import com.aix.city.comm.AIxRequest;
 import com.aix.city.comm.LocationEventRequest;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.EditableEventListing;
@@ -54,7 +54,7 @@ public class Location implements ListingSource {
     }
 
     @Override
-    public AIxJacksonRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public AIxRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new LocationEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
@@ -76,7 +76,7 @@ public class Location implements ListingSource {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return 59*id;
     }
 
     @Override

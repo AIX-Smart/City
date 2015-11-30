@@ -3,11 +3,9 @@ package com.aix.city.core;
 import android.content.Context;
 
 import com.aix.city.comm.OkHttpStack;
-import com.aix.city.comm.URLSegments;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 
 //import com.android.volley.toolbox.ImageLoader;
@@ -21,8 +19,6 @@ public class AIxNetworkManager {
     private static AIxNetworkManager instance;
     private final Context context;
     private RequestQueue requestQueue;
-
-    private HttpUrl serviceUrl;
 
 
     //Singleton methods and constructor
@@ -54,18 +50,6 @@ public class AIxNetworkManager {
 
     public Context getContext() {
         return context;
-    }
-
-    public HttpUrl getServiceUrl(){
-        if(serviceUrl == null){
-            serviceUrl = new HttpUrl.Builder()
-                    .scheme(URLSegments.SCHEME)
-                    .host(URLSegments.HOST)
-                    .port(URLSegments.PORT)
-                    .addPathSegment(URLSegments.SERVICE)
-                    .build();
-        }
-        return serviceUrl;
     }
 
     /**

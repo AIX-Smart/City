@@ -3,7 +3,7 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.aix.city.comm.AIxJacksonRequest;
+import com.aix.city.comm.AIxRequest;
 import com.aix.city.comm.TagEventRequest;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
@@ -42,7 +42,7 @@ public class Tag implements ListingSource {
     }
 
     @Override
-    public AIxJacksonRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
+    public AIxRequest createRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, boolean ignoreCache, int postNum, Post lastPost) {
         return new TagEventRequest(listener, errorListener, ignoreCache, postNum, lastPost, this);
     }
 
@@ -60,19 +60,16 @@ public class Tag implements ListingSource {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         Tag tag = (Tag) o;
 
-        return name.equals(tag.name);
+        return id == tag.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+        return 73*id;
     }
 
     @Override

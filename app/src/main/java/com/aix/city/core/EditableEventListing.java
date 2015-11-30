@@ -1,6 +1,6 @@
 package com.aix.city.core;
 
-import com.aix.city.comm.AIxJacksonRequest;
+import com.aix.city.comm.AIxRequest;
 import com.aix.city.comm.CreateEventRequest;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
@@ -39,7 +39,7 @@ public class EditableEventListing extends EditableListing {
         this.addPost(event);
 
         //Add Post to database
-        AIxJacksonRequest request = new CreateEventRequest(this, content);
+        AIxRequest request = new CreateEventRequest(this, content);
         AIxNetworkManager.getInstance().addRequest(request);
         return event;
     }
