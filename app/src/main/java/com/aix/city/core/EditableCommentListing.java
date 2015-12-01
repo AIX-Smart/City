@@ -1,7 +1,7 @@
 package com.aix.city.core;
 
-import com.aix.city.comm.AIxRequest;
-import com.aix.city.comm.CreateCommentRequest;
+import com.aix.city.comm.AIxJsonRequest;
+import com.aix.city.comm.PostCreationRequest;
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
@@ -17,7 +17,7 @@ public class EditableCommentListing extends EditableListing {
     /**
      * INTERNAL USE ONLY: use instead event.createPostListing()
      *
-     * @param listingSource
+     * @param listingSource listingSource must be an instance of Event
      */
     public EditableCommentListing(ListingSource listingSource) {
         super(listingSource);
@@ -30,6 +30,7 @@ public class EditableCommentListing extends EditableListing {
         return event;
     }
 
+    /*
     public Comment createComment(String content) {
         User user = AIxLoginModule.getInstance().getLoggedInUser();
         long now = System.currentTimeMillis();
@@ -37,10 +38,10 @@ public class EditableCommentListing extends EditableListing {
         this.addPost(comment);
 
         //Add Post to database
-        AIxRequest request = new CreateCommentRequest(this, content);
+        AIxJsonRequest request = new PostCreationRequest(this, content);
         AIxNetworkManager.getInstance().addRequest(request);
         return comment;
-    }
+    }*/
 
     public boolean deleteComment(Comment comment) {
         if (comment.getEventId() == event.getId()) {
@@ -54,10 +55,10 @@ public class EditableCommentListing extends EditableListing {
         }
     }
 
-    @Override
+    /*@Override
     public boolean createPost(String content) {
         return createComment(content) != null;
-    }
+    }*/
 
     @Override
     public boolean deletePost(Post post) {

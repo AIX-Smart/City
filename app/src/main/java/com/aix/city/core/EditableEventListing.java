@@ -1,7 +1,7 @@
 package com.aix.city.core;
 
-import com.aix.city.comm.AIxRequest;
-import com.aix.city.comm.CreateEventRequest;
+import com.aix.city.comm.AIxJsonRequest;
+import com.aix.city.comm.PostCreationRequest;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -17,7 +17,7 @@ public class EditableEventListing extends EditableListing {
     /**
      * INTERNAL USE ONLY: use instead location.createPostListing()
      *
-     * @param listingSource
+     * @param listingSource listingSource must be an instance of Location
      */
     public EditableEventListing(ListingSource listingSource) {
         super(listingSource);
@@ -31,6 +31,7 @@ public class EditableEventListing extends EditableListing {
     }
 
 
+    /*
     public Event createEvent(String content) {
         int id = 0;
         User user = AIxLoginModule.getInstance().getLoggedInUser();
@@ -39,10 +40,10 @@ public class EditableEventListing extends EditableListing {
         this.addPost(event);
 
         //Add Post to database
-        AIxRequest request = new CreateEventRequest(this, content);
+        AIxJsonRequest request = new PostCreationRequest(this, content);
         AIxNetworkManager.getInstance().addRequest(request);
         return event;
-    }
+    }*/
 
     public boolean deleteEvent(Event event) {
         if (event.getLocation().equals(location)) {
@@ -56,10 +57,10 @@ public class EditableEventListing extends EditableListing {
         }
     }
 
-    @Override
+    /*@Override
     public boolean createPost(String content) {
         return createEvent(content) != null;
-    }
+    }*/
 
     @Override
     public boolean deletePost(Post post) {

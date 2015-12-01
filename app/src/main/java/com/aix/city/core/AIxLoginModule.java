@@ -62,9 +62,8 @@ public class AIxLoginModule {
             }
         };
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        Request<User> request = new LoginRequest(listener, errorListener, deviceId);
 
-        //add login request to request queue
-        AIxNetworkManager.getInstance().addRequest(request);
+        //send request to server
+        AIxNetworkManager.getInstance().requestLogin(listener, errorListener, deviceId);
     }
 }

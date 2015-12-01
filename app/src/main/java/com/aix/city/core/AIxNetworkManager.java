@@ -2,9 +2,16 @@ package com.aix.city.core;
 
 import android.content.Context;
 
+import com.aix.city.comm.GetPostsRequest;
+import com.aix.city.comm.LikeRequest;
+import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
+import com.aix.city.comm.PostCreationRequest;
+import com.aix.city.core.data.Post;
+import com.aix.city.core.data.User;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -83,4 +90,23 @@ public class AIxNetworkManager {
         }
     }
 
+    public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource){
+        GetPostsRequest request = new GetPostsRequest(listener, errorListener, postNum, lastPost, listingSource);
+        addRequest(request);
+    }
+
+    public void requestPostCreation(Response.Listener<String> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
+        PostCreationRequest request = new PostCreationRequest(listener, errorListener, postListing, content);
+        addRequest(request);
+    }
+
+    public void requestLike(Response.Listener<User> listener, Response.ErrorListener errorListener, Post post, boolean like){
+        LikeRequest request = new LikeRequest(listener, errorListener, post, like);
+        addRequest(request);
+    }
+
+    public void requestLogin(Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
+        LoginRequest request = new LoginRequest(listener, errorListener, deviceId);
+        addRequest(request);
+    }
 }

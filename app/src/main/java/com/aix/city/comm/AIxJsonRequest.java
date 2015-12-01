@@ -8,10 +8,9 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 
-public class AIxRequest<T> extends JsonRequest<T> {
+public class AIxJsonRequest<T> extends JsonRequest<T> {
 
-    private Class<T> responseType;
-    private boolean ignoreCache;
+    private final Class<T> responseType;
 
     /**
      * Creates a new request.
@@ -26,30 +25,26 @@ public class AIxRequest<T> extends JsonRequest<T> {
      *            Listener to receive the JSON response
      * @param errorListener
      *            Error listener, or null to ignore errors.
+     * @param shouldCache
+     *            Whether or not responses to this request should be cached
      */
-    public AIxRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean ignoreCache)
+    public AIxJsonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean shouldCache)
     {
         super(method, url, (requestData == null) ? null : Mapper.string(requestData), listener, errorListener);
         this.responseType = responseType;
-        this. ignoreCache = ignoreCache;
+        this.setShouldCache(shouldCache);
     }
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            Cache.Entry entry;
-            if(ignoreCache) entry = HttpHeaderParser.parseCacheHeaders(response); //TODO:HttpHeaderParser.parseIgnoreCacheHeaders(response);
-            else entry = HttpHeaderParser.parseCacheHeaders(response);
+            Cache.Entry entry = HttpHeaderParser.parseCacheHeaders(response);
             return Response.success(Mapper.objectOrThrow(jsonString, responseType), entry);
         }
         catch (Exception e) {
             return Response.error(new ParseError(e));
         }
-    }
-
-    public boolean isIgnoreCache() {
-        return ignoreCache;
     }
 
     public Class<T> getResponseType() {

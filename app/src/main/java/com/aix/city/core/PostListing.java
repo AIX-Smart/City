@@ -1,7 +1,7 @@
 package com.aix.city.core;
 
+import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.core.data.Post;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -17,6 +17,9 @@ public class PostListing extends Observable {
 
     /** Defines the default number of posts for a database GET-request */
     public static final int POST_REQUEST_NUM = 1;
+
+    public static final String OBSERVER_KEY_CHANGED_DATA_SET = "dataSet";
+    public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
 
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
@@ -98,8 +101,8 @@ public class PostListing extends Observable {
             }
         };
 
-        Request<Post> request = listingSource.createRequest(listener, errorListener, false, postNum, lastPost);
-        AIxNetworkManager.getInstance().addRequest(request);
+        //send request to server
+        listingSource.requestPosts(listener, errorListener, postNum, lastPost);
     }
 
     public void loadMorePosts() {
@@ -129,4 +132,5 @@ public class PostListing extends Observable {
     public boolean isEditable(){
         return false;
     }
+
 }

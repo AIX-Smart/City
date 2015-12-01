@@ -10,8 +10,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Post{
 
     public static final int MAX_CONTENT_LENGTH = 140;
-    //TODO: lokale posts entfernen und stattdessen mit Request arbeiten(createRequest gibt post zurück und bis zur response wird editable des listing auf false gesetzt)
-    public static final int LOCALE_ID = -1;
 
     private int id;
     private String content;

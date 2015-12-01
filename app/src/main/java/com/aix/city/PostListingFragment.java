@@ -221,6 +221,20 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
     @Override
     public void update(Observable observable, Object data) {
-        mAdapter.notifyDataSetChanged();
+        String key;
+        if(data == null) key = "";
+        else key = data.toString();
+
+        switch(key){
+            case PostListing.OBSERVER_KEY_CHANGED_DATA_SET:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case PostListing.OBSERVER_KEY_CHANGED_EDITABILITY:
+                setPostCreationVisibility(postListing.isEditable());
+                break;
+            default:
+                mAdapter.notifyDataSetChanged();
+                setPostCreationVisibility(postListing.isEditable());
+        }
     }
 }
