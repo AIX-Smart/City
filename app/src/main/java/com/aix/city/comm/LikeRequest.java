@@ -8,13 +8,13 @@ import com.android.volley.Response;
 /**
  * Created by Thomas on 01.12.2015.
  */
-public class LikeRequest extends AIxJsonRequest<User> {
+public class LikeRequest extends AIxJsonRequest<String> {
 
     private final Post post;
     private final boolean like;
 
-    public LikeRequest(Response.Listener<User> listener, Response.ErrorListener errorListener, Post post, boolean like) {
-        super(Request.Method.GET, URLFactory.get().createLikeURL(post), like, User.class, listener, errorListener, false);
+    public LikeRequest(Response.Listener<String> listener, Response.ErrorListener errorListener, Post post, boolean like) {
+        super(Request.Method.PUT, URLFactory.get().createLikeURL(post), like, String.class, listener, errorListener, false);
         this.post = post;
         this.like = like;
     }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
-import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 
@@ -24,6 +23,13 @@ public class PostAdapter extends ArrayAdapter<Post> {
     private final Context context;
     private final List<Post> posts;
 
+    static class ViewHolder {
+        TextView contentView;
+        TextView locationNameView;
+        TextView commentCounterView;
+        Button likeButton;
+    }
+
     public PostAdapter(Context context, List<Post> posts) {
         super(context, -1, posts);
         this.context = context;
@@ -32,20 +38,52 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        PostView postView = (PostView) inflater.inflate(R.layout.post, parent, false);
+
+        ViewHolder holder;
+
+        if(convertView == null){
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = (PostView) inflater.inflate(R.layout.post, parent, false);
+
+            holder = new ViewHolder();
+            holder.contentView = (TextView) convertView.findViewById(R.id.content);
+            holder.locationNameView = (TextView) convertView.findViewById(R.id.locationName);
+            holder.commentCounterView = (TextView) convertView.findViewById(R.id.commentCounter);
+            holder.likeButton = (Button) convertView.findViewById(R.id.likeButton);
+            convertView.setTag(holder);
+        }
+        else{
+            holder = (ViewHolder) convertView.getTag();
+        }
+
         final Post post = posts.get(position);
 
-        TextView contentView = (TextView) postView.findViewById(R.id.content);
-        TextView locationNameView = (TextView) postView.findViewById(R.id.locationName);
-        Button buttonView = (Button) postView.findViewById(R.id.button);
-        TextView commentCounterView = (TextView) postView.findViewById(R.id.commentCounter);
+        if(post != null){
+            updateCommentCounterView(holder.commentCounterView, post);
+            updateContentView(holder.contentView, post);
+            updateLikeButton(holder.likeButton, post);
+            updateLocationNameView(holder.locationNameView, post);
+        }
 
-        contentView.setText(post.getContent());
+        return convertView;
+    }
 
+    public void updateLikeButton(Button likeButton, final Post post){
+        if (post instanceof Event) {
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    post.like();
+                }
+            });
+        }
+        else{
+            likeButton.setVisibility(View.GONE);
+        }
+    }
 
-        if(post instanceof Event){
+    public void updateLocationNameView(TextView locationNameView, final Post post){
+        if (post instanceof Event){
             final Event event = (Event) post;
 
             locationNameView.setText(post.getSourceName());
@@ -57,6 +95,15 @@ public class PostAdapter extends ArrayAdapter<Post> {
                     getContext().startActivity(intent);
                 }
             });
+        }
+        else{
+            locationNameView.setVisibility(View.GONE);
+        }
+    }
+
+    public void updateCommentCounterView(TextView commentCounterView, final Post post){
+        if (post instanceof Event){
+            final Event event = (Event) post;
 
             commentCounterView.setText(String.valueOf(event.getCommentCount()));
             commentCounterView.setOnClickListener(new View.OnClickListener() {
@@ -69,16 +116,13 @@ public class PostAdapter extends ArrayAdapter<Post> {
             });
         }
         else{
-            final Comment comment = (Comment) post;
-            locationNameView.setVisibility(View.GONE);
             commentCounterView.setVisibility(View.GONE);
-            buttonView.setVisibility(View.GONE);
         }
-
-
-        return postView;
     }
 
+    public void updateContentView(TextView contentView, final Post post){
+        contentView.setText(post.getContent());
+    }
 }
 
 

@@ -33,7 +33,7 @@ import java.util.Observer;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer {
+public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer, View.OnClickListener {
     
     public final static String ARG_LISTING_SOURCE = "listingSource";
 
@@ -189,14 +189,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         mListener = null;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-        }
-    }
-
     /**
      * The default content for this Fragment has a TextView that is shown when
      * the list is empty. If you would like to change the text, call this method
@@ -216,6 +208,21 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         }
         else{
             postCreationView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (null != mListener) {
+            // Notify the active callbacks interface (the activity, if the
+            // fragment is attached to one) that an item has been selected.
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            //handle multiple view click events
         }
     }
 

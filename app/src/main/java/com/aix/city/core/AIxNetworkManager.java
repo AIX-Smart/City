@@ -100,7 +100,7 @@ public class AIxNetworkManager {
         addRequest(request);
     }
 
-    public void requestLike(Response.Listener<User> listener, Response.ErrorListener errorListener, Post post, boolean like){
+    public void requestLike(Response.Listener<String> listener, Response.ErrorListener errorListener, Post post, boolean like){
         LikeRequest request = new LikeRequest(listener, errorListener, post, like);
         addRequest(request);
     }

@@ -1,5 +1,8 @@
 package com.aix.city.core.data;
 
+import com.aix.city.core.AIxNetworkManager;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -18,7 +21,6 @@ public abstract class Post{
     private int authorId;
     private boolean liked; //current user has already liked this post
     private transient boolean deleted = false;
-    private transient boolean locallyStored = false;
 
     //no-argument constructor for JSON
     protected Post(){
@@ -31,7 +33,6 @@ public abstract class Post{
         this.likeCount = likeCount;
         this.authorId = authorId;
         this.liked = liked;
-        this.locallyStored = true;
     }
 
     public String getContent() {
@@ -69,24 +70,43 @@ public abstract class Post{
         return deleted;
     }
 
-    @JsonIgnore
-    public boolean isLocallyStored() {
-        return locallyStored;
-    }
-
     public void like() {
         if (!liked) {
-            liked = true;
-            if (likeCount < Integer.MAX_VALUE) likeCount++;
-            //TODO: Server Communication
+            Response.Listener<String> listener = new Response.Listener<String>(){
+                @Override
+                public void onResponse(String response) {
+                    liked = true;
+                    if (likeCount < Integer.MAX_VALUE) likeCount++;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // do nothing
+                }
+            };
+
+            AIxNetworkManager.getInstance().requestLike(listener, errorListener, this, true);
         }
     }
 
     public void resetLike() {
         if (liked) {
-            liked = false;
-            if (likeCount > 0) likeCount--;
-            //TODO: Server Communication
+            Response.Listener<String> listener = new Response.Listener<String>(){
+                @Override
+                public void onResponse(String response) {
+                    liked = false;
+                    if (likeCount > 0) likeCount--;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // do nothing
+                }
+            };
+
+            AIxNetworkManager.getInstance().requestLike(listener, errorListener, this, false);
         }
     }
 
