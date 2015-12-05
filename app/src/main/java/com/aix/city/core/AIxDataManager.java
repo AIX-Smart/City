@@ -1,22 +1,18 @@
 package com.aix.city.core;
 
 import android.content.Context;
+import android.util.SparseArray;
 
 import com.aix.city.core.data.City;
-import com.aix.city.core.data.CityData;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.LocationData;
-import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
 import com.aix.city.core.data.User;
-import com.aix.city.core.data.UserData;
 import com.aix.city.dummy.DummyContent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,9 +25,7 @@ public class AIxDataManager {
     private City currentCity;
     private List<Tag> allTags = new ArrayList<Tag>();
     private List<City> allCities = new ArrayList<City>();
-    private Map<Integer, LocationData> storedLocationData = new HashMap<Integer, LocationData>();
-    private Map<Integer, UserData> storedUserData = new HashMap<Integer, UserData>();
-    private Map<Integer, CityData> storedCityData = new HashMap<Integer, CityData>();
+    private SparseArray<LocationData> storedLocationData = new SparseArray<LocationData>();
 
 
     //Singleton methods and constructor
@@ -66,21 +60,16 @@ public class AIxDataManager {
         return currentCity;
     }
 
+    public City getCity(int id){
+        for(City city: allCities){
+            if(city.getId() == id) return city;
+        }
+        return null;
+    }
+
     public LocationData createLocation(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, String phoneNumber, int likeCount, boolean liked, String gps) {
         LocationData data = new LocationData(new Location(locationId, name), tags, description, city.getId(), street, phoneNumber, houseNumber, likeCount, liked, gps);
         storedLocationData.put(locationId, data);
-        return data;
-    }
-
-    public CityData createCity(int cityId, String name, List<Location> locations) {
-        CityData data = new CityData(new City(cityId, name), locations);
-        storedCityData.put(cityId, data);
-        return data;
-    }
-
-    public UserData createUser(int userId, Set<Location> favorites, List<Location> ownBusinesses, Set<Integer> likedPosts, List<Post> writtenPosts) {
-        UserData data = new UserData(new User(userId), favorites, ownBusinesses);
-        storedUserData.put(userId, data);
         return data;
     }
 
@@ -93,24 +82,9 @@ public class AIxDataManager {
         return data;
     }
 
-    public CityData getCityData(int cityId) {
-        CityData data = storedCityData.get(cityId);
-        if(data == null){
-            //TODO: load from database instead
-            List<Location> locations = new ArrayList<Location>();
-            locations.add(DummyContent.GINBAR);
-            data = createCity(cityId, "Aachen", locations);
-        }
-        return data;
-    }
-
-    public UserData getUserData(int userId) {
-        UserData data = storedUserData.get(userId);
-        if(data == null){
-            //TODO: load from database instead
-            data = createUser(userId, new HashSet<Location>(), new ArrayList<Location>(), new HashSet<Integer>(), new ArrayList<Post>());
-        }
-        return data;
+    public Set<Location> getFavorites(User user){
+        //load stored favorite-list
+        return new HashSet<Location>();
     }
 
     public void reset() {

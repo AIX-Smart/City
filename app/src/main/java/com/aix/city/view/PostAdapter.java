@@ -68,7 +68,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         return convertView;
     }
 
-    public void updateLikeButton(Button likeButton, final Post post){
+    private void updateLikeButton(Button likeButton, final Post post){
         if (post instanceof Event) {
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,7 +82,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         }
     }
 
-    public void updateLocationNameView(TextView locationNameView, final Post post){
+    private void updateLocationNameView(TextView locationNameView, final Post post){
         if (post instanceof Event){
             final Event event = (Event) post;
 
@@ -101,7 +101,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         }
     }
 
-    public void updateCommentCounterView(TextView commentCounterView, final Post post){
+    private void updateCommentCounterView(TextView commentCounterView, final Post post){
         if (post instanceof Event){
             final Event event = (Event) post;
 
@@ -120,7 +120,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         }
     }
 
-    public void updateContentView(TextView contentView, final Post post){
+    private void updateContentView(TextView contentView, final Post post){
         contentView.setText(post.getContent());
     }
 }

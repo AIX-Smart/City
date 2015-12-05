@@ -51,7 +51,7 @@ public abstract class Likeable extends Observable {
             Response.ErrorListener errorListener = new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    // do nothing
+                    notifyObservers();
                 }
             };
 
@@ -72,7 +72,7 @@ public abstract class Likeable extends Observable {
             Response.ErrorListener errorListener = new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    // do nothing
+                    notifyObservers();
                 }
             };
 

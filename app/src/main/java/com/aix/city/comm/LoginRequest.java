@@ -18,6 +18,11 @@ public class LoginRequest extends AIxJsonRequest<User> {
         this.deviceId = deviceId;
     }
 
+    @Override
+    public Priority getPriority() {
+        return Priority.IMMEDIATE;
+    }
+
     public String getDeviceId() {
         return deviceId;
     }

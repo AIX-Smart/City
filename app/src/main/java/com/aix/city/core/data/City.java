@@ -1,5 +1,6 @@
 package com.aix.city.core.data;
 
+import android.location.*;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,6 +13,9 @@ import com.aix.city.core.PostListing;
 import com.android.volley.Response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Thomas on 11.10.2015.
  */
@@ -19,6 +23,7 @@ public class City implements ListingSource {
 
     private int id;
     private String name;
+    private transient List<Location> locations = null;
 
     //no-argument constructor for JSON
     private City(){}
@@ -43,8 +48,12 @@ public class City implements ListingSource {
     }
 
     @JsonIgnore
-    public CityData getData() {
-        return AIxDataManager.getInstance().getCityData(id);
+    public List<Location> getLocations() {
+        if(locations == null){
+            //get Locations from database
+            locations = new ArrayList<Location>();
+        }
+        return locations;
     }
 
     @Override

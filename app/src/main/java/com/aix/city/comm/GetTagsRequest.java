@@ -13,4 +13,9 @@ public class GetTagsRequest extends AIxJsonRequest<Location[]> {
                           Response.ErrorListener errorListener){
         super(Request.Method.GET, URLFactory.get().createGetAllTagsURL(), null, Location[].class, listener, errorListener, true);
     }
+
+    @Override
+    public Priority getPriority() {
+        return Priority.LOW;
+    }
 }

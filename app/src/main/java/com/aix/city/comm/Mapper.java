@@ -24,7 +24,6 @@ public final class Mapper
         {
             MAPPER = new ObjectMapper();
 
-            // This is useful for me in case I add new object properties on the server side which are not yet available on the client.
             MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             // ignore observers in serialization

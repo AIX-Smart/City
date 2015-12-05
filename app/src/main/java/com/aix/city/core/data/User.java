@@ -3,27 +3,46 @@ package com.aix.city.core.data;
 import com.aix.city.core.AIxDataManager;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by Thomas on 11.10.2015.
  */
 public class User {
 
     private int id;
+    private List<Location> ownLocations;
+    private int permission;
+    private transient Set<Location> favorites = null;
 
     //no-argument constructor for JSON
     private User(){}
 
-    public User(int id) {
+    /**
+     * INTERNAL USE ONLY: use instead user.getData() or AIxDataManager.getInstance().createUser(...)
+     */
+    public User(int id, List<Location> ownLocations, int permission) {
         this.id = id;
+        this.ownLocations = ownLocations;
+        this.permission = permission;
     }
 
     public int getId() {
         return id;
     }
 
+    public List<Location> getOwnLocations() {
+        return ownLocations;
+    }
+
+    public int getPermission() {
+        return permission;
+    }
+
     @JsonIgnore
-    public UserData getData() {
-        return AIxDataManager.getInstance().getUserData(id);
+    public Set<Location> getFavorites() {
+        return AIxDataManager.getInstance().getFavorites(this);
     }
 
     @Override
