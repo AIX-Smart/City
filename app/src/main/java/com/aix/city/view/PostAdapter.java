@@ -43,7 +43,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = (PostView) inflater.inflate(R.layout.post, parent, false);
+            convertView = inflater.inflate(R.layout.post, parent, false);
 
             holder = new ViewHolder();
             holder.contentView = (TextView) convertView.findViewById(R.id.content);
@@ -78,7 +78,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             });
         }
         else{
-            likeButton.setVisibility(View.GONE);
+            likeButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -86,7 +86,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         if (post instanceof Event){
             final Event event = (Event) post;
 
-            locationNameView.setText(post.getSourceName());
+            locationNameView.setText(event.getLocation().getName());
             locationNameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,7 +97,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             });
         }
         else{
-            locationNameView.setVisibility(View.GONE);
+            locationNameView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -116,7 +116,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             });
         }
         else{
-            commentCounterView.setVisibility(View.GONE);
+            commentCounterView.setVisibility(View.INVISIBLE);
         }
     }
 

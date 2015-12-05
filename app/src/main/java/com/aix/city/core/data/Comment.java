@@ -34,8 +34,4 @@ public class Comment extends Post {
         return true;
     }
 
-    @Override
-    public String getSourceName() {
-        return String.valueOf(eventId);
-    }
 }

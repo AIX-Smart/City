@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -233,11 +232,14 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         else key = data.toString();
 
         switch(key){
-            case PostListing.OBSERVER_KEY_CHANGED_DATA_SET:
+            case PostListing.OBSERVER_KEY_CHANGED_DATASET:
                 mAdapter.notifyDataSetChanged();
                 break;
             case PostListing.OBSERVER_KEY_CHANGED_EDITABILITY:
                 setPostCreationVisibility(postListing.isEditable());
+                break;
+            case PostListing.OBSERVER_KEY_CHANGED_LIKESTATUS:
+                mAdapter.notifyDataSetChanged();
                 break;
             default:
                 mAdapter.notifyDataSetChanged();

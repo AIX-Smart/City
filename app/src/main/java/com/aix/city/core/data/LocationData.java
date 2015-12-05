@@ -1,11 +1,13 @@
 package com.aix.city.core.data;
 
+import com.aix.city.core.Likeable;
+
 import java.util.List;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class LocationData {
+public class LocationData extends Likeable {
 
     private Location location;
     private List<Tag> tags;
@@ -15,8 +17,6 @@ public class LocationData {
     private String houseNumber;
     private String phoneNumber;
     private String gps;
-    private int likeCount;
-    private boolean liked;
     //TODO: öffnungszeiten
     //TODO: Bilder
 
@@ -26,16 +26,17 @@ public class LocationData {
     /**
      * INTERNAL USE ONLY: use instead location.getData() or AIxDataManager.getInstance().createLocation(...)
      */
-    public LocationData(Location location, List<Tag> tags, String description, int cityId, String street, String houseNumber, int likeCount, boolean liked, String gps) {
+    public LocationData(Location location, List<Tag> tags, String description, int cityId, String street, String houseNumber, String phoneNumber, int likeCount, boolean liked, String gps) {
         this.location = location;
         this.tags = tags;
         this.description = description;
         this.cityId = cityId;
         this.street = street;
         this.houseNumber = houseNumber;
-        this.likeCount = likeCount;
-        this.liked = liked;
+        this.phoneNumber = phoneNumber;
         this.gps = gps;
+        setLiked(liked);
+        setLikeCount(likeCount);
     }
 
 
@@ -55,6 +56,10 @@ public class LocationData {
         return location.getName();
     }
 
+    public int getId(){
+        return location.getId();
+    }
+
     public String getDescription() {
         return description;
     }
@@ -67,10 +72,6 @@ public class LocationData {
         return houseNumber;
     }
 
-    public boolean isLiked() {
-        return liked;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -79,31 +80,11 @@ public class LocationData {
         return gps;
     }
 
-    public int getLikeCount() {
-        return likeCount;
-    }
-
     public void addTag(Tag tag){
         tags.add(tag);
     }
 
     public void removeTag(Tag tag){
         tags.remove(tag);
-    }
-
-    public void like() {
-        if (!liked) {
-            liked = true;
-            if (likeCount < Integer.MAX_VALUE) likeCount++;
-            //TODO: Server Communication
-        }
-    }
-
-    public void resetLike() {
-        if (liked) {
-            liked = false;
-            if (likeCount > 0) likeCount--;
-            //TODO: Server Communication
-        }
     }
 }

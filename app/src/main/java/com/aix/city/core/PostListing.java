@@ -1,6 +1,5 @@
 package com.aix.city.core;
 
-import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.core.data.Post;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -9,17 +8,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class PostListing extends Observable {
+public class PostListing extends Observable implements Observer {
 
     /** Defines the default number of posts for a database GET-request */
     public static final int POST_REQUEST_NUM = 1;
 
-    public static final String OBSERVER_KEY_CHANGED_DATA_SET = "dataSet";
+    public static final String OBSERVER_KEY_CHANGED_DATASET = "dataSet";
     public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
+    public static final String OBSERVER_KEY_CHANGED_LIKESTATUS = "likeStatus";
 
     private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
@@ -45,14 +46,18 @@ public class PostListing extends Observable {
      */
     public void addPosts(Post[] posts){
         getPosts().addAll(Arrays.asList(posts));
+        for(Post post : posts){
+            post.addObserver(this);
+        }
         setChanged();
-        notifyObservers();
+        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     public void addPost(Post post){
         getPosts().add(post);
+        post.addObserver(this);
         setChanged();
-        notifyObservers();
+        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     /**
@@ -62,7 +67,7 @@ public class PostListing extends Observable {
     public void removePost(Post post){
         posts.remove(post);
         setChanged();
-        notifyObservers();
+        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     /**
@@ -133,4 +138,9 @@ public class PostListing extends Observable {
         return false;
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        setChanged();
+        notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
+    }
 }

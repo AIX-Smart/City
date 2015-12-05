@@ -3,7 +3,7 @@ package com.aix.city.core;
 import android.content.Context;
 
 import com.aix.city.comm.GetPostsRequest;
-import com.aix.city.comm.LikeRequest;
+import com.aix.city.comm.LikeChangeRequest;
 import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
 import com.aix.city.comm.PostCreationRequest;
@@ -100,8 +100,8 @@ public class AIxNetworkManager {
         addRequest(request);
     }
 
-    public void requestLike(Response.Listener<String> listener, Response.ErrorListener errorListener, Post post, boolean like){
-        LikeRequest request = new LikeRequest(listener, errorListener, post, like);
+    public void requestLikeChange(Response.Listener<String> listener, Response.ErrorListener errorListener, Likeable likeable, boolean like){
+        LikeChangeRequest request = new LikeChangeRequest(listener, errorListener, likeable, like);
         addRequest(request);
     }
 

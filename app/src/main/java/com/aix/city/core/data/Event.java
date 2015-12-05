@@ -57,11 +57,6 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
-    public String getSourceName() {
-        return location.getName();
-    }
-
-    @Override
     public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost) {
         AIxNetworkManager.getInstance().requestPosts(listener, errorListener, postNum, lastPost, this);
     }

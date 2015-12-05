@@ -66,8 +66,8 @@ public class AIxDataManager {
         return currentCity;
     }
 
-    public LocationData createLocation(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, int likeCount, boolean liked, String gps) {
-        LocationData data = new LocationData(new Location(locationId, name), tags, description, city.getId(), street, houseNumber, likeCount, liked, gps);
+    public LocationData createLocation(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, String phoneNumber, int likeCount, boolean liked, String gps) {
+        LocationData data = new LocationData(new Location(locationId, name), tags, description, city.getId(), street, phoneNumber, houseNumber, likeCount, liked, gps);
         storedLocationData.put(locationId, data);
         return data;
     }
@@ -88,7 +88,7 @@ public class AIxDataManager {
         LocationData data = storedLocationData.get(locationId);
         if(data == null){
             //TODO: load from database instead
-            data = createLocation(locationId, "GinBar", allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", 0, false, "gps");
+            data = createLocation(locationId, "GinBar", allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", "0240/123456789", 0, false, "gps");
         }
         return data;
     }
