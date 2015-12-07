@@ -1,5 +1,8 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.aix.city.core.AIxNetworkManager;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -13,6 +16,21 @@ public abstract class Likeable extends Observable {
 
     private boolean liked; //current user has already liked this post
     private int likeCount;
+
+    public Likeable(){
+
+    }
+
+    public Likeable(boolean liked, int likeCount) {
+        this.liked = liked;
+        this.likeCount = likeCount;
+    }
+
+    //implements Parcelable
+    public Likeable(Parcel in){
+        liked = (in.readInt() != 0);
+        likeCount = in.readInt();
+    }
 
     public boolean isLiked() {
         return liked;
@@ -78,5 +96,11 @@ public abstract class Likeable extends Observable {
 
             AIxNetworkManager.getInstance().requestLikeChange(listener, errorListener, this, false);
         }
+    }
+
+    //implements Parcelable
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(isLiked() ? 1 : 0);
+        dest.writeInt(getLikeCount());
     }
 }

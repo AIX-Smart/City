@@ -1,5 +1,7 @@
 package com.aix.city.core.data;
 
+import android.os.Parcel;
+
 import com.aix.city.core.Likeable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -22,16 +24,27 @@ public abstract class Post extends Likeable {
     protected Post(){
     }
 
-    public Post(int id, String content, long creationTime, int likeCount, int authorId, boolean liked) {
+    public Post(int id, String content, long creationTime, int authorId, boolean liked, int likeCount) {
+        super(liked, likeCount);
         this.id = id;
         this.content = content;
         this.creationTime = creationTime;
         this.authorId = authorId;
-        setLiked(liked);
-        setLikeCount(likeCount);
+    }
+
+    //implements Parcelable
+    public Post(Parcel in){
+        super(in);
+        id = in.readInt();
+        content = in.readString();
+        creationTime = in.readLong();
+        authorId = in.readInt();
     }
 
     public String getContent() {
+        if(content == null){
+            content = "";
+        }
         return content;
     }
 
@@ -55,10 +68,6 @@ public abstract class Post extends Likeable {
         return deleted;
     }
 
-    public void update() {
-        //TODO: update post from database
-    }
-
     /**
      * INTERNAL USE ONLY:
      */
@@ -80,5 +89,14 @@ public abstract class Post extends Likeable {
     @Override
     public int hashCode() {
         return 67*id;
+    }
+
+    //implements Parcelable
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeInt(getId());
+        dest.writeString(getContent());
+        dest.writeLong(getCreationTime());
+        dest.writeInt(getAuthorId());
     }
 }

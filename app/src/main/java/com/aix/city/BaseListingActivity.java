@@ -28,6 +28,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     private ListView searchMenuList;
     private ListView userMenuList;
 
+    //TODO: entfernen; nur lokal
     private ListingSource listingSource;
 
     public BaseListingActivity(){}

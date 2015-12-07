@@ -2,12 +2,18 @@ package com.aix.city.core;
 
 import android.content.Context;
 
+import com.aix.city.comm.GetCityLocationsRequest;
+import com.aix.city.comm.GetLocationRequest;
 import com.aix.city.comm.GetPostsRequest;
+import com.aix.city.comm.GetTagsRequest;
 import com.aix.city.comm.LikeChangeRequest;
 import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
 import com.aix.city.comm.PostCreationRequest;
+import com.aix.city.core.data.City;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
+import com.aix.city.core.data.Tag;
 import com.aix.city.core.data.User;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -107,6 +113,21 @@ public class AIxNetworkManager {
 
     public void requestLogin(Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
         LoginRequest request = new LoginRequest(listener, errorListener, deviceId);
+        addRequest(request);
+    }
+
+    public void requestTags(Response.Listener<Tag[]> listener, Response.ErrorListener errorListener){
+        GetTagsRequest request = new GetTagsRequest(listener, errorListener);
+        addRequest(request);
+    }
+
+    public void requestCityLocations(Response.Listener<Location[]> listener, Response.ErrorListener errorListener, City city){
+        GetCityLocationsRequest request = new GetCityLocationsRequest(listener, errorListener, city);
+        addRequest(request);
+    }
+
+    public void requestLocation(Response.Listener<Location> listener, Response.ErrorListener errorListener, int locationId){
+        GetLocationRequest request = new GetLocationRequest(listener, errorListener, locationId);
         addRequest(request);
     }
 }

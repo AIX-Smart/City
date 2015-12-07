@@ -21,6 +21,11 @@ public class GetPostsRequest extends AIxJsonRequest<Post[]> {
         this.listingSource = listingSource;
     }
 
+    @Override
+    public Priority getPriority() {
+        return Priority.HIGH;
+    }
+
     public int getPostNum() {
         return postNum;
     }

@@ -29,11 +29,13 @@ public class Tag implements ListingSource {
 
     public Tag(int id, String name) {
         this.id = id;
-        if(name == null) this.name = "";
-        else this.name = name;
+        this.name = name;
     }
 
     public String getName() {
+        if(name == null){
+            name = "";
+        }
         return name;
     }
 
@@ -79,8 +81,8 @@ public class Tag implements ListingSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
+        dest.writeInt(getId());
+        dest.writeString(getName());
     }
 
     public static final Parcelable.Creator<Tag> CREATOR =

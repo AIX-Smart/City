@@ -3,6 +3,7 @@ package com.aix.city.core.data;
 import android.location.*;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.core.AIxDataManager;
@@ -23,7 +24,6 @@ public class City implements ListingSource {
 
     private int id;
     private String name;
-    private transient List<Location> locations = null;
 
     //no-argument constructor for JSON
     private City(){}
@@ -40,20 +40,14 @@ public class City implements ListingSource {
     }
 
     public String getName() {
+        if(name == null){
+            name = "";
+        }
         return name;
     }
 
     public int getId() {
         return id;
-    }
-
-    @JsonIgnore
-    public List<Location> getLocations() {
-        if(locations == null){
-            //get Locations from database
-            locations = new ArrayList<Location>();
-        }
-        return locations;
     }
 
     @Override
@@ -94,8 +88,8 @@ public class City implements ListingSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
+        dest.writeInt(getId());
+        dest.writeString(getName());
     }
 
     public static final Parcelable.Creator<City> CREATOR =

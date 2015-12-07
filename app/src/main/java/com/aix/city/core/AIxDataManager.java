@@ -1,31 +1,42 @@
 package com.aix.city.core;
 
 import android.content.Context;
-import android.util.SparseArray;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Location;
-import com.aix.city.core.data.LocationData;
 import com.aix.city.core.data.Tag;
 import com.aix.city.core.data.User;
 import com.aix.city.dummy.DummyContent;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class AIxDataManager {
+public class AIxDataManager extends Observable {
+
+    public static final String OBSERVER_KEY_CHANGED_TAGS = "tags";
+    public static final String OBSERVER_KEY_CHANGED_LOCATIONS = "locations";
+    public static final String OBSERVER_KEY_CHANGED_CITY = "city";
+    public static final Location EMPTY_LOCATION = new Location();
 
     private static AIxDataManager instance;
     private final Context context;
     private City currentCity;
     private List<Tag> allTags = new ArrayList<Tag>();
     private List<City> allCities = new ArrayList<City>();
-    private SparseArray<LocationData> storedLocationData = new SparseArray<LocationData>();
+    private Map<Integer, Location> storedLocations = new HashMap<Integer, Location>();
 
 
     //Singleton methods and constructor
@@ -39,10 +50,17 @@ public class AIxDataManager {
             instance.allTags.add(DummyContent.BAR_TAG);
             instance.allTags.add(DummyContent.RESTAURANT_TAG);
             instance.allCities.add(DummyContent.AACHEN);
-            instance.currentCity = DummyContent.AACHEN;
+            instance.currentCity = instance.allCities.get(0);
+            instance.storedLocations.put(DummyContent.GINBAR.getId(), DummyContent.GINBAR);
+            //
+            instance.requestCityLocations(instance.currentCity);
+            instance.requestTags();
         }
     }
 
+    /**
+     * Singleton getter. initInstance(Context context) must be called before.
+     */
     public static AIxDataManager getInstance() {
         return instance;
     }
@@ -60,6 +78,7 @@ public class AIxDataManager {
         return currentCity;
     }
 
+    @Nullable
     public City getCity(int id){
         for(City city: allCities){
             if(city.getId() == id) return city;
@@ -67,19 +86,22 @@ public class AIxDataManager {
         return null;
     }
 
-    public LocationData createLocation(int locationId, String name, List<Tag> tags, String description, City city, String street, String houseNumber, String phoneNumber, int likeCount, boolean liked, String gps) {
-        LocationData data = new LocationData(new Location(locationId, name), tags, description, city.getId(), street, phoneNumber, houseNumber, likeCount, liked, gps);
-        storedLocationData.put(locationId, data);
-        return data;
+    @Nullable
+    public Tag getTag(int id){
+        for(Tag tag: allTags){
+            if(tag.getId() == id) return tag;
+        }
+        return null;
     }
 
-    public LocationData getLocationData(int locationId) {
-        LocationData data = storedLocationData.get(locationId);
-        if(data == null){
-            //TODO: load from database instead
-            data = createLocation(locationId, "GinBar", allTags, "Hier steht eine Beschreibung der Bar", DummyContent.AACHEN, "Irgendwo-Straße", "42", "0240/123456789", 0, false, "gps");
+    @NonNull
+    public Location getLocation(int locationId) {
+        Location location = storedLocations.get(locationId);
+        if(location == null){
+            //requestLocation(locationId);
+            location = EMPTY_LOCATION;
         }
-        return data;
+        return location;
     }
 
     public Set<Location> getFavorites(User user){
@@ -87,7 +109,66 @@ public class AIxDataManager {
         return new HashSet<Location>();
     }
 
-    public void reset() {
-        return;
+    public void requestCities(){
+        allCities.add(DummyContent.AACHEN);
+    }
+
+    public void requestTags(){
+        Response.Listener<Tag[]> listener = new Response.Listener<Tag[]>(){
+            @Override
+            public void onResponse(Tag[] response) {
+                allTags = Arrays.asList(response);
+                setChanged();
+                notifyObservers(OBSERVER_KEY_CHANGED_TAGS);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        };
+
+        AIxNetworkManager.getInstance().requestTags(listener, errorListener);
+    }
+
+    public void requestCityLocations(City city){
+        Response.Listener<Location[]> listener = new Response.Listener<Location[]>(){
+            @Override
+            public void onResponse(Location[] response) {
+                for (int i = 0; i < response.length; i++){
+                    storedLocations.put(response[i].getId(), response[i]);
+                }
+                setChanged();
+                notifyObservers(OBSERVER_KEY_CHANGED_LOCATIONS);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        };
+
+        AIxNetworkManager.getInstance().requestCityLocations(listener, errorListener, city);
+    }
+
+    public void requestLocation(int locationId){
+        Response.Listener<Location> listener = new Response.Listener<Location>(){
+            @Override
+            public void onResponse(Location response) {
+                storedLocations.put(response.getId(), response);
+                setChanged();
+                notifyObservers(OBSERVER_KEY_CHANGED_LOCATIONS);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        };
+
+        AIxNetworkManager.getInstance().requestLocation(listener, errorListener, locationId);
     }
 }

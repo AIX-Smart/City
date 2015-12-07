@@ -14,19 +14,13 @@ public class Comment extends Post {
     /**
      * INTERNAL USE ONLY: use instead event.createPostListing().createComment(String message)
      */
-    public Comment(int postID, String message, long creationTime, int likeCount, int authorId, boolean likeStatus, int eventId) {
-        super(postID, message, creationTime, likeCount, authorId, likeStatus);
+    public Comment(int postID, String message, long creationTime, int authorId, boolean liked, int likeCount, int eventId) {
+        super(postID, message, creationTime, authorId, liked, likeCount);
         this.eventId = eventId;
     }
 
     public int getEventId() {
         return eventId;
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        //TODO: update post from database
     }
 
     @Override

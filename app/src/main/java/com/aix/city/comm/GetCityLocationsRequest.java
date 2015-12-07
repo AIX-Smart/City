@@ -12,11 +12,14 @@ public class GetCityLocationsRequest extends AIxJsonRequest<Location[]> {
 
     private final City city;
 
-    public GetCityLocationsRequest(Response.Listener<Location[]> listener,
-                                   Response.ErrorListener errorListener,
-                                   City city){
-        super(Request.Method.GET, URLFactory.get().createGetCityLocationsURL(city), null, Location[].class, listener, errorListener, false);
+    public GetCityLocationsRequest(Response.Listener<Location[]> listener, Response.ErrorListener errorListener, City city){
+        super(Request.Method.GET, URLFactory.get().createGetCityLocationsURL(city), null, Location[].class, listener, errorListener, true);
         this.city = city;
+    }
+
+    @Override
+    public Priority getPriority() {
+        return Priority.LOW;
     }
 
     public City getCity() {

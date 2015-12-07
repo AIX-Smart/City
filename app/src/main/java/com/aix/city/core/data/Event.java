@@ -4,18 +4,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.aix.city.comm.GetPostsRequest;
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.android.volley.Response;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
 public class Event extends Post implements ListingSource {
 
-    private Location location;
+    private int locationId;
     private int commentCount;
 
     //no-argument constructor for JSON
@@ -23,32 +25,31 @@ public class Event extends Post implements ListingSource {
 
     //Parcelable constructor
     public Event(Parcel in){
-        super(in.readInt(), in.readString(), in.readLong(), in.readInt(), in.readInt(), (in.readInt() != 0));
-        this.location = in.readParcelable(Location.class.getClassLoader());
+        super(in);
+        this.locationId = in.readInt();
         this.commentCount = in.readInt();
     }
 
     /**
      * INTERNAL USE ONLY: use instead location.createPostListing().createEvent(String message)
      */
-    public Event(int postID, String message, long creationTime, int likeCount, int authorId, boolean likeStatus, Location location, int commentCount) {
-        super(postID, message, creationTime, likeCount, authorId, likeStatus);
-        this.location = location;
+    public Event(int postID, String message, long creationTime, int authorId, boolean liked, int likeCount, int locationId, int commentCount) {
+        super(postID, message, creationTime, authorId, liked, likeCount);
+        this.locationId = locationId;
         this.commentCount = commentCount;
     }
 
-    public Location getLocation() {
-        return location;
+    public int getLocationId() {
+        return locationId;
     }
 
     public int getCommentCount() {
         return commentCount;
     }
 
-    @Override
-    public void update() {
-        super.update();
-        //TODO: update post from database
+    @JsonIgnore
+    public Location getLocation(){
+        return AIxDataManager.getInstance().getLocation(locationId);
     }
 
     @Override
@@ -78,13 +79,8 @@ public class Event extends Post implements ListingSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(getId());
-        dest.writeString(getContent());
-        dest.writeLong(getCreationTime());
-        dest.writeInt(getLikeCount());
-        dest.writeInt(getAuthorId());
-        dest.writeInt(isLiked() ? 1 : 0);
-        dest.writeParcelable(getLocation(), flags);
+        super.writeToParcel(dest, flags);
+        dest.writeInt(getLocationId());
         dest.writeInt(getCommentCount());
     }
 

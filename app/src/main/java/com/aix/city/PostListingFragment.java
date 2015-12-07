@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Post;
 import com.aix.city.dummy.DummyContent;
@@ -105,7 +107,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
         //create postview-adapter
         mAdapter = new PostAdapter(getActivity(), postListing.getPosts());
-        postListing.addObserver(this);
     }
 
     @Override
@@ -169,6 +170,15 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
     @Override
     public void onResume() {
         super.onResume();
+        postListing.addObserver(this);
+        AIxDataManager.getInstance().addObserver(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        postListing.deleteObserver(this);
+        AIxDataManager.getInstance().deleteObserver(this);
     }
 
     @Override

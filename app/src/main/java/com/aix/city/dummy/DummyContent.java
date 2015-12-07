@@ -37,7 +37,7 @@ public class DummyContent {
 
     public static City AACHEN = new City(1, "Aachen");
 
-    public static Location GINBAR = new Location(1, "GinBar");
+    public static Location GINBAR = new Location(1, "GinBar", new ArrayList<Tag>(), "Eine tolle Bar", AACHEN.getId(), "Irgendwo-Straße", "42", "0240/123456789", false, 0);
 
     public static String[] LEFT_MENU_ELEMENTS = {"post", "bars", "restaurants"};
 
@@ -54,24 +54,27 @@ public class DummyContent {
         addItem(new DummyItem("2", "Item 2"));
         addItem(new DummyItem("3", "Item 3"));
 
+        GINBAR.addTag(BAR_TAG);
+        GINBAR.addTag(RESTAURANT_TAG);
+
         EditableEventListing listing = GINBAR.createPostListing();
 
         String content = "Post 1: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 2: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 3: Lorem ipsum dolor sit amet, ";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 4: Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 5: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 6: ";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 7: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula ";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
         content = "Post 8: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatib";
-        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, 0, false, GINBAR, 0));
+        listing.addPost(new Event(-1, content, System.currentTimeMillis(), 0, false, 0, GINBAR.getId(), 0));
 
         PostListing listing2 = AACHEN.createPostListing();
         listing2.getPosts().addAll(listing.getPosts());

@@ -55,8 +55,10 @@ public abstract class EditableListing extends PostListing {
     }
 
     public void setEditable(boolean editable){
-        this.editable = editable;
-        setChanged();
-        notifyObservers(OBSERVER_KEY_CHANGED_EDITABILITY);
+        if(this.editable != editable){
+            this.editable = editable;
+            setChanged();
+            notifyObservers(OBSERVER_KEY_CHANGED_EDITABILITY);
+        }
     }
 }

@@ -11,7 +11,6 @@ import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.data.Location;
-import com.aix.city.core.data.LocationData;
 import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
 import com.squareup.okhttp.HttpUrl;
@@ -132,6 +131,14 @@ public class URLFactory {
         return urlBuilder.build().toString();
     }
 
+    public String createGetLocationURL(int locationId) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(LOCATION);
+        urlBuilder.addPathSegment(String.valueOf(locationId));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        return urlBuilder.build().toString();
+    }
+
     public String createPostCreationURL(EditableListing postListing){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
 
@@ -171,7 +178,7 @@ public class URLFactory {
         if(likeable instanceof Comment){
             urlBuilder.addPathSegment(COMMENT);
         }
-        if(likeable instanceof LocationData){
+        if(likeable instanceof Location){
             urlBuilder.addPathSegment(LOCATION);
         }
         urlBuilder.addPathSegment(String.valueOf(likeable.getId()));

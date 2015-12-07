@@ -14,7 +14,7 @@ public class LoginRequest extends AIxJsonRequest<User> {
     public LoginRequest(Response.Listener<User> listener,
                         Response.ErrorListener errorListener,
                         String deviceId){
-        super(Request.Method.GET, URLFactory.get().createLoginURL(deviceId), null, User.class, listener, errorListener, false);
+        super(Request.Method.GET, URLFactory.get().createLoginURL(deviceId), null, User.class, listener, errorListener, true);
         this.deviceId = deviceId;
     }
 
