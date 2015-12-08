@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.PostListing;
 import com.aix.city.core.data.City;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Event;
@@ -28,9 +29,6 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     private ListView searchMenuList;
     private ListView userMenuList;
 
-    //TODO: entfernen; nur lokal
-    private ListingSource listingSource;
-
     public BaseListingActivity(){}
 
     @Override
@@ -39,10 +37,15 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         setContentView(R.layout.activity_base_listing);
 
         Intent intent = getIntent();
-        listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
+        ListingSource listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
+        PostListing postListing;
         if(listingSource == null){
            //listingSource = AIxDataManager.getInstance().getCurrentCity();
            //listingSource = DummyContent.GINBAR;
+            postListing = DummyContent.AACHEN_LISTING;
+        }
+        else{
+            postListing = listingSource.createPostListing();
         }
 
         searchMenuList = (ListView) findViewById(R.id.left_menu_list);
@@ -54,8 +57,8 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         userMenuList.setAdapter(rightListAdapter);
 
         //create fragments with data
-        postListingFragment = PostListingFragment.newInstance(listingSource);
-        listingSourceFragment = createListingSourceFragment();
+        postListingFragment = PostListingFragment.newInstance(postListing);
+        listingSourceFragment = createListingSourceFragment(listingSource);
 
         // Create transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -72,7 +75,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
 
 
-    public Fragment createListingSourceFragment(){
+    public Fragment createListingSourceFragment(ListingSource listingSource){
         if(listingSource == null) return CityFragment.newInstance((City) listingSource);
 
         switch (listingSource.getType()) {
@@ -107,7 +110,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     }
 
     public ListingSource getListingSource() {
-        return listingSource;
+        return postListingFragment.getPostListing().getListingSource();
     }
 
     @Override

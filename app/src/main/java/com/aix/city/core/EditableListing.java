@@ -1,5 +1,7 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+
 import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.comm.PostCreationRequest;
 import com.aix.city.core.data.Post;
@@ -16,6 +18,10 @@ public abstract class EditableListing extends PostListing {
 
     public EditableListing(ListingSource listingSource) {
         super(listingSource);
+    }
+
+    public EditableListing(Parcel in){
+        super(in);
     }
 
     @Override
@@ -60,5 +66,10 @@ public abstract class EditableListing extends PostListing {
             setChanged();
             notifyObservers(OBSERVER_KEY_CHANGED_EDITABILITY);
         }
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
     }
 }

@@ -3,7 +3,6 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableCommentListing;
@@ -31,7 +30,7 @@ public class Event extends Post implements ListingSource {
     }
 
     /**
-     * INTERNAL USE ONLY: use instead location.createPostListing().createEvent(String message)
+     * INTERNAL USE ONLY: use instead location.createPostListing().createPost(String message)
      */
     public Event(int postID, String message, long creationTime, int authorId, boolean liked, int likeCount, int locationId, int commentCount) {
         super(postID, message, creationTime, authorId, liked, likeCount);
@@ -74,7 +73,7 @@ public class Event extends Post implements ListingSource {
 
     @Override
     public int describeContents() {
-        return 0;
+        return Post.PARCEL_DESCRIPTION_EVENT;
     }
 
     @Override
@@ -89,6 +88,8 @@ public class Event extends Post implements ListingSource {
 
                 @Override
                 public Event createFromParcel(Parcel source) {
+                    //read class description
+                    source.readInt();
                     return new Event(source);
                 }
 

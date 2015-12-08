@@ -1,5 +1,8 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.aix.city.core.data.Post;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -13,16 +16,19 @@ import java.util.Observer;
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class PostListing extends Observable implements Observer {
+public class PostListing extends Observable implements Observer, Parcelable {
 
     /** Defines the default number of posts for a database GET-request */
     public static final int POST_REQUEST_NUM = 1;
+
+    public static final int PARCEL_DESCRIPTION_POST_LISTING = 0;
+    public static final int PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING = 1;
+    public static final int PARCEL_DESCRIPTION_EDITABLE_COMMENT_LISTING = 2;
 
     public static final String OBSERVER_KEY_CHANGED_DATASET = "dataSet";
     public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
     public static final String OBSERVER_KEY_CHANGED_LIKESTATUS = "likeStatus";
 
-    private List<Post> allStoredPosts  = new ArrayList<Post>();
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
     private boolean finished = false;
@@ -34,6 +40,12 @@ public class PostListing extends Observable implements Observer {
      */
     public PostListing(ListingSource listingSource) {
         this.listingSource = listingSource;
+    }
+
+    public PostListing(Parcel in){
+        in.readTypedList(posts, Post.CREATOR);
+        listingSource = in.readParcelable(ListingSource.class.getClassLoader());
+        finished = (in.readInt() != 0);
     }
 
     public ListingSource getListingSource() {
@@ -143,4 +155,40 @@ public class PostListing extends Observable implements Observer {
         setChanged();
         notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
     }
+
+    @Override
+    public int describeContents() {
+        return PARCEL_DESCRIPTION_POST_LISTING;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.describeContents());
+        dest.writeTypedList(getPosts());
+        dest.writeParcelable(getListingSource(), flags);
+        dest.writeInt(isFinished() ? 1 : 0);
+    }
+
+    public static final Parcelable.Creator<PostListing> CREATOR =
+            new Parcelable.Creator<PostListing>(){
+
+                @Override
+                public PostListing createFromParcel(Parcel source) {
+                    int classDescription = source.readInt();
+                    switch(classDescription){
+                        case PARCEL_DESCRIPTION_POST_LISTING:
+                            return new PostListing(source);
+                        case PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING:
+                            return new EditableEventListing(source);
+                        case PARCEL_DESCRIPTION_EDITABLE_COMMENT_LISTING:
+                            return new EditableCommentListing(source);
+                    }
+                    return null;
+                }
+
+                @Override
+                public PostListing[] newArray(int size) {
+                    return new PostListing[size];
+                }
+            };
 }

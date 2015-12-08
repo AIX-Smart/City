@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 
@@ -90,9 +91,11 @@ public class PostAdapter extends ArrayAdapter<Post> {
             locationNameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), BaseListingActivity.class);
-                    intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, event.getLocation());
-                    getContext().startActivity(intent);
+                    if(event.getLocation() != AIxDataManager.EMPTY_LOCATION){
+                        Intent intent = new Intent(getContext(), BaseListingActivity.class);
+                        intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, event.getLocation());
+                        getContext().startActivity(intent);
+                    }
                 }
             });
         }

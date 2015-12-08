@@ -167,11 +167,12 @@ public class Location extends Likeable implements ListingSource {
 
     @Override
     public int describeContents() {
-        return 0;
+        return ListingSource.PARCEL_DESCRIPTION_LOCATION;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.describeContents());
         super.writeToParcel(dest, flags);
         dest.writeInt(getId());
         dest.writeString(getName());
@@ -189,6 +190,8 @@ public class Location extends Likeable implements ListingSource {
 
                 @Override
                 public Location createFromParcel(Parcel source) {
+                    //read class description
+                    source.readInt();
                     return new Location(source);
                 }
 

@@ -76,11 +76,12 @@ public class Tag implements ListingSource {
 
     @Override
     public int describeContents() {
-        return 0;
+        return ListingSource.PARCEL_DESCRIPTION_TAG;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.describeContents());
         dest.writeInt(getId());
         dest.writeString(getName());
     }
@@ -90,6 +91,8 @@ public class Tag implements ListingSource {
 
                 @Override
                 public Tag createFromParcel(Parcel source) {
+                    //read class description
+                    source.readInt();
                     return new Tag(source);
                 }
 

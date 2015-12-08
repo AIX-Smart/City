@@ -78,6 +78,10 @@ public class AIxDataManager extends Observable {
         return currentCity;
     }
 
+    public User getCurrentUser(){
+        return AIxLoginModule.getInstance().getLoggedInUser();
+    }
+
     @Nullable
     public City getCity(int id){
         for(City city: allCities){

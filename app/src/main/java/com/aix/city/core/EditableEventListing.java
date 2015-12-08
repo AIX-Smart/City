@@ -1,5 +1,7 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+
 import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.comm.PostCreationRequest;
 import com.aix.city.core.data.Event;
@@ -21,9 +23,12 @@ public class EditableEventListing extends EditableListing {
      */
     public EditableEventListing(ListingSource listingSource) {
         super(listingSource);
-        if (listingSource instanceof Location) {
-            location = (Location) getListingSource();
-        }
+        location = (Location) getListingSource();
+    }
+
+    public EditableEventListing(Parcel in){
+        super(in);
+        location = (Location) getListingSource();
     }
 
     public Location getLocation() {
@@ -70,5 +75,15 @@ public class EditableEventListing extends EditableListing {
         else{
             return false;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return PostListing.PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
     }
 }

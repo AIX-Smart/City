@@ -83,11 +83,12 @@ public class City implements ListingSource {
 
     @Override
     public int describeContents() {
-        return 0;
+        return ListingSource.PARCEL_DESCRIPTION_CITY;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.describeContents());
         dest.writeInt(getId());
         dest.writeString(getName());
     }
@@ -97,6 +98,8 @@ public class City implements ListingSource {
 
                 @Override
                 public City createFromParcel(Parcel source) {
+                    //read class description
+                    source.readInt();
                     return new City(source);
                 }
 

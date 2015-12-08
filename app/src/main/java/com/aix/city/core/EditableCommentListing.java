@@ -1,5 +1,7 @@
 package com.aix.city.core;
 
+import android.os.Parcel;
+
 import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.comm.PostCreationRequest;
 import com.aix.city.core.data.Comment;
@@ -21,9 +23,12 @@ public class EditableCommentListing extends EditableListing {
      */
     public EditableCommentListing(ListingSource listingSource) {
         super(listingSource);
-        if (listingSource instanceof Event) {
-            event = (Event) getListingSource();
-        }
+        event = (Event) getListingSource();
+    }
+
+    public EditableCommentListing(Parcel in){
+        super(in);
+        event = (Event) getListingSource();
     }
 
     public Event getEvent() {
@@ -68,5 +73,15 @@ public class EditableCommentListing extends EditableListing {
         else{
             return false;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return PostListing.PARCEL_DESCRIPTION_EDITABLE_COMMENT_LISTING;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
     }
 }

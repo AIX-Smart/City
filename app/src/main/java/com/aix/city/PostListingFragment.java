@@ -36,7 +36,7 @@ import java.util.Observer;
  */
 public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer, View.OnClickListener {
     
-    public final static String ARG_LISTING_SOURCE = "listingSource";
+    public final static String ARG_POST_LISTING = "listing";
 
     /**
      * This interface must be implemented by activities that contain this
@@ -72,10 +72,10 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
      */
     private PostAdapter mAdapter;
 
-    public static PostListingFragment newInstance(ListingSource listingSource) {
+    public static PostListingFragment newInstance(PostListing postListing) {
         PostListingFragment fragment = new PostListingFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_LISTING_SOURCE, listingSource);
+        args.putParcelable(ARG_POST_LISTING, postListing);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,6 +87,10 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
     public PostListingFragment() {
     }
 
+    public PostListing getPostListing() {
+        return postListing;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,14 +99,10 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
         //get instance data
         if (getArguments() != null) {
-            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
-            if(obj != null && obj instanceof ListingSource){
-                postListing = ((ListingSource)obj).createPostListing();
+            Object obj = getArguments().getParcelable(ARG_POST_LISTING);
+            if(obj != null && obj instanceof PostListing){
+                postListing = (PostListing)obj;
             }
-        }
-
-        if(postListing == null){
-            postListing = DummyContent.AACHEN_LISTING;
         }
 
         //create postview-adapter
