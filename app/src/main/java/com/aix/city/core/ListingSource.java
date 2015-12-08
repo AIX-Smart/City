@@ -25,6 +25,8 @@ public interface ListingSource extends Parcelable {
     @JsonIgnore
     ListingSourceType getType();
 
+    int getId();
+
     Parcelable.Creator<ListingSource> CREATOR =
             new Parcelable.Creator<ListingSource>(){
 

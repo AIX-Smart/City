@@ -7,13 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
 import com.aix.city.dummy.DummyContent;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LocationProfileFragment extends Fragment {
+public class LocationProfileFragment extends ListingSourceFragment {
 
     public final static String ARG_LOCATION = "location";
 
@@ -29,6 +30,11 @@ public class LocationProfileFragment extends Fragment {
     }
 
     public LocationProfileFragment() {
+    }
+
+    @Override
+    public ListingSource getListingSource() {
+        return location;
     }
 
     @Override

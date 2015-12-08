@@ -164,21 +164,29 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         super.onStart();
 
         //load posts
-        postListing.loadMorePosts();
-    }
+        if(postListing.getPosts().isEmpty()){
+            postListing.loadMorePosts();
+        }
 
-    @Override
-    public void onResume() {
-        super.onResume();
         postListing.addObserver(this);
         AIxDataManager.getInstance().addObserver(this);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         postListing.deleteObserver(this);
         AIxDataManager.getInstance().deleteObserver(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override

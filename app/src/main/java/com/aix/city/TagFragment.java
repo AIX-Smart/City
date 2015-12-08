@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Tag;
 import com.aix.city.dummy.DummyContent;
@@ -14,7 +15,7 @@ import com.aix.city.dummy.DummyContent;
 /**
  * Created by Thomas on 17.11.2015.
  */
-public class TagFragment extends Fragment {
+public class TagFragment extends ListingSourceFragment {
 
     public final static String ARG_TAG = "tag";
 
@@ -30,6 +31,11 @@ public class TagFragment extends Fragment {
     }
 
     public TagFragment() {
+    }
+
+    @Override
+    public ListingSource getListingSource() {
+        return tag;
     }
 
     @Override

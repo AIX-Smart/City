@@ -18,6 +18,11 @@ public class LikeChangeRequest extends AIxJsonRequest<String> {
         this.liked = liked;
     }
 
+    @Override
+    public Priority getPriority() {
+        return Priority.HIGH;
+    }
+
     public Likeable getLikeable() {
         return likeable;
     }

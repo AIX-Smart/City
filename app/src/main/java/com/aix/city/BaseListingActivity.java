@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.PostListing;
-import com.aix.city.core.data.City;
 import com.aix.city.core.ListingSource;
-import com.aix.city.core.data.Event;
-import com.aix.city.core.data.Location;
-import com.aix.city.core.data.Tag;
 import com.aix.city.dummy.DummyContent;
 
 
@@ -23,11 +23,14 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
     public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.ListingSource";
 
-    private Fragment listingSourceFragment;
+    private ListingSourceFragment listingSourceFragment;
     private PostListingFragment postListingFragment;
 
-    private ListView searchMenuList;
-    private ListView userMenuList;
+    private LinearLayout searchMenu;
+    private LinearLayout userMenu;
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
+    private RelativeLayout mainLayout;
 
     public BaseListingActivity(){}
 
@@ -35,82 +38,71 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_listing);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
+        searchMenu = (LinearLayout) findViewById(R.id.left_menu);
+        userMenu = (LinearLayout) findViewById(R.id.right_menu);
 
+        createMainLayout();
+        createSearchMenu();
+        createUserMenu();
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if (drawerView.getId() == R.id.right_menu) slideOffset *= -1;
+                float moveFactor = (searchMenu.getWidth() * slideOffset);
+                mainLayout.setTranslationX(moveFactor);
+            }
+        };
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+
+    private void createMainLayout(){
         Intent intent = getIntent();
         ListingSource listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
         PostListing postListing;
         if(listingSource == null){
-           //listingSource = AIxDataManager.getInstance().getCurrentCity();
-           //listingSource = DummyContent.GINBAR;
+            listingSource = AIxDataManager.getInstance().getCurrentCity();
+            postListing = listingSource.createPostListing();
             postListing = DummyContent.AACHEN_LISTING;
         }
         else{
             postListing = listingSource.createPostListing();
         }
 
-        searchMenuList = (ListView) findViewById(R.id.left_menu_list);
-        ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
-        searchMenuList.setAdapter(leftListAdapter);
-
-        userMenuList = (ListView) findViewById(R.id.right_menu_list);
-        ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
-        userMenuList.setAdapter(rightListAdapter);
-
         //create fragments with data
         postListingFragment = PostListingFragment.newInstance(postListing);
-        listingSourceFragment = createListingSourceFragment(listingSource);
+        listingSourceFragment = ListingSourceFragment.newInstance(listingSource);
 
         // Create transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack if needed
+        // Replace fragment container with actual fragment
         transaction.replace(R.id.fragment_container_top, listingSourceFragment);
         transaction.replace(R.id.fragment_container_bottom, postListingFragment);
 
         // Commit the transaction
         transaction.commit();
-
     }
 
-
-
-    public Fragment createListingSourceFragment(ListingSource listingSource){
-        if(listingSource == null) return CityFragment.newInstance((City) listingSource);
-
-        switch (listingSource.getType()) {
-            case CITY:
-                return CityFragment.newInstance((City) listingSource);
-            case LOCATION:
-                return LocationProfileFragment.newInstance((Location) listingSource);
-            case TAG:
-                return TagFragment.newInstance((Tag) listingSource);
-            case EVENT:
-                return EventFragment.newInstance((Event) listingSource);
-            default:
-                return CityFragment.newInstance(AIxDataManager.getInstance().getCurrentCity());
-        }
-
+    private void createSearchMenu(){
+        ListView searchMenuList = (ListView) findViewById(R.id.left_menu_list);
+        ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
+        searchMenuList.setAdapter(leftListAdapter);
     }
 
-    public Fragment getListingSourceFragment() {
-        return listingSourceFragment;
-    }
-
-    public PostListingFragment getPostListingFragment() {
-        return postListingFragment;
-    }
-
-    public ListView getSearchMenuList() {
-        return searchMenuList;
-    }
-
-    public ListView getUserMenuList() {
-        return userMenuList;
+    private void createUserMenu(){
+        ListView userMenuList = (ListView) findViewById(R.id.right_menu_list);
+        ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
+        userMenuList.setAdapter(rightListAdapter);
     }
 
     public ListingSource getListingSource() {
-        return postListingFragment.getPostListing().getListingSource();
+        return listingSourceFragment.getListingSource();
+    }
+
+    public PostListing getPostListing(){
+        return postListingFragment.getPostListing();
     }
 
     @Override

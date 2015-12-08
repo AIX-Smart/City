@@ -16,7 +16,7 @@
     <string name="postCreationMessage_successful">Post erfolgreich erstellt</string>
     <string name="postCreationMessage_failed">Erstellung von Post fehlgeschlagen</string>
     <string name="loginFailure">Login fehlgeschlagen</string>
-
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="acc_drawer_open">open</string>
+    <string name="acc_drawer_close">close</string>
 </resources>

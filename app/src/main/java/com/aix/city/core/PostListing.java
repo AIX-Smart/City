@@ -127,9 +127,8 @@ public class PostListing extends Observable implements Observer, Parcelable {
     }
 
     public void refresh() {
-        int postNum = posts.size();
         posts.clear();
-        loadMorePosts(postNum);
+        loadMorePosts();
     }
 
     /**

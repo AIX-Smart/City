@@ -6,6 +6,7 @@ import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.EditableListing;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
@@ -24,10 +25,10 @@ public class URLFactory {
     public static final String HOST = "www.citevents.de";
     public static final int PORT = 8080;
     public static final String SERVICE = "service";
-    public static final String LOCATION = "location";
-    public static final String CITY = "city";
-    public static final String TAG = "tag";
-    public static final String EVENT = "event";
+    public static final String LOCATION = ListingSourceType.LOCATION.name().toLowerCase(); //"location"
+    public static final String CITY = ListingSourceType.CITY.name().toLowerCase(); //"city"
+    public static final String TAG = ListingSourceType.TAG.name().toLowerCase(); //"tag"
+    public static final String EVENT = ListingSourceType.EVENT.name().toLowerCase(); //"event"
     public static final String COMMENT = "comment";
     public static final String USER = "user";
 
@@ -59,24 +60,9 @@ public class URLFactory {
     }
 
     public String createGetPostsURL(int postNum, Post lastPost, ListingSource listingSource){
-        switch(listingSource.getType()){
-            case CITY:
-                return createGetCityEventsURL(postNum, lastPost, (City) listingSource);
-            case LOCATION:
-                return createGetLocationEventsURL(postNum, lastPost, (Location) listingSource);
-            case TAG:
-                return createGetTagEventsURL(postNum, lastPost, (Tag) listingSource);
-            case EVENT:
-                return createGetEventCommentsURL(postNum, lastPost, (Event) listingSource);
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    public String createGetCityEventsURL(int postNum, Post lastPost, City city){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
-                .addPathSegment(CITY)
-                .addPathSegment(String.valueOf(city.getId()))
+                .addPathSegment(listingSource.getType().name().toLowerCase())
+                .addPathSegment(String.valueOf(listingSource.getId()))
                 .addPathSegment(String.valueOf(postNum))
                 .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         if(lastPost != null){
@@ -85,7 +71,7 @@ public class URLFactory {
         return urlBuilder.build().toString();
     }
 
-    public String createGetLocationEventsURL(int postNum, Post lastPost, Location location){
+    /*public String createGetLocationEventsURL(int postNum, Post lastPost, Location location){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
                 .addPathSegment(LOCATION)
                 .addPathSegment(String.valueOf(location.getId()))
@@ -120,7 +106,7 @@ public class URLFactory {
             urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
         }
         return urlBuilder.build().toString();
-    }
+    }*/
 
     public String createGetCityLocationsURL(City city){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
@@ -140,18 +126,8 @@ public class URLFactory {
 
     public String createPostCreationURL(EditableListing postListing){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
-
-        if(postListing instanceof EditableEventListing){ //the post is a event
-            Location location = ((EditableEventListing)postListing).getLocation();
-            urlBuilder.addPathSegment(LOCATION);
-            urlBuilder.addPathSegment(String.valueOf(location.getId()));
-        }
-        if(postListing instanceof EditableCommentListing){ //the post is a comment
-            Event event = ((EditableCommentListing)postListing).getEvent();
-            urlBuilder.addPathSegment(EVENT);
-            urlBuilder.addPathSegment(String.valueOf(event.getId()));
-        }
-
+        urlBuilder.addPathSegment(postListing.getListingSource().getType().name().toLowerCase());
+        urlBuilder.addPathSegment(String.valueOf(postListing.getListingSource().getId()));
         urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         return urlBuilder.build().toString();
     }

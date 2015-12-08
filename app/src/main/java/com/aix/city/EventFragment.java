@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Tag;
 import com.aix.city.dummy.DummyContent;
@@ -14,7 +15,7 @@ import com.aix.city.dummy.DummyContent;
 /**
  * Created by Thomas on 17.11.2015.
  */
-public class EventFragment extends Fragment {
+public class EventFragment extends ListingSourceFragment {
 
     public final static String ARG_EVENT = "event";
 
@@ -30,6 +31,11 @@ public class EventFragment extends Fragment {
     }
 
     public EventFragment() {
+    }
+
+    @Override
+    public ListingSource getListingSource() {
+        return event;
     }
 
     @Override

@@ -7,13 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.City;
 import com.aix.city.dummy.DummyContent;
 
 /**
  * Created by Thomas on 03.11.2015.
  */
-public class CityFragment extends Fragment {
+public class CityFragment extends ListingSourceFragment {
 
     public final static String ARG_CITY = "city";
 
@@ -29,6 +30,11 @@ public class CityFragment extends Fragment {
     }
 
     public CityFragment() {
+    }
+
+    @Override
+    public ListingSource getListingSource() {
+        return city;
     }
 
     @Override
