@@ -73,7 +73,7 @@ public class Event extends Post implements ListingSource {
 
     @Override
     public int describeContents() {
-        return Post.PARCEL_DESCRIPTION_EVENT;
+        return getType().getParcelDescription();
     }
 
     @Override

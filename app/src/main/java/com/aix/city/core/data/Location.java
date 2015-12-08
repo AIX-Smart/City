@@ -4,14 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.android.volley.Response;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +165,7 @@ public class Location extends Likeable implements ListingSource {
 
     @Override
     public int describeContents() {
-        return ListingSource.PARCEL_DESCRIPTION_LOCATION;
+        return getType().getParcelDescription();
     }
 
     @Override

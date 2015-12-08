@@ -3,7 +3,6 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
@@ -76,7 +75,7 @@ public class Tag implements ListingSource {
 
     @Override
     public int describeContents() {
-        return ListingSource.PARCEL_DESCRIPTION_TAG;
+        return getType().getParcelDescription();
     }
 
     @Override

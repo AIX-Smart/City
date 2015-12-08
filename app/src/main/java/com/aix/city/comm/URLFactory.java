@@ -69,8 +69,7 @@ public class URLFactory {
             case EVENT:
                 return createGetEventCommentsURL(postNum, lastPost, (Event) listingSource);
             default:
-                //TODO: throw Exception
-                return "";
+                throw new IllegalArgumentException();
         }
     }
 

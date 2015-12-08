@@ -1,21 +1,13 @@
 package com.aix.city.core.data;
 
-import android.location.*;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
-import com.aix.city.comm.GetPostsRequest;
-import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
 import com.android.volley.Response;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -83,7 +75,7 @@ public class City implements ListingSource {
 
     @Override
     public int describeContents() {
-        return ListingSource.PARCEL_DESCRIPTION_CITY;
+        return getType().getParcelDescription();
     }
 
     @Override
