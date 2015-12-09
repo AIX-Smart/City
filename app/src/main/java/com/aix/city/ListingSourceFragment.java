@@ -15,6 +15,14 @@ import com.aix.city.core.data.Tag;
  */
 public abstract class ListingSourceFragment extends Fragment {
 
+    public static final String INTERACTION_KEY_OPEN_LEFT = "ListingSourceFragment.openLeft";
+
+    private OnFragmentInteractionListener mListener;
+
+    public interface OnFragmentInteractionListener {
+        public void onFragmentInteraction(String key);
+    }
+
     public static ListingSourceFragment newInstance(ListingSource listingSource) {
         ListingSourceFragment fragment;
         if(listingSource == null) listingSource = AIxDataManager.getInstance().getCurrentCity();
@@ -38,6 +46,16 @@ public abstract class ListingSourceFragment extends Fragment {
     }
 
     public ListingSourceFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mListener = (OnFragmentInteractionListener) getActivity();
+    }
+
+    public OnFragmentInteractionListener getListener() {
+        return mListener;
     }
 
     public abstract ListingSource getListingSource();

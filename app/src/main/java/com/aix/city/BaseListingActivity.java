@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -17,9 +19,10 @@ import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.dummy.DummyContent;
+import com.aix.city.view.TagAdapter;
 
 
-public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener {
+public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener {
 
     public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.ListingSource";
 
@@ -87,8 +90,9 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
     private void createSearchMenu(){
         ListView searchMenuList = (ListView) findViewById(R.id.left_menu_list);
+        TagAdapter adapter = new TagAdapter(this, AIxDataManager.getInstance().getTags());
         ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
-        searchMenuList.setAdapter(leftListAdapter);
+        searchMenuList.setAdapter(adapter);
     }
 
     private void createUserMenu(){
@@ -106,6 +110,13 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     }
 
     @Override
-    public void onFragmentInteraction(boolean isEditable) {
+    public void onFragmentInteraction(String key) {
+        if (key != null){
+            switch(key){
+                case ListingSourceFragment.INTERACTION_KEY_OPEN_LEFT:
+                    drawerLayout.openDrawer(GravityCompat.START);
+                    break;
+            }
+        }
     }
 }

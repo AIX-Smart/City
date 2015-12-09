@@ -1,14 +1,12 @@
 package com.aix.city;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aix.city.core.ListingSource;
-import com.aix.city.core.data.City;
 import com.aix.city.core.data.Tag;
 import com.aix.city.dummy.DummyContent;
 
@@ -42,7 +40,7 @@ public class TagFragment extends ListingSourceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tag, container, false);
-        tagNameView = (TextView) view.findViewById(R.id.tagName);
+        tagNameView = (TextView) view.findViewById(R.id.tagElementName);
         tagNameView.setText(tag.getName());
         return view;
     }

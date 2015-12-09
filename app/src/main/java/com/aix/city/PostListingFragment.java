@@ -2,6 +2,7 @@ package com.aix.city;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.InputFilter;
 import android.view.KeyEvent;
@@ -49,7 +50,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(boolean isEditable);
+        public void onFragmentInteraction(String key);
     }
 
     /**
