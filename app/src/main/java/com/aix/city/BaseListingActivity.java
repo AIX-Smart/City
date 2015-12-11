@@ -67,7 +67,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         if(listingSource == null){
             listingSource = AIxDataManager.getInstance().getCurrentCity();
             postListing = listingSource.createPostListing();
-            postListing = DummyContent.AACHEN_LISTING;
+            //postListing = DummyContent.AACHEN_LISTING;
         }
         else{
             postListing = listingSource.createPostListing();

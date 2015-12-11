@@ -19,7 +19,7 @@ import java.util.Observer;
 public class PostListing extends Observable implements Observer, Parcelable {
 
     /** Defines the default number of posts for a database GET-request */
-    public static final int POST_REQUEST_NUM = 1;
+    public static final int POST_REQUEST_NUM = 20;
 
     public static final int PARCEL_DESCRIPTION_POST_LISTING = 0;
     public static final int PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING = 1;

@@ -55,7 +55,7 @@ public class AIxLoginModule {
             }
             catch (Exception e){
                 Toast.makeText(context, context.getResources().getString(R.string.loginFailure), Toast.LENGTH_SHORT).show();
-                loggedInUser = new User(0, new ArrayList<Location>(), 0);
+                loggedInUser = new User(1, new ArrayList<Location>(), 0);
             }
             loginFuture = null;
         }
