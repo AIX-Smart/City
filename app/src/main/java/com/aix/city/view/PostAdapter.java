@@ -20,6 +20,7 @@ import java.util.List;
 public class PostAdapter extends ArrayAdapter<Post> {
     private final Context context;
     private final List<Post> posts;
+    private final List<PostView> viewList = new ArrayList<PostView>();
 
     static class ViewHolder {
         TextView contentView;
@@ -51,6 +52,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.likeButton = (Button) postView.findViewById(R.id.likeButton);
             postView.setTag(holder);
             postView.init();
+            viewList.add(postView);
         }
 
         final Post post = posts.get(position);
@@ -58,6 +60,12 @@ public class PostAdapter extends ArrayAdapter<Post> {
         postView.update();
 
         return postView;
+    }
+
+    public void updateVisibleViews(){
+        for (PostView v : viewList){
+            v.update();
+        }
     }
 }
 

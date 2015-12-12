@@ -2,6 +2,7 @@ package com.aix.city;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -40,6 +41,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_base_listing);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
@@ -63,15 +65,10 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     private void createMainLayout(){
         Intent intent = getIntent();
         ListingSource listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
-        PostListing postListing;
-        if(listingSource == null){
+        if (listingSource == null){
             listingSource = AIxDataManager.getInstance().getCurrentCity();
-            postListing = listingSource.createPostListing();
-            //postListing = DummyContent.AACHEN_LISTING;
         }
-        else{
-            postListing = listingSource.createPostListing();
-        }
+        PostListing postListing = listingSource.createPostListing();
 
         //create fragments with data
         postListingFragment = PostListingFragment.newInstance(postListing);

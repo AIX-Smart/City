@@ -17,13 +17,9 @@ public class AIxApplication extends Application {
 
         // Initialize the singletons so their instances
         // are bound to the application process.
-        initSingletons();
-    }
-
-    public void initSingletons() {
-        AIxNetworkManager.initInstance(this);
-        AIxLoginModule.initInstance(this);
-        AIxDataManager.initInstance(this);
+        AIxNetworkManager.createInstance(this);
+        AIxLoginModule.createInstance(this);
+        AIxDataManager.createInstance(this);
     }
 
     @Override

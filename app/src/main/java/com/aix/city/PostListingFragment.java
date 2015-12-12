@@ -12,13 +12,16 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
@@ -38,6 +41,8 @@ import java.util.Observer;
 public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer, View.OnClickListener {
     
     public final static String ARG_POST_LISTING = "listing";
+    private TextView mEmptyView;
+    private ProgressBar mLoadingPanel;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -117,12 +122,14 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mEmptyView = (TextView)view.findViewById(R.id.emptyText);
+        mLoadingPanel = (ProgressBar) view.findViewById(R.id.loadingPanel);
+
         mListView.setAdapter(mAdapter);
+        mEmptyView.setVisibility(View.GONE);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
-        mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
 
         //initialize post creation view (text field)
@@ -132,7 +139,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         final EditText editText = (EditText)view.findViewById(R.id.postCreationTextField);
         editText.setHorizontallyScrolling(false);
         editText.setMaxLines(5);
-        editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
         editText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -164,13 +171,13 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
     public void onStart() {
         super.onStart();
 
+        postListing.addObserver(this);
+        AIxDataManager.getInstance().addObserver(this);
+
         //load posts
         if(postListing.getPosts().isEmpty()){
             postListing.loadMorePosts();
         }
-
-        postListing.addObserver(this);
-        AIxDataManager.getInstance().addObserver(this);
     }
 
     @Override
@@ -207,19 +214,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         mListener = null;
     }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
     public void setPostCreationVisibility(boolean isVisible){
         if(isVisible){
             postCreationView.setVisibility(View.VISIBLE);
@@ -253,16 +247,40 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         switch(key){
             case PostListing.OBSERVER_KEY_CHANGED_DATASET:
                 mAdapter.notifyDataSetChanged();
+                mLoadingPanel.setVisibility(View.GONE);
+                if (!postListing.getPosts().isEmpty()){
+                    mEmptyView.setVisibility(View.GONE);
+                }
                 break;
             case PostListing.OBSERVER_KEY_CHANGED_EDITABILITY:
                 setPostCreationVisibility(postListing.isEditable());
                 break;
-            case PostListing.OBSERVER_KEY_CHANGED_LIKESTATUS:
-                mAdapter.notifyDataSetChanged();
+            case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
+                mAdapter.updateVisibleViews();
+                break;
+            case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
+                mAdapter.updateVisibleViews();
+                break;
+            case PostListing.OBSERVER_KEY_CHANGED_FINISHED:
+                mLoadingPanel.setVisibility(View.GONE);
+                if (postListing.getPosts().isEmpty()){
+                    mEmptyView.setVisibility(View.VISIBLE);
+                }
                 break;
             default:
                 mAdapter.notifyDataSetChanged();
+                mAdapter.updateVisibleViews();
                 setPostCreationVisibility(postListing.isEditable());
+                if (postListing.getPosts().isEmpty()){
+                    if (postListing.isFinished()){
+                        mLoadingPanel.setVisibility(View.GONE);
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    }
+                }
+                else{
+                    mLoadingPanel.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.GONE);
+                }
         }
     }
 }

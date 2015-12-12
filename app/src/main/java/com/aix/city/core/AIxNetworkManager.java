@@ -39,10 +39,10 @@ public class AIxNetworkManager {
         this.context = context;
     }
 
-    public static synchronized void initInstance(Context context){
+    public static synchronized void createInstance(Context context){
         if(instance == null){
             instance = new AIxNetworkManager(context);
-            instance.getRequestQueue().start();
+            //instance.init();
         }
     }
 
@@ -50,6 +50,10 @@ public class AIxNetworkManager {
         return instance;
     }
     //
+
+    public void init(){
+        getRequestQueue().start();
+    }
 
     public RequestQueue getRequestQueue() {
         if (requestQueue == null) {

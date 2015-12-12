@@ -27,7 +27,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     public static final String OBSERVER_KEY_CHANGED_DATASET = "dataSet";
     public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
-    public static final String OBSERVER_KEY_CHANGED_LIKESTATUS = "likeStatus";
+    public static final String OBSERVER_KEY_CHANGED_FINISHED = "finished";
 
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
@@ -57,12 +57,14 @@ public class PostListing extends Observable implements Observer, Parcelable {
      * @param posts
      */
     public void addPosts(Post[] posts){
-        getPosts().addAll(Arrays.asList(posts));
-        for(Post post : posts){
-            post.addObserver(this);
+        if (posts.length > 0) {
+            getPosts().addAll(Arrays.asList(posts));
+            for (Post post : posts) {
+                post.addObserver(this);
+            }
+            setChanged();
+            notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
         }
-        setChanged();
-        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     public void addPost(Post post){
@@ -94,6 +96,14 @@ public class PostListing extends Observable implements Observer, Parcelable {
         return finished;
     }
 
+    public void setFinished() {
+        if(!finished) {
+            finished = true;
+            setChanged();
+            notifyObservers(OBSERVER_KEY_CHANGED_FINISHED);
+        }
+    }
+
     public void loadMorePosts(final int postNum) {
 
         Post lastPost = null;
@@ -105,7 +115,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             @Override
             public void onResponse(Post[] response) {
                 if(response.length < postNum){
-                    finished = true;
+                    setFinished();
                 }
                 addPosts(response);
             }
@@ -152,7 +162,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     @Override
     public void update(Observable observable, Object data) {
         setChanged();
-        notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
+        notifyObservers(data);
     }
 
     @Override

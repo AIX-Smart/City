@@ -1,9 +1,6 @@
 package com.aix.city.comm;
 
-import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxLoginModule;
-import com.aix.city.core.EditableCommentListing;
-import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.EditableListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
@@ -13,7 +10,6 @@ import com.aix.city.core.data.Event;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
-import com.aix.city.core.data.Tag;
 import com.squareup.okhttp.HttpUrl;
 
 /**

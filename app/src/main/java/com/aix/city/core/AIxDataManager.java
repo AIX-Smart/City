@@ -44,22 +44,26 @@ public class AIxDataManager extends Observable {
         this.context = context;
     }
 
-    public static synchronized void initInstance(Context context){
+    public static synchronized void createInstance(Context context){
         if(instance == null){
             instance = new AIxDataManager(context);
-            instance.allTags.add(DummyContent.BAR_TAG);
-            instance.allTags.add(DummyContent.RESTAURANT_TAG);
-            instance.allCities.add(DummyContent.AACHEN);
-            instance.currentCity = instance.allCities.get(0);
-            instance.storedLocations.put(DummyContent.GINBAR.getId(), DummyContent.GINBAR);
-            //
-            instance.requestCityLocations(instance.currentCity);
-            instance.requestTags();
+            //instance.init()
         }
     }
 
+    public void init(){
+        allTags.add(DummyContent.BAR_TAG);
+        allTags.add(DummyContent.RESTAURANT_TAG);
+        allCities.add(DummyContent.AACHEN);
+        storedLocations.put(DummyContent.GINBAR.getId(), DummyContent.GINBAR);
+
+        currentCity = allCities.get(0);
+        requestCityLocations(currentCity);
+        requestTags();
+    }
+
     /**
-     * Singleton getter. initInstance(Context context) must be called before.
+     * Singleton getter. createInstance(Context context) must be called before.
      */
     public static AIxDataManager getInstance() {
         return instance;

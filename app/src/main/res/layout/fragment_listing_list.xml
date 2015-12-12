@@ -37,12 +37,20 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent" />
 
-        <TextView android:id="@android:id/empty"
+        <TextView android:id="@+id/emptyText"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:text="Empty"
-            android:textSize="48sp"/>
+            android:text="@string/empty"
+            android:textSize="48sp"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:id="@+id/loadingPanel"
+            android:layout_gravity="center" />
     </FrameLayout>
 
 

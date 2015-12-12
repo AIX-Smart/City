@@ -12,8 +12,8 @@ import java.util.Set;
 public class User {
 
     private int id;
-    private List<Location> ownLocations;
     private int permission;
+    private List<Location> ownLocations;
     private transient Set<Location> favorites = null;
 
     //no-argument constructor for JSON
@@ -32,12 +32,12 @@ public class User {
         return id;
     }
 
-    public List<Location> getOwnLocations() {
-        return ownLocations;
-    }
-
     public int getPermission() {
         return permission;
+    }
+
+    public List<Location> getOwnLocations() {
+        return ownLocations;
     }
 
     @JsonIgnore

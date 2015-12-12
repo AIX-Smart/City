@@ -14,6 +14,8 @@ import java.util.Observable;
  */
 public abstract class Likeable extends Observable {
 
+    public static final String OBSERVER_KEY_CHANGED_LIKESTATUS = "likeStatus";
+
     private boolean liked; //current user has already liked this post
     private int likeCount;
 
@@ -63,13 +65,13 @@ public abstract class Likeable extends Observable {
                 public void onResponse(String response) {
                     setLiked(true);
                     if (getLikeCount() < Integer.MAX_VALUE) setLikeCount(getLikeCount() + 1);
-                    notifyObservers();
+                    notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    notifyObservers();
+                    notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
 
@@ -84,13 +86,13 @@ public abstract class Likeable extends Observable {
                 public void onResponse(String response) {
                     setLiked(false);
                     if (getLikeCount() > 0) setLikeCount(getLikeCount() - 1);
-                    notifyObservers();
+                    notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    notifyObservers();
+                    notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
 

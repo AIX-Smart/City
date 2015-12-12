@@ -10,7 +10,7 @@ import com.android.volley.Response;
 public class GetTagsRequest extends AIxJsonRequest<Tag[]> {
 
     public GetTagsRequest(Response.Listener<Tag[]> listener, Response.ErrorListener errorListener){
-        super(Request.Method.GET, URLFactory.get().createGetAllTagsURL(), null, Tag[].class, listener, errorListener, true);
+        super(Request.Method.GET, URLFactory.get().createGetAllTagsURL(), null, Tag[].class, listener, errorListener, false);
     }
 
     @Override
