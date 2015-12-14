@@ -7,12 +7,12 @@ import com.android.volley.Response;
 /**
  * Created by Thomas on 01.12.2015.
  */
-public class LikeChangeRequest extends AIxJsonRequest<String> {
+public class PutLikeRequest extends AIxJsonRequest<String> {
 
     private final Likeable likeable;
     private final boolean liked;
 
-    public LikeChangeRequest(Response.Listener<String> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked) {
+    public PutLikeRequest(Response.Listener<String> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked) {
         super(Request.Method.PUT, URLFactory.get().createLikeChangeURL(likeable), liked, String.class, listener, errorListener, false);
         this.likeable = likeable;
         this.liked = liked;

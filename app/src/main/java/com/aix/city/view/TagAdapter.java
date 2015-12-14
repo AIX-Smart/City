@@ -38,9 +38,9 @@ public class TagAdapter extends ArrayAdapter<Tag> {
 
         ViewHolder holder;
 
-        if (convertView == null) {
+        if (convertView == null || !(convertView.getTag() instanceof TagAdapter.ViewHolder)) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.tag, parent, false);
+            convertView = inflater.inflate(R.layout.list_element_tag, parent, false);
 
             holder = new ViewHolder();
             holder.tagNameView = (TextView) convertView.findViewById(R.id.tagElementName);

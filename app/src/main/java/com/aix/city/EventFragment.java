@@ -17,15 +17,13 @@ import com.aix.city.dummy.DummyContent;
  */
 public class EventFragment extends ListingSourceFragment {
 
-    public final static String ARG_EVENT = "event";
-
     private Event event;
     private TextView eventNameView;
 
     public static EventFragment newInstance(Event event) {
         EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_EVENT, event);
+        args.putParcelable(ARG_LISTING_SOURCE, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +50,7 @@ public class EventFragment extends ListingSourceFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            Object obj = getArguments().getParcelable(ARG_EVENT);
+            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
             if (obj != null && obj instanceof Event) {
                 event = ((Event) obj);
             }

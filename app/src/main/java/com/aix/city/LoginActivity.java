@@ -47,7 +47,6 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     public void finishLoginActivity(){
         AIxLoginModule.getInstance().deleteObserver(this);
 
-        ListingSource city = AIxDataManager.getInstance().getCurrentCity();
         Intent intent = new Intent(this, BaseListingActivity.class);
         startActivity(intent);
         finish();
@@ -60,8 +59,9 @@ public class LoginActivity extends AppCompatActivity implements Observer {
                 case AIxLoginModule.OBSERVER_KEY_LOGIN_SUCCESS:
                     loginSuccess();
                     break;
-                default:
+                case AIxLoginModule.OBSERVER_KEY_LOGIN_FAILURE:
                     loginFailure();
+                    break;
             }
         }
     }

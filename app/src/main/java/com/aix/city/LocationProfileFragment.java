@@ -16,15 +16,13 @@ import com.aix.city.dummy.DummyContent;
  */
 public class LocationProfileFragment extends ListingSourceFragment {
 
-    public final static String ARG_LOCATION = "location";
-
     private Location location;
     private TextView locationNameView;
 
     public static LocationProfileFragment newInstance(Location location) {
         LocationProfileFragment fragment = new LocationProfileFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_LOCATION, location);
+        args.putParcelable(ARG_LISTING_SOURCE, location);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,7 +49,7 @@ public class LocationProfileFragment extends ListingSourceFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            Object obj = getArguments().getParcelable(ARG_LOCATION);
+            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
             if(obj != null && obj instanceof Location){
                 location = ((Location)obj);
             }

@@ -16,6 +16,7 @@ import com.aix.city.core.data.Tag;
 public abstract class ListingSourceFragment extends Fragment {
 
     public static final String INTERACTION_KEY_OPEN_LEFT = "ListingSourceFragment.openLeft";
+    public final static String ARG_LISTING_SOURCE = "listingSource";
 
     private OnFragmentInteractionListener mListener;
 
@@ -52,6 +53,12 @@ public abstract class ListingSourceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListener = (OnFragmentInteractionListener) getActivity();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(ARG_LISTING_SOURCE, getListingSource());
+        super.onSaveInstanceState(outState);
     }
 
     public OnFragmentInteractionListener getListener() {

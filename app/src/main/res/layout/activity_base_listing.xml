@@ -16,7 +16,7 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:paddingTop="0dp"
-        tools:context=".LocationActivity">
+        tools:context=".BaseListingActivity">
 
         <FrameLayout
             android:id="@+id/fragment_container_top"
@@ -36,42 +36,20 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragment_left_menu"
+        android:name="com.aix.city.SearchMenuFragment"
         android:layout_height="match_parent"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/drawer_width"
         android:layout_gravity="left"
-        android:id="@+id/left_menu"
-        android:background="@color/accent_material_light">
-        <ListView android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/left_menu_list"
-            android:background="@color/accent_material_light"/>
+        tools:layout="@layout/fragment_search_menu" />
 
-        <!--<fragment
-            android:id="@+id/fragment_left_menu"
-            android:name="com.aix.city.LeftMenuFragment"
-            android:layout_height="match_parent"
-            android:layout_width="250dp"
-            tools:layout="@layout/fragment_listing_list" />-->
-    </LinearLayout>
-
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragment_right_menu"
+        android:name="com.aix.city.UserMenuFragment"
         android:layout_height="match_parent"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/drawer_width"
         android:layout_gravity="right"
-        android:id="@+id/right_menu"
-        android:background="@color/accent_material_light">
-        <ListView android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/right_menu_list"
-            android:background="@color/accent_material_light"/>
-
-        <!--<fragment
-            android:id="@+id/fragment_left_menu"
-            android:name="com.aix.city.LeftMenuFragment"
-            android:layout_height="match_parent"
-            android:layout_width="250dp"
-            tools:layout="@layout/fragment_listing_list" />-->
-    </LinearLayout>
+        tools:layout="@layout/fragment_user_menu" />
 
 </android.support.v4.widget.DrawerLayout>

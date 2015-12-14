@@ -2,28 +2,29 @@ package com.aix.city;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.PostListing;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.PostListing;
 import com.aix.city.dummy.DummyContent;
+import com.aix.city.view.LocationAdapter;
 import com.aix.city.view.TagAdapter;
 
 
-public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener {
+public class BaseListingActivity extends FragmentActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener, SearchMenuFragment.OnFragmentInteractionListener, UserMenuFragment.OnFragmentInteractionListener {
 
     public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.ListingSource";
 
@@ -45,16 +46,17 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         setContentView(R.layout.activity_base_listing);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-        searchMenu = (LinearLayout) findViewById(R.id.left_menu);
-        userMenu = (LinearLayout) findViewById(R.id.right_menu);
+        searchMenu = (LinearLayout) findViewById(R.id.fragment_left_menu);
+        userMenu = (LinearLayout) findViewById(R.id.fragment_right_menu);
 
         createMainLayout();
         createSearchMenu();
         createUserMenu();
 
+        drawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (drawerView.getId() == R.id.right_menu) slideOffset *= -1;
+                if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
                 float moveFactor = (searchMenu.getWidth() * slideOffset);
                 mainLayout.setTranslationX(moveFactor);
             }
@@ -86,10 +88,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     }
 
     private void createSearchMenu(){
-        ListView searchMenuList = (ListView) findViewById(R.id.left_menu_list);
-        TagAdapter adapter = new TagAdapter(this, AIxDataManager.getInstance().getTags());
-        ArrayAdapter<String> leftListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.LEFT_MENU_ELEMENTS);
-        searchMenuList.setAdapter(adapter);
+
     }
 
     private void createUserMenu(){
@@ -114,6 +113,16 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
                     drawerLayout.openDrawer(GravityCompat.START);
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(searchMenu) || drawerLayout.isDrawerOpen(userMenu)){
+            drawerLayout.closeDrawers();
+        }
+        else{
+            super.onBackPressed();
         }
     }
 }

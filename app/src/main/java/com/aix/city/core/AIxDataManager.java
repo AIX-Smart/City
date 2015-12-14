@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -112,6 +113,10 @@ public class AIxDataManager extends Observable {
         return location;
     }
 
+    public List<Location> getCityLocations() {
+        return new ArrayList<Location>(storedLocations.values());
+    }
+
     public Set<Location> getFavorites(User user){
         //load stored favorite-list
         return new HashSet<Location>();
@@ -179,4 +184,5 @@ public class AIxDataManager extends Observable {
 
         AIxNetworkManager.getInstance().requestLocation(listener, errorListener, locationId);
     }
+
 }

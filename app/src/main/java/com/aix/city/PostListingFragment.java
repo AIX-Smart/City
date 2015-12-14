@@ -154,6 +154,12 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(ARG_POST_LISTING, postListing);
+        super.onSaveInstanceState(outState);
+    }
+
     public void createPost(String postContent) {
         boolean postCreated = postListing.createPost(postContent);
 
@@ -267,20 +273,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
                 break;
-            default:
-                mAdapter.notifyDataSetChanged();
-                mAdapter.updateVisibleViews();
-                setPostCreationVisibility(postListing.isEditable());
-                if (postListing.getPosts().isEmpty()){
-                    if (postListing.isFinished()){
-                        mLoadingPanel.setVisibility(View.GONE);
-                        mEmptyView.setVisibility(View.VISIBLE);
-                    }
-                }
-                else{
-                    mLoadingPanel.setVisibility(View.GONE);
-                    mEmptyView.setVisibility(View.GONE);
-                }
         }
     }
 }

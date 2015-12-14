@@ -15,15 +15,13 @@ import com.aix.city.dummy.DummyContent;
  */
 public class TagFragment extends ListingSourceFragment {
 
-    public final static String ARG_TAG = "tag";
-
     private Tag tag = DummyContent.BAR_TAG;
     private TextView tagNameView;
 
     public static TagFragment newInstance(Tag tag) {
         TagFragment fragment = new TagFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_TAG, tag);
+        args.putParcelable(ARG_LISTING_SOURCE, tag);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +48,7 @@ public class TagFragment extends ListingSourceFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            Object obj = getArguments().getParcelable(ARG_TAG);
+            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
             if (obj != null && obj instanceof Tag) {
                 tag = ((Tag) obj);
             }

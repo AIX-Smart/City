@@ -6,7 +6,7 @@ import com.aix.city.comm.GetCityLocationsRequest;
 import com.aix.city.comm.GetLocationRequest;
 import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.comm.GetTagsRequest;
-import com.aix.city.comm.LikeChangeRequest;
+import com.aix.city.comm.PutLikeRequest;
 import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
 import com.aix.city.comm.PostCreationRequest;
@@ -111,7 +111,7 @@ public class AIxNetworkManager {
     }
 
     public void requestLikeChange(Response.Listener<String> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
-        LikeChangeRequest request = new LikeChangeRequest(listener, errorListener, likeable, liked);
+        PutLikeRequest request = new PutLikeRequest(listener, errorListener, likeable, liked);
         addRequest(request);
     }
 

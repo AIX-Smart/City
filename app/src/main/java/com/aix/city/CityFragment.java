@@ -17,14 +17,12 @@ import com.aix.city.dummy.DummyContent;
  */
 public class CityFragment extends ListingSourceFragment {
 
-    public final static String ARG_CITY = "city";
-
     private City city = DummyContent.AACHEN;
 
     public static CityFragment newInstance(City city) {
         CityFragment fragment = new CityFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_CITY, city);
+        args.putParcelable(ARG_LISTING_SOURCE, city);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +58,7 @@ public class CityFragment extends ListingSourceFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            Object obj = getArguments().getParcelable(ARG_CITY);
+            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
             if(obj != null && obj instanceof City){
                 city = ((City)obj);
             }
