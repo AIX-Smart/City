@@ -42,7 +42,12 @@ public final class Mapper
     {
         try
         {
-            return get().writeValueAsString(data);
+            if (data instanceof String){
+                return (String) data;
+            }
+            else{
+                return get().writeValueAsString(data);
+            }
         }
         catch (Exception e)
         {
@@ -60,7 +65,12 @@ public final class Mapper
     {
         try
         {
-            return objectOrThrow(data, type);
+            if (type.equals(String.class)){
+                return (T) data;
+            }
+            else{
+                return objectOrThrow(data, type);
+            }
         }
         catch (Exception e)
         {

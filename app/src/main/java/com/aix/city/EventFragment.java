@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.aix.city.core.ListingSource;
@@ -42,6 +43,15 @@ public class EventFragment extends ListingSourceFragment {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         eventNameView = (TextView) view.findViewById(R.id.sourceEvent);
         eventNameView.setText(event.getContent());
+
+        Button backButton = (Button) view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getListener().onFragmentInteraction(INTERACTION_KEY_BACK);
+            }
+        });
+
         return view;
     }
 

@@ -25,6 +25,6 @@
         android:layout_height="wrap_content"
         android:text="S"
         android:id="@+id/openLeft"
-        android:layout_gravity="left|center_vertical" />
+        android:layout_gravity="left|top" />
 
 </FrameLayout>

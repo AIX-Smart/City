@@ -7,6 +7,15 @@
     tools:context="com.aix.city.LocationProfileFragment"
     android:background="@color/accent_material_light">
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="back"
+        android:textSize="8sp"
+        android:id="@+id/backButton"
+        android:layout_gravity="left|top" />
+
     <TextView android:text="@string/locationProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +23,7 @@
         android:textSize="28sp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_toRightOf="@id/backButton"/>
 
 </FrameLayout>

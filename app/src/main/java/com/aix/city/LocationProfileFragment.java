@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.aix.city.core.ListingSource;
@@ -41,6 +42,14 @@ public class LocationProfileFragment extends ListingSourceFragment {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
         locationNameView = (TextView) view.findViewById(R.id.locationName);
         locationNameView.setText(location.getName());
+
+        Button backButton = (Button) view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getListener().onFragmentInteraction(INTERACTION_KEY_BACK);
+            }
+        });
         return view;
     }
 

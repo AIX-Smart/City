@@ -10,9 +10,19 @@
     tools:context="com.aix.city.EventFragment"
     android:background="@color/accent_material_light">
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="back"
+        android:textSize="8sp"
+        android:id="@+id/backButton"
+        android:layout_gravity="left|top" />
+
     <TextView android:text="@string/event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sourceEvent"/>
+        android:id="@+id/sourceEvent"
+        android:layout_toRightOf="@id/backButton"/>
 
 </RelativeLayout>

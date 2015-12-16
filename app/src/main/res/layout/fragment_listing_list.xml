@@ -25,6 +25,7 @@
             android:maxHeight="160dp"
             android:hint="@string/postContentHint"
             android:inputType="textImeMultiLine"
+            android:imeOptions="actionDone"
             android:scrollbars="vertical"/>
 
     </FrameLayout>

@@ -53,7 +53,6 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         createSearchMenu();
         createUserMenu();
 
-        drawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
@@ -111,6 +110,12 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
             switch(key){
                 case ListingSourceFragment.INTERACTION_KEY_OPEN_LEFT:
                     drawerLayout.openDrawer(GravityCompat.START);
+                    break;
+                case ListingSourceFragment.INTERACTION_KEY_BACK:
+                    Intent intent = new Intent(this, BaseListingActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                     break;
             }
         }

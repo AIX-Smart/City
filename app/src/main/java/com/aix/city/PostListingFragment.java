@@ -1,6 +1,7 @@
 package com.aix.city;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -136,21 +138,20 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         postCreationView = view.findViewById(R.id.postCreationLayout);
         setPostCreationVisibility(postListing.isEditable());
 
+        final InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         final EditText editText = (EditText)view.findViewById(R.id.postCreationTextField);
         editText.setHorizontallyScrolling(false);
         editText.setMaxLines(5);
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
-        editText.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    createPost(editText.getText().toString());
-                    editText.setText("");
-                    return true;
-                }
-                return false;
+        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                createPost(editText.getText().toString());
+                editText.setText("");
+                inputManager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                return true;
             }
         });
-
         return view;
     }
 
@@ -166,6 +167,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         final String creationMessage;
         if (postCreated) {
             creationMessage = getResources().getString(R.string.postCreationMessage_successful);
+            postListing.refresh();
         }
         else{
             creationMessage = getResources().getString(R.string.postCreationMessage_failed);
