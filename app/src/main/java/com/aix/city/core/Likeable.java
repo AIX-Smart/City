@@ -59,7 +59,7 @@ public abstract class Likeable extends Observable {
     public abstract int getId();
 
     public void like() {
-        if (isLiked()) {
+        if (!isLiked()) {
             Response.Listener<String> listener = new Response.Listener<String>(){
                 @Override
                 public void onResponse(String response) {
