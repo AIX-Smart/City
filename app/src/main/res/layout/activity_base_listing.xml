@@ -18,6 +18,12 @@
         android:paddingTop="0dp"
         tools:context=".BaseListingActivity">
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="refresh"
+            android:visibility="gone"/>
+
         <FrameLayout
             android:id="@+id/fragment_container_top"
             android:layout_width="match_parent"

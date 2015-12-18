@@ -25,6 +25,8 @@ public class PostView extends RelativeLayout implements View.OnClickListener {
 
     private Post post;
 
+    private boolean likeVisible;
+
     public PostView(Context context) {
         super(context);
     }
@@ -72,11 +74,14 @@ public class PostView extends RelativeLayout implements View.OnClickListener {
     public void update(){
         final PostAdapter.ViewHolder h = getViewHolder();
         h.contentView.setText(post.getContent());
+        h.likeButton.setText(String.valueOf(post.getLikeCount()));
 
         if(post.isLiked()) {
+            likeVisible = true;
             h.likeButton.setBackgroundColor(Color.CYAN);
         }
         else {
+            likeVisible = false;
             h.likeButton.setBackgroundResource(android.R.drawable.btn_default);
         }
 
@@ -114,7 +119,12 @@ public class PostView extends RelativeLayout implements View.OnClickListener {
     }
 
     public void onLikeButtonClick(){
-        post.like();
+        if(likeVisible){
+            post.resetLike();
+        }
+        else{
+            post.like();
+        }
     }
 
     @Override

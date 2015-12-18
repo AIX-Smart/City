@@ -1,6 +1,8 @@
 package com.aix.city.comm;
 
 import com.aix.city.core.Likeable;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 
@@ -29,5 +31,15 @@ public class PutLikeRequest extends AIxJsonRequest<String> {
 
     public boolean isLiked() {
         return liked;
+    }
+
+    @Override
+    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+        try {
+            return Response.success("", null);
+        }
+        catch (Exception e) {
+            return Response.error(new ParseError(e));
+        }
     }
 }

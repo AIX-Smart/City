@@ -198,6 +198,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.updateVisibleViews();
     }
 
     @Override
