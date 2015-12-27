@@ -3,7 +3,6 @@ package com.aix.city;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.InputFilter;
 import android.view.KeyEvent;
@@ -20,12 +19,8 @@ import android.widget.Toast;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.Likeable;
-import com.aix.city.core.ListingSource;
-import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
-import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
-import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostAdapter;
 
 import java.util.Observable;
@@ -40,11 +35,18 @@ import java.util.Observer;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer, View.OnClickListener {
+public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer, View.OnClickListener, AbsListView.OnScrollListener {
     
-    public final static String ARG_POST_LISTING = "listing";
+    public final static String ARG_POST_LISTING = "PostListingFragment.PostListing";
     private TextView mEmptyView;
     private ProgressBar mLoadingPanel;
+
+    //true if fragment waits for a response of the server
+    private boolean isLoading = true;
+    //a flag which indicates whether the user is scrolling up or down
+    private boolean isScrollingUp = false;
+    //used to determine isScrollingUp in method onScrollStateChanged(...)
+    private int lastFirstVisibleItem = 0;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -128,6 +130,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         mLoadingPanel = (ProgressBar) view.findViewById(R.id.loadingPanel);
 
         mListView.setAdapter(mAdapter);
+        mListView.setOnScrollListener(this);
         mEmptyView.setVisibility(View.GONE);
 
         // Set OnItemClickListener so we can be notified on item clicks
@@ -167,7 +170,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         final String creationMessage;
         if (postCreated) {
             creationMessage = getResources().getString(R.string.postCreationMessage_successful);
-            postListing.refresh();
         }
         else{
             creationMessage = getResources().getString(R.string.postCreationMessage_failed);
@@ -184,7 +186,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
         //load posts
         if(postListing.getPosts().isEmpty()){
-            postListing.loadMorePosts();
+            postListing.loadPosts();
         }
     }
 
@@ -232,6 +234,20 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         }
     }
 
+    public void setLoading(boolean isLoading){
+        this.isLoading = true;
+        if (isLoading){
+            mLoadingPanel.setVisibility(View.VISIBLE);
+        }
+        else{
+            mLoadingPanel.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean isLoading(){
+        return isLoading;
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != mListener) {
@@ -247,6 +263,21 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         }
     }
 
+    public void refresh(){
+        setLoading(true);
+        postListing.refresh();
+    }
+
+    public void loadNewerPosts(){
+        setLoading(true);
+        postListing.loadNewerPosts();
+    }
+
+    public void loadOlderPosts(){
+        setLoading(true);
+        postListing.loadOlderPosts();
+    }
+
     @Override
     public void update(Observable observable, Object data) {
         String key;
@@ -256,7 +287,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         switch(key){
             case PostListing.OBSERVER_KEY_CHANGED_DATASET:
                 mAdapter.notifyDataSetChanged();
-                mLoadingPanel.setVisibility(View.GONE);
+                setLoading(false);
                 if (!postListing.getPosts().isEmpty()){
                     mEmptyView.setVisibility(View.GONE);
                 }
@@ -270,12 +301,46 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
             case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
                 mAdapter.updateVisibleViews();
                 break;
-            case PostListing.OBSERVER_KEY_CHANGED_FINISHED:
-                mLoadingPanel.setVisibility(View.GONE);
+            case PostListing.OBSERVER_KEY_FINISHED:
+                setLoading(false);
                 if (postListing.getPosts().isEmpty()){
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
                 break;
+            case PostListing.OBSERVER_KEY_UPTODATE:
+                setLoading(false);
+                break;
         }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if(visibleItemCount != 0 && !isLoading()){
+            if(isScrollingUp){
+                if(firstVisibleItem == 0){
+                    loadNewerPosts();
+                }
+            }
+            else{
+                final int lastVisibleItem = firstVisibleItem + visibleItemCount;
+                if(lastVisibleItem == totalItemCount && !postListing.isFinished()) {
+                    loadOlderPosts();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        final int currentFirstVisibleItem = mListView.getFirstVisiblePosition();
+
+        if(currentFirstVisibleItem > lastFirstVisibleItem) {
+            isScrollingUp = false;
+        }
+        else if(currentFirstVisibleItem < lastFirstVisibleItem) {
+            isScrollingUp = true;
+        }
+
+        lastFirstVisibleItem = currentFirstVisibleItem;
     }
 }

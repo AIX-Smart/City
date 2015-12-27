@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,10 +18,12 @@ import java.util.List;
 /**
  * Created by Thomas on 17.10.2015.
  */
-public class PostAdapter extends ArrayAdapter<Post> {
+public class PostAdapter extends ArrayAdapter<Post>{
     private final Context context;
     private final List<Post> posts;
     private final List<PostView> viewList = new ArrayList<PostView>();
+
+
 
     static class ViewHolder {
         TextView contentView;

@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,7 +28,21 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     public static final String OBSERVER_KEY_CHANGED_DATASET = "dataSet";
     public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
-    public static final String OBSERVER_KEY_CHANGED_FINISHED = "finished";
+    public static final String OBSERVER_KEY_FINISHED = "finished";
+    public static final String OBSERVER_KEY_UPTODATE = "up-to-date";
+
+    private static final Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            //TODO:
+        }
+    };
+    private static final Comparator<Post> newestFirstComparator = new Comparator<Post>() {
+        @Override
+        public int compare(Post lhs, Post rhs) {
+            return rhs.getId() - lhs.getId();
+        }
+    };
 
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
@@ -52,20 +67,53 @@ public class PostListing extends Observable implements Observer, Parcelable {
         return listingSource;
     }
 
-    /**
-     * INTERNAL USE ONLY: use location.createPostListing().createEvent(...) or event.createPostListing().createComment(...) instead
-     * @param posts
-     */
-    public void addPosts(Post[] posts){
-        if (posts.length > 0) {
-            getPosts().addAll(Arrays.asList(posts));
-            for (Post post : posts) {
+
+
+    public void addPosts(Post[] postArray){
+        if (postArray.length > 0) {
+            getPosts().addAll(Arrays.asList(postArray));
+            for (Post post : postArray) {
                 post.addObserver(this);
             }
             setChanged();
             notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
         }
     }
+
+    public void addNewerPosts(Post[] responsePostArray){
+        if (responsePostArray.length > 0) {
+            final Post firstPost = posts.get(0);
+
+            List<Post> newPostList = new ArrayList<Post>();
+            for (Post post : responsePostArray){
+                if (post.equals(firstPost)){
+                    //post is a duplicate --> all following posts are also duplicates
+                    break;
+                }
+                else {
+                    //post is new
+                    newPostList.add(post);
+                    post.addObserver(this);
+                }
+            }
+
+            if (newPostList.size() != 0){
+                if (newPostList.size() < responsePostArray.length){
+                    posts.addAll(0, newPostList);
+                    setChanged();
+                    notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
+                }
+                else{
+                    //TODO: more new posts have to be loaded from the database
+                }
+            }
+            else{
+                setChanged();
+                notifyObservers(OBSERVER_KEY_UPTODATE);
+            }
+        }
+    }
+
 
     public void addPost(Post post){
         getPosts().add(post);
@@ -100,45 +148,51 @@ public class PostListing extends Observable implements Observer, Parcelable {
         if(!finished) {
             finished = true;
             setChanged();
-            notifyObservers(OBSERVER_KEY_CHANGED_FINISHED);
+            notifyObservers(OBSERVER_KEY_FINISHED);
         }
     }
 
-    public void loadMorePosts(final int postNum) {
+    public void loadPosts() {
+        loadOlderPosts();
+    }
 
-        Post lastPost = null;
+    public void loadOlderPosts() {
+
+        Post oldestPost = null;
         if(!posts.isEmpty()){
-            lastPost = posts.get(posts.size() - 1);
+            oldestPost = posts.get(posts.size() - 1);
         }
 
         Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
             @Override
             public void onResponse(Post[] response) {
-                if(response.length < postNum){
+                if(response.length < POST_REQUEST_NUM){
                     setFinished();
                 }
                 addPosts(response);
             }
         };
 
-        Response.ErrorListener errorListener = new Response.ErrorListener(){
+        //send request to server
+        listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost);
+    }
+
+    public void loadNewerPosts() {
+
+        Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
             @Override
-            public void onErrorResponse(VolleyError error) {
-                //TODO:
+            public void onResponse(Post[] response) {
+                addNewerPosts(response);
             }
         };
 
         //send request to server
-        listingSource.requestPosts(listener, errorListener, postNum, lastPost);
-    }
-
-    public void loadMorePosts() {
-        loadMorePosts(POST_REQUEST_NUM);
+        listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, null);
     }
 
     public void refresh() {
         posts.clear();
-        loadMorePosts();
+        loadPosts();
     }
 
     /**

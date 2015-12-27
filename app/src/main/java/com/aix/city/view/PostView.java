@@ -132,10 +132,10 @@ public class PostView extends RelativeLayout implements View.OnClickListener {
         if(v == getViewHolder().locationNameView){
             onLocationNameClick();
         }
-        if(v == getViewHolder().commentCounterView){
+        else if(v == getViewHolder().commentCounterView){
             onCommentCounterClick();
         }
-        if(v == getViewHolder().likeButton){
+        else if(v == getViewHolder().likeButton){
             onLikeButtonClick();
         }
     }
