@@ -37,7 +37,7 @@ public class DummyContent {
 
     public static City AACHEN = new City(1, "Aachen");
 
-    public static Location GINBAR = new Location(1, "GinBar", new ArrayList<Tag>(), "Eine tolle Bar", AACHEN.getId(), "Irgendwo-Straße", "42", "0240/123456789", false, 0);
+    public static Location GINBAR = new Location(1, "GinBar", new int[0], "Eine tolle Bar", AACHEN.getId(), "Irgendwo-Straße", "42", "0240/123456789", false, 0);
 
     public static String[] LEFT_MENU_ELEMENTS = {"post", "bars", "restaurants"};
 

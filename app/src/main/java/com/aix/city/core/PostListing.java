@@ -31,7 +31,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public static final String OBSERVER_KEY_FINISHED = "finished";
     public static final String OBSERVER_KEY_UPTODATE = "up-to-date";
 
-    private static final Response.ErrorListener errorListener = new Response.ErrorListener() {
+    protected static final Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             //TODO:
@@ -80,6 +80,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         }
     }
 
+    //TODO: überpfüfung auf vollständigkeit lieber woanders machen, da sonst nicht verständlich
     public void addNewerPosts(Post[] responsePostArray){
         if (responsePostArray.length > 0) {
             final Post firstPost = posts.get(0);

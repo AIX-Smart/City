@@ -52,8 +52,31 @@ public abstract class EditableListing extends PostListing {
     }
 
     @Override
-    //TODO: hier implementieren und nicht in der subklasse
-    public abstract boolean deletePost(Post post);
+    public boolean deletePost(Post post){
+        if(isEditable()){
+            Response.Listener listener = new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    refresh();
+                    setEditable(true);
+                }
+            };
+
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    setEditable(true);
+                }
+            };
+            //send request to server
+            AIxNetworkManager.getInstance().requestPostDeletion(listener, errorListener, post);
+
+            //waiting for response
+            setEditable(false);
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean isEditable() {

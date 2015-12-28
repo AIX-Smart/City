@@ -2,6 +2,7 @@ package com.aix.city.core;
 
 import android.content.Context;
 
+import com.aix.city.comm.DeletePostRequest;
 import com.aix.city.comm.GetCityLocationsRequest;
 import com.aix.city.comm.GetLocationRequest;
 import com.aix.city.comm.GetPostsRequest;
@@ -132,6 +133,11 @@ public class AIxNetworkManager {
 
     public void requestLocation(Response.Listener<Location> listener, Response.ErrorListener errorListener, int locationId){
         GetLocationRequest request = new GetLocationRequest(listener, errorListener, locationId);
+        addRequest(request);
+    }
+
+    public void requestPostDeletion(Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {
+        DeletePostRequest request = new DeletePostRequest(listener, errorListener, post);
         addRequest(request);
     }
 }

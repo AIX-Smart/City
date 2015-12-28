@@ -24,7 +24,6 @@ public class PostAdapter extends ArrayAdapter<Post>{
     private final List<PostView> viewList = new ArrayList<PostView>();
 
 
-
     static class ViewHolder {
         TextView contentView;
         TextView locationNameView;
@@ -69,6 +68,10 @@ public class PostAdapter extends ArrayAdapter<Post>{
         for (PostView v : viewList){
             v.update();
         }
+    }
+
+    public List<Post> getPosts() {
+        return posts;
     }
 }
 

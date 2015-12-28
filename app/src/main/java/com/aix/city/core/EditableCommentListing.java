@@ -35,45 +35,6 @@ public class EditableCommentListing extends EditableListing {
         return event;
     }
 
-    /*
-    public Comment createComment(String content) {
-        User user = AIxLoginModule.getInstance().getLoggedInUser();
-        long now = System.currentTimeMillis();
-        Comment comment = new Comment(Post.LOCALE_ID, content, now, 0, user.getId(), false, event.getId());
-        this.addPost(comment);
-
-        //Add Post to database
-        AIxJsonRequest request = new PostCreationRequest(this, content);
-        AIxNetworkManager.getInstance().addRequest(request);
-        return comment;
-    }*/
-
-    public boolean deleteComment(Comment comment) {
-        if (comment.getEventId() == event.getId()) {
-            this.removePost(comment);
-            comment.rawDelete();
-            //TODO: commit deletion to database
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    /*@Override
-    public boolean createPost(String content) {
-        return createComment(content) != null;
-    }*/
-
-    @Override
-    public boolean deletePost(Post post) {
-        if(post instanceof Comment){
-            return deleteComment((Comment) post);
-        }
-        else{
-            return false;
-        }
-    }
 
     @Override
     public int describeContents() {

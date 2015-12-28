@@ -56,7 +56,6 @@ public class AIxDataManager extends Observable {
         allTags.add(DummyContent.BAR_TAG);
         allTags.add(DummyContent.RESTAURANT_TAG);
         allCities.add(DummyContent.AACHEN);
-        storedLocations.put(DummyContent.GINBAR.getId(), DummyContent.GINBAR);
 
         currentCity = allCities.get(0);
         requestCityLocations(currentCity);

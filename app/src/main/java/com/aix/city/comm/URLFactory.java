@@ -1,5 +1,6 @@
 package com.aix.city.comm;
 
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.EditableListing;
 import com.aix.city.core.ListingSource;
@@ -27,6 +28,7 @@ public class URLFactory {
     public static final String EVENT = ListingSourceType.EVENT.name().toLowerCase(); //"event"
     public static final String COMMENT = "comment";
     public static final String USER = "user";
+    public static final String ALL = "all";
 
     //"http://www.citevents.de:8080/service" as HttpUrl
     private HttpUrl serviceUrl;
@@ -56,11 +58,14 @@ public class URLFactory {
     }
 
     public String createGetPostsURL(int postNum, Post lastPost, ListingSource listingSource){
-        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
-                .addPathSegment(listingSource.getType().name().toLowerCase())
-                .addPathSegment(String.valueOf(listingSource.getId()))
-                .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
+        if(listingSource.getType() == ListingSourceType.TAG){
+            urlBuilder.addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()));
+        }
+        urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
+        urlBuilder.addPathSegment(String.valueOf(postNum));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         if(lastPost != null){
             urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
         }
@@ -137,7 +142,8 @@ public class URLFactory {
 
     public String createGetAllTagsURL(){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
-                .addPathSegment(TAG);
+                .addPathSegment(TAG)
+                .addPathSegment(ALL);
         return urlBuilder.build().toString();
     }
 
@@ -146,14 +152,27 @@ public class URLFactory {
         if(likeable instanceof Event){
             urlBuilder.addPathSegment(EVENT);
         }
-        if(likeable instanceof Comment){
+        else if(likeable instanceof Comment){
             urlBuilder.addPathSegment(COMMENT);
         }
-        if(likeable instanceof Location){
+        else if(likeable instanceof Location){
             urlBuilder.addPathSegment(LOCATION);
         }
         urlBuilder.addPathSegment(String.valueOf(likeable.getId()));
         urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        return urlBuilder.build().toString();
+    }
+
+    public String createDeletePostURL(Post post) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        if (post instanceof Event){
+            urlBuilder.addPathSegment(EVENT);
+        }
+        else if (post instanceof Comment){
+            urlBuilder.addPathSegment(COMMENT);
+        }
+        urlBuilder.addPathSegment(String.valueOf(post.getId()));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser()));
         return urlBuilder.build().toString();
     }
 }

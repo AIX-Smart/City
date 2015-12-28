@@ -36,47 +36,6 @@ public class EditableEventListing extends EditableListing {
     }
 
 
-    /*
-    public Event createEvent(String content) {
-        int id = 0;
-        User user = AIxLoginModule.getInstance().getLoggedInUser();
-        long now = System.currentTimeMillis();
-        Event event = new Event(Post.LOCALE_ID, content, now, 0, user.getId(), false, location, 0);
-        this.addPost(event);
-
-        //Add Post to database
-        AIxJsonRequest request = new PostCreationRequest(this, content);
-        AIxNetworkManager.getInstance().addRequest(request);
-        return event;
-    }*/
-
-    public boolean deleteEvent(Event event) {
-        if (event.getLocation().equals(location)) {
-            this.removePost(event);
-            event.rawDelete();
-            //TODO: commit deletion to database
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    /*@Override
-    public boolean createPost(String content) {
-        return createEvent(content) != null;
-    }*/
-
-    @Override
-    public boolean deletePost(Post post) {
-        if(post instanceof Event){
-            return deleteEvent((Event)post);
-        }
-        else{
-            return false;
-        }
-    }
-
     @Override
     public int describeContents() {
         return PostListing.PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING;

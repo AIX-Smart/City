@@ -10,6 +10,7 @@ import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.android.volley.Response;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Location extends Likeable implements ListingSource {
 
     private int id;
     private String name;
-    private List<Tag> tags;
+    private int[] tagIds;
     private String description;
     private int cityId;
     private String street;
@@ -38,8 +39,7 @@ public class Location extends Likeable implements ListingSource {
         super(in);
         id = in.readInt();
         name = in.readString();
-        tags = new ArrayList<Tag>();
-        in.readTypedList(tags, Tag.CREATOR);
+        tagIds = in.createIntArray();
         description = in.readString();
         cityId = in.readInt();
         street = in.readString();
@@ -48,11 +48,11 @@ public class Location extends Likeable implements ListingSource {
         gps = in.readString();
     }
 
-    public Location(int id, String name, List<Tag> tags, String description, int cityId, String street, String houseNumber, String phoneNumber, boolean liked, int likeCount) {
+    public Location(int id, String name, int[] tags, String description, int cityId, String street, String houseNumber, String phoneNumber, boolean liked, int likeCount) {
         super(liked, likeCount);
         this.id = id;
         this.name = name;
-        this.tags = tags;
+        this.tagIds = tags;
         this.description = description;
         this.cityId = cityId;
         this.street = street;
@@ -73,11 +73,17 @@ public class Location extends Likeable implements ListingSource {
     }
 
     @NonNull
+    @JsonIgnore
     public List<Tag> getTags() {
-        if(tags == null){
-            tags = new ArrayList<Tag>();
+        return new ArrayList<Tag>();
+    }
+
+    @NonNull
+    public int[] getTagIds() {
+        if (tagIds == null){
+            tagIds = new int[0];
         }
-        return tags;
+        return tagIds;
     }
 
     @NonNull
@@ -124,12 +130,14 @@ public class Location extends Likeable implements ListingSource {
         return gps;
     }
 
-    public void addTag(Tag tag){
-        tags.add(tag);
-    }
-
-    public void removeTag(Tag tag){
-        tags.remove(tag);
+    public void addTag(Tag tag) {
+        int size = tagIds.length;
+        int[] newArray = new int[size + 1];
+        for (int i = 0; i < tagIds.length; i++){
+            newArray[i] = tagIds[i];
+        }
+        newArray[tagIds.length] = tag.getId();
+        tagIds = newArray;
     }
 
     @Override
@@ -174,7 +182,7 @@ public class Location extends Likeable implements ListingSource {
         super.writeToParcel(dest, flags);
         dest.writeInt(getId());
         dest.writeString(getName());
-        dest.writeTypedList(getTags());
+        dest.writeIntArray(getTagIds());
         dest.writeString(getDescription());
         dest.writeInt(getCityId());
         dest.writeString(getStreet());
@@ -198,4 +206,5 @@ public class Location extends Likeable implements ListingSource {
                     return new Location[size];
                 }
             };
+
 }

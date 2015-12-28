@@ -21,7 +21,7 @@ import com.aix.city.core.data.Post;
 /**
  * Created by Thomas on 17.10.2015.
  */
-public class PostView extends RelativeLayout implements View.OnClickListener {
+public class PostView extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener {
 
     private Post post;
 
@@ -138,5 +138,13 @@ public class PostView extends RelativeLayout implements View.OnClickListener {
         else if(v == getViewHolder().likeButton){
             onLikeButtonClick();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == getViewHolder().contentView){
+
+        }
+        return true;
     }
 }

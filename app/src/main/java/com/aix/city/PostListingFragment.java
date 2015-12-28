@@ -35,7 +35,7 @@ import java.util.Observer;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class PostListingFragment extends ListFragment implements AbsListView.OnItemClickListener, Observer, View.OnClickListener, AbsListView.OnScrollListener {
+public class PostListingFragment extends ListFragment implements Observer, AbsListView.OnScrollListener {
     
     public final static String ARG_POST_LISTING = "PostListingFragment.PostListing";
     private TextView mEmptyView;
@@ -43,10 +43,11 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
     //true if fragment waits for a response of the server
     private boolean isLoading = true;
-    //a flag which indicates whether the user is scrolling up or down
+    //a flag which indicates whether the user is scrolling the listview up or down
     private boolean isScrollingUp = false;
     //used to determine isScrollingUp in method onScrollStateChanged(...)
     private int lastFirstVisibleItem = 0;
+    private int scrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -132,9 +133,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
         mListView.setAdapter(mAdapter);
         mListView.setOnScrollListener(this);
         mEmptyView.setVisibility(View.GONE);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
 
 
         //initialize post creation view (text field)
@@ -235,9 +233,9 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
     }
 
     public void setLoading(boolean isLoading){
-        this.isLoading = true;
+        this.isLoading = isLoading;
         if (isLoading){
-            mLoadingPanel.setVisibility(View.VISIBLE);
+            /*mLoadingPanel.setVisibility(View.VISIBLE);*/
         }
         else{
             mLoadingPanel.setVisibility(View.GONE);
@@ -246,21 +244,6 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
     public boolean isLoading(){
         return isLoading;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            //handle multiple view click events
-        }
     }
 
     public void refresh(){
@@ -315,7 +298,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if(visibleItemCount != 0 && !isLoading()){
+        if(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleItemCount != 0 && !isLoading()){
             if(isScrollingUp){
                 if(firstVisibleItem == 0){
                     loadNewerPosts();
@@ -341,6 +324,7 @@ public class PostListingFragment extends ListFragment implements AbsListView.OnI
             isScrollingUp = true;
         }
 
+        this.scrollState = scrollState;
         lastFirstVisibleItem = currentFirstVisibleItem;
     }
 }
