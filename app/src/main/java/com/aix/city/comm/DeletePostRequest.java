@@ -7,7 +7,7 @@ import com.android.volley.Response;
 /**
  * Created by Thomas on 28.12.2015.
  */
-public class DeletePostRequest extends AIxJsonRequest {
+public class DeletePostRequest extends AIxJsonRequest<Post> {
 
 
     public DeletePostRequest(Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {

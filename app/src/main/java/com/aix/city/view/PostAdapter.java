@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.aix.city.PostListingFragment;
 import com.aix.city.R;
 import com.aix.city.core.data.Post;
 
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by Thomas on 17.10.2015.
  */
 public class PostAdapter extends ArrayAdapter<Post>{
-    private final Context context;
+    private final PostListingFragment fragment;
     private final List<Post> posts;
     private final List<PostView> viewList = new ArrayList<PostView>();
 
@@ -31,9 +32,9 @@ public class PostAdapter extends ArrayAdapter<Post>{
         Button likeButton;
     }
 
-    public PostAdapter(Context context, List<Post> posts) {
-        super(context, -1, posts);
-        this.context = context;
+    public PostAdapter(PostListingFragment fragment, List<Post> posts) {
+        super(fragment.getContext(), -1, posts);
+        this.fragment = fragment;
         this.posts = posts;
     }
 
@@ -44,7 +45,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
         PostView postView = (PostView) convertView;
 
         if(postView == null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             postView = (PostView) inflater.inflate(R.layout.post, parent, false);
 
             holder = new ViewHolder();
@@ -53,7 +54,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
             holder.commentCounterView = (TextView) postView.findViewById(R.id.commentCounter);
             holder.likeButton = (Button) postView.findViewById(R.id.likeButton);
             postView.setTag(holder);
-            postView.init();
+            postView.init(this);
             viewList.add(postView);
         }
 
@@ -72,6 +73,10 @@ public class PostAdapter extends ArrayAdapter<Post>{
 
     public List<Post> getPosts() {
         return posts;
+    }
+
+    public void deletePost(Post post){
+        fragment.deletePost(post);
     }
 }
 

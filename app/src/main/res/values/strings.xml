@@ -28,4 +28,8 @@
     <string name="search_menu_title">Search</string>
     <string name="left_tab_locations">Locations</string>
     <string name="left_tab_tags">Tags</string>
+    <string name="postDeletionMessage_successful">Post gelöscht</string>
+    <string name="postCreationMessage_not_allowed">Unerlaubte Aktion</string>
+    <string name="postDeletionMessage_failed">Löschung fehlgeschlagen</string>
+    <string name="postDeletionMessage_not_allowed">Unerlaubte Löschung</string>
 </resources>

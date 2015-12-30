@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.core.AIxDataManager;
@@ -22,6 +23,8 @@ import com.aix.city.core.data.Post;
  * Created by Thomas on 17.10.2015.
  */
 public class PostView extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener {
+
+    private PostAdapter adapter;
 
     private Post post;
 
@@ -64,8 +67,10 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
         return (PostAdapter.ViewHolder) super.getTag();
     }
 
-    public void init(){
+    public void init(PostAdapter adapter){
+        this.adapter = adapter;
         final PostAdapter.ViewHolder h = getViewHolder();
+        this.setOnLongClickListener(this);
         h.locationNameView.setOnClickListener(this);
         h.commentCounterView.setOnClickListener(this);
         h.likeButton.setOnClickListener(this);
@@ -142,9 +147,10 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
 
     @Override
     public boolean onLongClick(View v) {
-        if (v == getViewHolder().contentView){
-
+        if (v == this){
+            adapter.deletePost(post);
+            return true;
         }
-        return true;
+        return false;
     }
 }

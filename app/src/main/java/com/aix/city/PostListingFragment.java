@@ -117,7 +117,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         }
 
         //create postview-adapter
-        mAdapter = new PostAdapter(getActivity(), postListing.getPosts());
+        mAdapter = new PostAdapter(this, postListing.getPosts());
     }
 
     @Override
@@ -163,16 +163,51 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public void createPost(String postContent) {
-        boolean postCreated = postListing.createPost(postContent);
+        Runnable successCommand = new Runnable() {
+            @Override
+            public void run() {
+                final String message = getResources().getString(R.string.postCreationMessage_successful);
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        };
+        Runnable errorCommand = new Runnable() {
+            @Override
+            public void run() {
+                final String message = getResources().getString(R.string.postCreationMessage_failed);
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        };
 
-        final String creationMessage;
-        if (postCreated) {
-            creationMessage = getResources().getString(R.string.postCreationMessage_successful);
+        boolean isCreationAllowed = postListing.createPost(postContent, successCommand, errorCommand);
+
+        if (!isCreationAllowed){
+            final String message = getResources().getString(R.string.postCreationMessage_not_allowed);
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
-        else{
-            creationMessage = getResources().getString(R.string.postCreationMessage_failed);
+    }
+
+    public void deletePost(Post post) {
+        Runnable successCommand = new Runnable() {
+            @Override
+            public void run() {
+                final String message = getResources().getString(R.string.postDeletionMessage_successful);
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        };
+        Runnable errorCommand = new Runnable() {
+            @Override
+            public void run() {
+                final String message = getResources().getString(R.string.postDeletionMessage_failed);
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        boolean isDeletionAllowed = postListing.deletePost(post, successCommand, errorCommand);
+
+        if (!isDeletionAllowed){
+            final String message = getResources().getString(R.string.postDeletionMessage_not_allowed);
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(getContext(), creationMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override

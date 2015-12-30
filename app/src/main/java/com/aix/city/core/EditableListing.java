@@ -2,8 +2,6 @@ package com.aix.city.core;
 
 import android.os.Parcel;
 
-import com.aix.city.comm.AIxJsonRequest;
-import com.aix.city.comm.PostCreationRequest;
 import com.aix.city.core.data.Post;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,18 +23,20 @@ public abstract class EditableListing extends PostListing {
     }
 
     @Override
-    public boolean createPost(String content){
+    public boolean createPost(String content, final Runnable successCommand, final Runnable errorCommand){
         if(isEditable()){
             Response.Listener listener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     refresh();
+                    successCommand.run();
                     setEditable(true);
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    errorCommand.run();
                     setEditable(true);
                 }
             };
@@ -52,12 +52,13 @@ public abstract class EditableListing extends PostListing {
     }
 
     @Override
-    public boolean deletePost(Post post){
+    public boolean deletePost(Post post, final Runnable successCommand, final Runnable errorCommand){
         if(isEditable()){
             Response.Listener listener = new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
                     refresh();
+                    successCommand.run();
                     setEditable(true);
                 }
             };
@@ -65,6 +66,7 @@ public abstract class EditableListing extends PostListing {
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    errorCommand.run();
                     setEditable(true);
                 }
             };

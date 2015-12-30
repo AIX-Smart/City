@@ -200,13 +200,23 @@ public class PostListing extends Observable implements Observer, Parcelable {
      *  creates a new Post in this listing and sends it to the server.
         Does nothing if posts cannot be created in this context.
      * @param content content/message of the created Post
-     * @return returns true if the post was successfully created
+     * @param successCommand will be executed if the creation was successful
+     *@param errorCommand will be executed if an error occurred
+     * @return returns true if postCreation is allowed in this context
      */
-    public boolean createPost(String content){
+    public boolean createPost(String content, Runnable successCommand, Runnable errorCommand){
         return false;
     }
 
-    public boolean deletePost(Post post){
+    /**
+     *  sends a deletion request for a Post in this listing to the server.
+     Does nothing if posts cannot be deleted in this context.
+     * @param post post to be deleted
+     * @param successCommand will be executed if the deletion was successful
+     *@param errorCommand will be executed if an error occurred
+     * @return returns true if the deletion is allowed in this context
+     */
+    public boolean deletePost(Post post, Runnable successCommand, Runnable errorCommand){
         return false;
     }
 
