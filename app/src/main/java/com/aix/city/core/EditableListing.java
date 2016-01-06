@@ -25,9 +25,9 @@ public abstract class EditableListing extends PostListing {
     @Override
     public boolean createPost(String content, final Runnable successCommand, final Runnable errorCommand){
         if(isEditable()){
-            Response.Listener listener = new Response.Listener<String>() {
+            Response.Listener<Post> listener = new Response.Listener<Post>() {
                 @Override
-                public void onResponse(String response) {
+                public void onResponse(Post response) {
                     refresh();
                     successCommand.run();
                     setEditable(true);
@@ -54,9 +54,9 @@ public abstract class EditableListing extends PostListing {
     @Override
     public boolean deletePost(Post post, final Runnable successCommand, final Runnable errorCommand){
         if(isEditable()){
-            Response.Listener listener = new Response.Listener() {
+            Response.Listener<Post> listener = new Response.Listener<Post>() {
                 @Override
-                public void onResponse(Object response) {
+                public void onResponse(Post response) {
                     refresh();
                     successCommand.run();
                     setEditable(true);

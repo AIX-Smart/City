@@ -3,6 +3,7 @@ package com.aix.city;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.text.InputFilter;
 import android.view.KeyEvent;
@@ -11,17 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Post;
 import com.aix.city.view.PostAdapter;
+import com.android.volley.Response;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -36,18 +38,20 @@ import java.util.Observer;
  * interface.
  */
 public class PostListingFragment extends ListFragment implements Observer, AbsListView.OnScrollListener {
-    
-    public final static String ARG_POST_LISTING = "PostListingFragment.PostListing";
-    private TextView mEmptyView;
-    private ProgressBar mLoadingPanel;
 
-    //true if fragment waits for a response of the server
-    private boolean isLoading = true;
-    //a flag which indicates whether the user is scrolling the listview up or down
-    private boolean isScrollingUp = false;
-    //used to determine isScrollingUp in method onScrollStateChanged(...)
-    private int lastFirstVisibleItem = 0;
-    private int scrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+    //bundle argument key for creation
+    public static final String ARG_POST_LISTING = "PostListingFragment.PostListing";
+    //timer delay for update requests in milliseconds
+    public static final int UPDATE_DELAY_MS = 5000;
+    //handler for timed updates
+    private final Handler mUpdateTaskHandler = new Handler();
+    private final Runnable mUpdateTask = new Runnable() {
+        @Override
+        public void run() {
+            update();
+            mUpdateTaskHandler.postDelayed(this, UPDATE_DELAY_MS);
+        }
+    };
 
     /**
      * This interface must be implemented by activities that contain this
@@ -66,7 +70,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     /**
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
-    private PostListing postListing;
+    private PostListing mPostListing;
 
     private OnFragmentInteractionListener mListener;
 
@@ -75,7 +79,15 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
      */
     private AbsListView mListView;
 
-    private View postCreationView;
+    private TextView mEmptyView;
+
+    private ProgressBar mLoadingPanel;
+
+    private View mPostCreationView;
+
+    //true if fragment waits for a response of the server
+    private boolean mIsLoading = true;
+
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -99,7 +111,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public PostListing getPostListing() {
-        return postListing;
+        return mPostListing;
     }
 
     @Override
@@ -112,12 +124,12 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_POST_LISTING);
             if(obj != null && obj instanceof PostListing){
-                postListing = (PostListing)obj;
+                mPostListing = (PostListing)obj;
             }
         }
 
         //create postview-adapter
-        mAdapter = new PostAdapter(this, postListing.getPosts());
+        mAdapter = new PostAdapter(this, mPostListing.getPosts());
     }
 
     @Override
@@ -134,10 +146,9 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         mListView.setOnScrollListener(this);
         mEmptyView.setVisibility(View.GONE);
 
-
         //initialize post creation view (text field)
-        postCreationView = view.findViewById(R.id.postCreationLayout);
-        setPostCreationVisibility(postListing.isEditable());
+        mPostCreationView = view.findViewById(R.id.postCreationLayout);
+        setPostCreationVisibility(mPostListing.isEditable());
 
         final InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         final EditText editText = (EditText)view.findViewById(R.id.postCreationTextField);
@@ -158,7 +169,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(ARG_POST_LISTING, postListing);
+        outState.putParcelable(ARG_POST_LISTING, mPostListing);
         super.onSaveInstanceState(outState);
     }
 
@@ -178,7 +189,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             }
         };
 
-        boolean isCreationAllowed = postListing.createPost(postContent, successCommand, errorCommand);
+        boolean isCreationAllowed = mPostListing.createPost(postContent, successCommand, errorCommand);
 
         if (!isCreationAllowed){
             final String message = getResources().getString(R.string.postCreationMessage_not_allowed);
@@ -202,7 +213,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             }
         };
 
-        boolean isDeletionAllowed = postListing.deletePost(post, successCommand, errorCommand);
+        boolean isDeletionAllowed = mPostListing.deletePost(post, successCommand, errorCommand);
 
         if (!isDeletionAllowed){
             final String message = getResources().getString(R.string.postDeletionMessage_not_allowed);
@@ -214,19 +225,19 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void onStart() {
         super.onStart();
 
-        postListing.addObserver(this);
+        mPostListing.addObserver(this);
         AIxDataManager.getInstance().addObserver(this);
 
         //load posts
-        if(postListing.getPosts().isEmpty()){
-            postListing.loadPosts();
+        if(mPostListing.getPosts().isEmpty()){
+            mPostListing.loadPosts();
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        postListing.deleteObserver(this);
+        mPostListing.deleteObserver(this);
         AIxDataManager.getInstance().deleteObserver(this);
     }
 
@@ -234,11 +245,13 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void onResume() {
         super.onResume();
         mAdapter.updateVisibleViews();
+        mUpdateTaskHandler.postDelayed(mUpdateTask, UPDATE_DELAY_MS);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mUpdateTaskHandler.removeCallbacks(mUpdateTask);
     }
 
     @Override
@@ -260,15 +273,15 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void setPostCreationVisibility(boolean isVisible){
         if(isVisible){
-            postCreationView.setVisibility(View.VISIBLE);
+            mPostCreationView.setVisibility(View.VISIBLE);
         }
         else{
-            postCreationView.setVisibility(View.GONE);
+            mPostCreationView.setVisibility(View.GONE);
         }
     }
 
     public void setLoading(boolean isLoading){
-        this.isLoading = isLoading;
+        this.mIsLoading = isLoading;
         if (isLoading){
             /*mLoadingPanel.setVisibility(View.VISIBLE);*/
         }
@@ -278,22 +291,21 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public boolean isLoading(){
-        return isLoading;
+        return mIsLoading;
     }
 
     public void refresh(){
         setLoading(true);
-        postListing.refresh();
+        mPostListing.refresh();
     }
 
     public void loadNewerPosts(){
-        setLoading(true);
-        postListing.loadNewerPosts();
+        mPostListing.loadNewerPosts();
     }
 
     public void loadOlderPosts(){
         setLoading(true);
-        postListing.loadOlderPosts();
+        mPostListing.loadOlderPosts();
     }
 
     @Override
@@ -306,12 +318,12 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             case PostListing.OBSERVER_KEY_CHANGED_DATASET:
                 mAdapter.notifyDataSetChanged();
                 setLoading(false);
-                if (!postListing.getPosts().isEmpty()){
+                if (!mPostListing.getPosts().isEmpty()){
                     mEmptyView.setVisibility(View.GONE);
                 }
                 break;
             case PostListing.OBSERVER_KEY_CHANGED_EDITABILITY:
-                setPostCreationVisibility(postListing.isEditable());
+                setPostCreationVisibility(mPostListing.isEditable());
                 break;
             case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
                 mAdapter.updateVisibleViews();
@@ -321,7 +333,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                 break;
             case PostListing.OBSERVER_KEY_FINISHED:
                 setLoading(false);
-                if (postListing.getPosts().isEmpty()){
+                if (mPostListing.getPosts().isEmpty()){
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -331,26 +343,32 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         }
     }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleItemCount != 0 && !isLoading()){
-            if(isScrollingUp){
-                if(firstVisibleItem == 0){
+    public void update(){
+        Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
+            @Override
+            public void onResponse(Boolean response) {
+                if (!response){
                     loadNewerPosts();
                 }
             }
-            else{
-                final int lastVisibleItem = firstVisibleItem + visibleItemCount;
-                if(lastVisibleItem == totalItemCount && !postListing.isFinished()) {
-                    loadOlderPosts();
-                }
+        };
+        AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+        if(!isLoading() && !mPostListing.isFinished() && visibleItemCount != 0){
+            final int lastVisibleItem = firstVisibleItem + visibleItemCount;
+            if(lastVisibleItem == totalItemCount) {
+                loadOlderPosts();
             }
         }
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        final int currentFirstVisibleItem = mListView.getFirstVisiblePosition();
+        /*final int currentFirstVisibleItem = mListView.getFirstVisiblePosition();
 
         if(currentFirstVisibleItem > lastFirstVisibleItem) {
             isScrollingUp = false;
@@ -360,6 +378,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         }
 
         this.scrollState = scrollState;
-        lastFirstVisibleItem = currentFirstVisibleItem;
+        lastFirstVisibleItem = currentFirstVisibleItem;*/
     }
 }

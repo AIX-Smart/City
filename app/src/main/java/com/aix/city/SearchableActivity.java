@@ -12,6 +12,8 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.aix.city.core.AIxDataManager;
+
 /**
  * Created by Thomas on 13.12.2015.
  */

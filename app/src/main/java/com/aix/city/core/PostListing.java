@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.aix.city.core.data.Post;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -222,6 +223,16 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     public boolean isEditable(){
         return false;
+    }
+
+    @JsonIgnore
+    public Post getNewestPost(){
+        return posts.get(0);
+    }
+
+    @JsonIgnore
+    public Post getOldestPost(){
+        return posts.get(posts.size() - 1);
     }
 
     @Override

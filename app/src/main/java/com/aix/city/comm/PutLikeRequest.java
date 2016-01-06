@@ -9,13 +9,13 @@ import com.android.volley.Response;
 /**
  * Created by Thomas on 01.12.2015.
  */
-public class PutLikeRequest extends AIxJsonRequest<String> {
+public class PutLikeRequest extends AIxJsonRequest<Boolean> {
 
     private final Likeable likeable;
     private final boolean liked;
 
-    public PutLikeRequest(Response.Listener<String> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked) {
-        super(Request.Method.PUT, URLFactory.get().createLikeChangeURL(likeable), liked, String.class, listener, errorListener, false);
+    public PutLikeRequest(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked) {
+        super(Request.Method.PUT, URLFactory.get().createLikeChangeURL(likeable), liked, Boolean.class, listener, errorListener, false);
         this.likeable = likeable;
         this.liked = liked;
     }
@@ -31,15 +31,5 @@ public class PutLikeRequest extends AIxJsonRequest<String> {
 
     public boolean isLiked() {
         return liked;
-    }
-
-    @Override
-    protected Response<String> parseNetworkResponse(NetworkResponse response) {
-        try {
-            return Response.success("", null);
-        }
-        catch (Exception e) {
-            return Response.error(new ParseError(e));
-        }
     }
 }

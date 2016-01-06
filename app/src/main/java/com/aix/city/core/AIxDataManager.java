@@ -53,11 +53,9 @@ public class AIxDataManager extends Observable {
     }
 
     public void init(){
-        allTags.add(DummyContent.BAR_TAG);
-        allTags.add(DummyContent.RESTAURANT_TAG);
         allCities.add(DummyContent.AACHEN);
-
         currentCity = allCities.get(0);
+
         requestCityLocations(currentCity);
         requestTags();
     }

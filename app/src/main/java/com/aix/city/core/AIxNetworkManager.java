@@ -7,6 +7,7 @@ import com.aix.city.comm.GetCityLocationsRequest;
 import com.aix.city.comm.GetLocationRequest;
 import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.comm.GetTagsRequest;
+import com.aix.city.comm.IsUpToDateRequest;
 import com.aix.city.comm.PutLikeRequest;
 import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
@@ -19,6 +20,7 @@ import com.aix.city.core.data.User;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -29,6 +31,13 @@ import com.squareup.okhttp.OkHttpClient;
  * Created by Thomas on 31.10.2015.
  */
 public class AIxNetworkManager {
+
+    public static final Response.ErrorListener DEFAULT_ERROR_LISTENER = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            // do nothing
+        }
+    };
 
     private static AIxNetworkManager instance;
     private final Context context;
@@ -106,12 +115,12 @@ public class AIxNetworkManager {
         addRequest(request);
     }
 
-    public void requestPostCreation(Response.Listener<String> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
+    public void requestPostCreation(Response.Listener<Post> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
         PostCreationRequest request = new PostCreationRequest(listener, errorListener, postListing, content);
         addRequest(request);
     }
 
-    public void requestLikeChange(Response.Listener<String> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
+    public void requestLikeChange(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
         PutLikeRequest request = new PutLikeRequest(listener, errorListener, likeable, liked);
         addRequest(request);
     }
@@ -138,6 +147,11 @@ public class AIxNetworkManager {
 
     public void requestPostDeletion(Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {
         DeletePostRequest request = new DeletePostRequest(listener, errorListener, post);
+        addRequest(request);
+    }
+
+    public void requestIsUpToDate(Response.Listener<Boolean> listener, PostListing postListing) {
+        IsUpToDateRequest request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, postListing.getNewestPost(), postListing.getListingSource());
         addRequest(request);
     }
 }

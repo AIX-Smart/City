@@ -72,6 +72,17 @@ public class URLFactory {
         return urlBuilder.build().toString();
     }
 
+    public String createUpToDateURL(Post newestPost, ListingSource listingSource) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
+        if(listingSource.getType() == ListingSourceType.TAG){
+            urlBuilder.addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()));
+        }
+        urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
+        urlBuilder.addPathSegment(String.valueOf(newestPost.getId()));
+        return urlBuilder.build().toString();
+    }
+
     /*public String createGetLocationEventsURL(int postNum, Post lastPost, Location location){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
                 .addPathSegment(LOCATION)
@@ -121,7 +132,6 @@ public class URLFactory {
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
         urlBuilder.addPathSegment(LOCATION);
         urlBuilder.addPathSegment(String.valueOf(locationId));
-        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
         return urlBuilder.build().toString();
     }
 

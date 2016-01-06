@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/searchView"
         android:queryHint="@string/search_hint"
-        android:iconifiedByDefault= "false"/>
+        android:iconifiedByDefault= "false"
+        android:visibility="gone"/>
 
     <ListView android:layout_height="fill_parent"
         android:layout_width="match_parent"

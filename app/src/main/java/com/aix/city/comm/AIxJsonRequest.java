@@ -8,6 +8,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 
+import java.nio.charset.Charset;
+
 public class AIxJsonRequest<T> extends JsonRequest<T> {
 
     private final Class<T> responseType;
@@ -38,7 +40,7 @@ public class AIxJsonRequest<T> extends JsonRequest<T> {
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            String jsonString = new String(response.data, Charset.forName("UTF-8")  /*HttpHeaderParser.parseCharset(response.headers)*/);
             Cache.Entry entry = HttpHeaderParser.parseCacheHeaders(response);
             return Response.success(Mapper.objectOrThrow(jsonString, responseType), entry);
         }

@@ -60,9 +60,9 @@ public abstract class Likeable extends Observable {
 
     public void like() {
         if (!isLiked()) {
-            Response.Listener<String> listener = new Response.Listener<String>(){
+            Response.Listener<Boolean> listener = new Response.Listener<Boolean>(){
                 @Override
-                public void onResponse(String response) {
+                public void onResponse(Boolean response) {
                     if (!isLiked() && getLikeCount() < Integer.MAX_VALUE) setLikeCount(getLikeCount() + 1);
                     setLiked(true);
                     notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
@@ -81,9 +81,9 @@ public abstract class Likeable extends Observable {
 
     public void resetLike() {
         if (isLiked()) {
-            Response.Listener<String> listener = new Response.Listener<String>(){
+            Response.Listener<Boolean> listener = new Response.Listener<Boolean>(){
                 @Override
-                public void onResponse(String response) {
+                public void onResponse(Boolean response) {
                     if (isLiked() && getLikeCount() > 0) setLikeCount(getLikeCount() - 1);
                     setLiked(false);
                     notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
