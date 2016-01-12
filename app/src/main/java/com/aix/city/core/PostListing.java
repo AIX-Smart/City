@@ -84,7 +84,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     //TODO: überpfüfung auf vollständigkeit lieber woanders machen, da sonst nicht verständlich
     public void addNewerPosts(Post[] responsePostArray){
         if (responsePostArray.length > 0) {
-            final Post firstPost = posts.get(0);
+            final Post firstPost = getNewestPost();
 
             List<Post> newPostList = new ArrayList<Post>();
             for (Post post : responsePostArray){
@@ -184,7 +184,12 @@ public class PostListing extends Observable implements Observer, Parcelable {
         Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
             @Override
             public void onResponse(Post[] response) {
-                addNewerPosts(response);
+                if (posts.size() > 0){
+                    addNewerPosts(response);
+                }
+                else{
+                    addPosts(response);
+                }
             }
         };
 
@@ -227,12 +232,18 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     @JsonIgnore
     public Post getNewestPost(){
-        return posts.get(0);
+        if (posts.size() > 0){
+            return posts.get(0);
+        }
+        return null;
     }
 
     @JsonIgnore
     public Post getOldestPost(){
-        return posts.get(posts.size() - 1);
+        if (posts.size() > 0) {
+            return posts.get(posts.size() - 1);
+        }
+        return null;
     }
 
     @Override

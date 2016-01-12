@@ -2,35 +2,53 @@ package com.aix.city.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Thomas on 13.12.2015.
  */
-public class LocationAdapter extends ArrayAdapter<Location> {
-    private final Context context;
-    private final List<Location> locations;
+public class LocationAdapter extends ArrayAdapter<Location> implements Filterable {
+    private final Fragment fragment;
+    private List<Location> allLocations;
+    private CharSequence filterConstraint;
 
     static class ViewHolder {
         FrameLayout locationLayout;
         TextView locationNameView;
     }
 
-    public LocationAdapter(Context context, List<Location> locations) {
-        super(context, -1, locations);
-        this.context = context;
-        this.locations = locations;
+    public LocationAdapter(Fragment fragment, List<Location> locations) {
+        super(fragment.getContext(), -1, new ArrayList<Location>(locations));
+        this.fragment = fragment;
+        this.allLocations = locations;
+    }
+
+    public List<Location> getAllLocations() {
+        return allLocations;
+    }
+
+    public void setAllLocations(List<Location> allLocations) {
+        this.allLocations = allLocations;
+    }
+
+    public CharSequence getFilterConstraint() {
+        return filterConstraint;
     }
 
     @Override
@@ -39,7 +57,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
         ViewHolder holder;
 
         if (convertView == null || !(convertView.getTag() instanceof LocationAdapter.ViewHolder)) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_element_location, parent, false);
 
             holder = new ViewHolder();
@@ -50,28 +68,76 @@ public class LocationAdapter extends ArrayAdapter<Location> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final Location location = locations.get(position);
+        if (allLocations.size() > 0){
+            final Location location = getItem(position);
 
-        if (location != null) {
-            updateLocationLayout(holder.locationLayout, location);
-            updateLocationNameView(holder.locationNameView, location);
+            if (location != null) {
+                updateLocationLayout(holder.locationLayout, location);
+                updateLocationNameView(holder.locationNameView, location);
+            }
+            return convertView;
+        }
+        else{
+            return null;
         }
 
-        return convertView;
     }
 
     private void updateLocationLayout(FrameLayout locationLayout, final Location location) {
         locationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), BaseListingActivity.class);
-                intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, location);
-                getContext().startActivity(intent);
+                startBaseListingActivity(location);
             }
         });
     }
 
     private void updateLocationNameView(TextView locationNameView, final Location location) {
         locationNameView.setText(location.getName());
+    }
+
+    public void startBaseListingActivity(ListingSource listingSource){
+        BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
+        activity.startBaseListingActivity(listingSource);
+    }
+
+    public void filter(CharSequence constraint){
+        filterConstraint = constraint;
+        getFilter().filter(constraint);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                List<Location> filteredResult = getFilteredResults(charSequence);
+
+                FilterResults results = new FilterResults();
+                results.values = filteredResult;
+                results.count = filteredResult.size();
+
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                clear();
+                @SuppressWarnings("unchecked")
+                List<Location> filteredList = (List<Location>) filterResults.values;
+                addAll(filteredList);
+            }
+
+
+            private List<Location> getFilteredResults(CharSequence constraint){
+                ArrayList<Location> listResult = new ArrayList<Location>();
+                for (Location location : allLocations){
+                    if (location.getName().toLowerCase().startsWith(constraint.toString().toLowerCase())){
+                        listResult.add(location);
+                    }
+                }
+                return listResult;
+            }
+        };
     }
 }

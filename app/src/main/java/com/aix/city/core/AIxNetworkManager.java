@@ -67,9 +67,7 @@ public class AIxNetworkManager {
 
     public RequestQueue getRequestQueue() {
         if (requestQueue == null) {
-            // getApplicationContext() is key, it keeps you from leaking the
-            // Activity or BroadcastReceiver if someone passes one in.
-            requestQueue = Volley.newRequestQueue(context, new OkHttpStack(new OkHttpClient()));
+            requestQueue = Volley.newRequestQueue(context.getApplicationContext(), new OkHttpStack(new OkHttpClient()));
         }
 
         return requestQueue;
@@ -151,7 +149,13 @@ public class AIxNetworkManager {
     }
 
     public void requestIsUpToDate(Response.Listener<Boolean> listener, PostListing postListing) {
-        IsUpToDateRequest request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, postListing.getNewestPost(), postListing.getListingSource());
-        addRequest(request);
+        final Post newestPost = postListing.getNewestPost();
+        if (newestPost == null){
+            listener.onResponse(false);
+        }
+        else{
+            IsUpToDateRequest request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
+            addRequest(request);
+        }
     }
 }

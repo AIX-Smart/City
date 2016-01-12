@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.aix.city.BaseListingActivity;
 import com.aix.city.PostListingFragment;
 import com.aix.city.R;
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Post;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
             viewList.add(postView);
         }
 
-        final Post post = posts.get(position);
+        final Post post = getItem(position);
         postView.setPost(post);
         postView.update();
 
@@ -69,6 +71,11 @@ public class PostAdapter extends ArrayAdapter<Post>{
         for (PostView v : viewList){
             v.update();
         }
+    }
+
+    public void startBaseListingActivity(ListingSource listingSource){
+        BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
+        activity.startBaseListingActivity(listingSource);
     }
 
     public List<Post> getPosts() {

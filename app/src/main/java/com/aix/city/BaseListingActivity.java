@@ -104,6 +104,12 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         return postListingFragment.getPostListing();
     }
 
+    public void startBaseListingActivity(ListingSource listingSource){
+        Intent intent = new Intent(this, BaseListingActivity.class);
+        intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, listingSource);
+        this.startActivity(intent);
+    }
+
     @Override
     public void onFragmentInteraction(String key) {
         if (key != null){

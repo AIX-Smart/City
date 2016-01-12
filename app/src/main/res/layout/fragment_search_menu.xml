@@ -4,8 +4,8 @@
     android:layout_width="fill_parent"
     android:background="@color/accent_material_light"
     android:orientation="vertical"
-    android:descendantFocusability="blocksDescendants"
     tools:context="com.aix.city.SearchMenuFragment">
+    <!--android:descendantFocusability="blocksDescendants"-->
 
     <android.support.design.widget.TabLayout
         android:layout_height="wrap_content"
@@ -17,8 +17,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/searchView"
         android:queryHint="@string/search_hint"
-        android:iconifiedByDefault= "false"
-        android:visibility="gone"/>
+        android:iconifiedByDefault="false" />
 
     <ListView android:layout_height="fill_parent"
         android:layout_width="match_parent"

@@ -6,9 +6,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -92,6 +98,14 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
         }
     }
 
+    public LocationAdapter getLocationAdapter() {
+        return locationAdapter;
+    }
+
+    public TagAdapter getTagAdapter() {
+        return tagAdapter;
+    }
+
     public void updateViews(){
         String queryHint;
         switch (state){
@@ -132,6 +146,7 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
         searchView = (SearchView) searchMenuLayout.findViewById(R.id.searchView);
         tabLayout = (TabLayout) searchMenuLayout.findViewById(R.id.left_tab_layout);
 
+        searchView.setIconifiedByDefault(false);
         tagTab = tabLayout.newTab().setText(R.string.left_tab_tags);
         tagTab.setTag(State.TAG_SELECTED);
         locationTab = tabLayout.newTab().setText(R.string.left_tab_locations);
@@ -139,6 +154,43 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
         tabLayout.addTab(tagTab);
         tabLayout.addTab(locationTab);
         tabLayout.setOnTabSelectedListener(this);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (listView.getAdapter() == locationAdapter) {
+                    for (int i = 0; i < locationAdapter.getCount(); i++) {
+                        Location location = (Location) locationAdapter.getItem(i);
+                        if (location.getName().toLowerCase().equals(query.toLowerCase())) {
+                            locationAdapter.startBaseListingActivity(location);
+                        }
+                    }
+                } else if (listView.getAdapter() == tagAdapter) {
+                    for (int i = 0; i < tagAdapter.getCount(); i++) {
+                        Tag tag = (Tag) tagAdapter.getItem(i);
+                        if (tag.getName().toLowerCase().equals(query.toLowerCase())) {
+                            locationAdapter.startBaseListingActivity(tag);
+                        }
+                    }
+                } else {
+                    throw new IllegalStateException();
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (listView.getAdapter() == locationAdapter) {
+                    locationAdapter.filter(newText);
+                } else if (listView.getAdapter() == tagAdapter) {
+                    tagAdapter.filter(newText);
+                } else {
+                    throw new IllegalStateException();
+                }
+                return false;
+            }
+        });
 
         return searchMenuLayout;
     }
@@ -170,8 +222,8 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
     public void onStart(){
         super.onStart();
 
-        tagAdapter = new TagAdapter(getActivity(), AIxDataManager.getInstance().getTags());
-        locationAdapter = new LocationAdapter(getActivity(), AIxDataManager.getInstance().getCityLocations());
+        tagAdapter = new TagAdapter(this, AIxDataManager.getInstance().getTags());
+        locationAdapter = new LocationAdapter(this, AIxDataManager.getInstance().getCityLocations());
         AIxDataManager.getInstance().addObserver(this);
         updateViews();
     }
@@ -204,16 +256,12 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
             String key = data.toString();
             switch(key){
                 case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
-                    locationAdapter.setNotifyOnChange(false);
-                    locationAdapter.clear();
-                    locationAdapter.setNotifyOnChange(true);
-                    locationAdapter.addAll(AIxDataManager.getInstance().getCityLocations());
+                    locationAdapter.setAllLocations(AIxDataManager.getInstance().getCityLocations());
+                    locationAdapter.filter(locationAdapter.getFilterConstraint());
                     break;
                 case AIxDataManager.OBSERVER_KEY_CHANGED_TAGS:
-                    tagAdapter.setNotifyOnChange(false);
-                    tagAdapter.clear();
-                    tagAdapter.setNotifyOnChange(true);
-                    tagAdapter.addAll(AIxDataManager.getInstance().getTags());
+                    tagAdapter.setAllTags(AIxDataManager.getInstance().getTags());
+                    tagAdapter.filter(tagAdapter.getFilterConstraint());
                     break;
             }
         }

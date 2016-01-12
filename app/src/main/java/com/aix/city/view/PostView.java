@@ -101,17 +101,11 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
         }
     }
 
-    public void startBaseListingActivity(ListingSource listingSource){
-        Intent intent = new Intent(getContext(), BaseListingActivity.class);
-        intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, listingSource);
-        getContext().startActivity(intent);
-    }
-
     public void onLocationNameClick(){
         if(post instanceof Event) {
             final Location location = ((Event)post).getLocation();
             if (location != AIxDataManager.EMPTY_LOCATION) {
-                startBaseListingActivity(location);
+                adapter.startBaseListingActivity(location);
             }
         }
     }
@@ -119,7 +113,7 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
     public void onCommentCounterClick(){
         if(post instanceof Event) {
             final Event event = (Event)post;
-            startBaseListingActivity(event);
+            adapter.startBaseListingActivity(event);
         }
     }
 

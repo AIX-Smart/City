@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -31,13 +32,17 @@ public class AIxDataManager extends Observable {
     public static final String OBSERVER_KEY_CHANGED_LOCATIONS = "locations";
     public static final String OBSERVER_KEY_CHANGED_CITY = "city";
     public static final Location EMPTY_LOCATION = new Location();
+    private static final int REQUEST_RETRY_DELAY = 2000;
 
     private static AIxDataManager instance;
     private final Context context;
+    private final Handler requestRetryHandler = new Handler();
     private City currentCity;
     private List<Tag> allTags = new ArrayList<Tag>();
     private List<City> allCities = new ArrayList<City>();
     private Map<Integer, Location> storedLocations = new HashMap<Integer, Location>();
+
+
 
 
     //Singleton methods and constructor
@@ -124,6 +129,15 @@ public class AIxDataManager extends Observable {
     }
 
     public void requestTags(){
+
+        final Runnable requestRetry = new Runnable() {
+            @Override
+            public void run() {
+                requestTags();
+            }
+        };
+        requestRetryHandler.removeCallbacks(requestRetry);
+
         Response.Listener<Tag[]> listener = new Response.Listener<Tag[]>(){
             @Override
             public void onResponse(Tag[] response) {
@@ -135,7 +149,7 @@ public class AIxDataManager extends Observable {
         Response.ErrorListener errorListener = new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
             }
         };
 
@@ -143,6 +157,15 @@ public class AIxDataManager extends Observable {
     }
 
     public void requestCityLocations(City city){
+
+        final Runnable requestRetry = new Runnable() {
+            @Override
+            public void run() {
+                requestCityLocations(getCurrentCity());
+            }
+        };
+        requestRetryHandler.removeCallbacks(requestRetry);
+
         Response.Listener<Location[]> listener = new Response.Listener<Location[]>(){
             @Override
             public void onResponse(Location[] response) {
@@ -156,14 +179,23 @@ public class AIxDataManager extends Observable {
         Response.ErrorListener errorListener = new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
             }
         };
 
         AIxNetworkManager.getInstance().requestCityLocations(listener, errorListener, city);
     }
 
-    public void requestLocation(int locationId){
+    public void requestLocation(final int locationId){
+
+        final Runnable requestRetry = new Runnable() {
+            @Override
+            public void run() {
+                requestLocation(locationId);
+            }
+        };
+        requestRetryHandler.removeCallbacks(requestRetry);
+
         Response.Listener<Location> listener = new Response.Listener<Location>(){
             @Override
             public void onResponse(Location response) {
@@ -175,7 +207,7 @@ public class AIxDataManager extends Observable {
         Response.ErrorListener errorListener = new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
             }
         };
 

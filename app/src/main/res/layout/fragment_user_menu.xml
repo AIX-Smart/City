@@ -4,7 +4,6 @@
     android:layout_width="fill_parent"
     android:background="@color/accent_material_light"
     android:orientation="vertical"
-    android:descendantFocusability="blocksDescendants"
     tools:context="com.aix.city.UserMenuFragment">
 
     <ListView android:layout_height="match_parent"
