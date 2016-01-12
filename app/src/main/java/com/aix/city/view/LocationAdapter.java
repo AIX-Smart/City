@@ -96,9 +96,9 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
         locationNameView.setText(location.getName());
     }
 
-    public void startBaseListingActivity(ListingSource listingSource){
+    public void startBaseListingActivity(Location location){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startBaseListingActivity(listingSource);
+        activity.startBaseListingActivity(location);
     }
 
     public void filter(CharSequence constraint){

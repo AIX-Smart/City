@@ -95,9 +95,9 @@ public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
         tagNameView.setText(tag.getName());
     }
 
-    public void startBaseListingActivity(ListingSource listingSource){
+    public void startBaseListingActivity(Tag tag){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startBaseListingActivity(listingSource);
+        activity.startBaseListingActivity(tag);
     }
 
     public void filter(CharSequence constraint){

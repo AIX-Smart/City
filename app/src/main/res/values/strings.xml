@@ -21,7 +21,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="acc_drawer_open">open</string>
     <string name="acc_drawer_close">close</string>
-    <string name="search_location_hint">Suche Location</string>
+    <string name="search_location_hint">Suche Orte</string>
     <string name="search_tag_hint">Suche Tag</string>
     <string name="search_hint">Suche</string>
     <string name="app_label">City</string>

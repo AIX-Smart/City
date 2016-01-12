@@ -161,15 +161,15 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
                 if (listView.getAdapter() == locationAdapter) {
                     for (int i = 0; i < locationAdapter.getCount(); i++) {
                         Location location = (Location) locationAdapter.getItem(i);
-                        if (location.getName().toLowerCase().equals(query.toLowerCase())) {
+                        if (locationAdapter.getCount() == 1 || location.getName().toLowerCase().equals(query.toLowerCase())) {
                             locationAdapter.startBaseListingActivity(location);
                         }
                     }
                 } else if (listView.getAdapter() == tagAdapter) {
                     for (int i = 0; i < tagAdapter.getCount(); i++) {
                         Tag tag = (Tag) tagAdapter.getItem(i);
-                        if (tag.getName().toLowerCase().equals(query.toLowerCase())) {
-                            locationAdapter.startBaseListingActivity(tag);
+                        if (tagAdapter.getCount() == 1 || tag.getName().toLowerCase().equals(query.toLowerCase())){
+                            tagAdapter.startBaseListingActivity(tag);
                         }
                     }
                 } else {
@@ -280,5 +280,4 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(String key);
     }
-
 }
