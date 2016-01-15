@@ -36,7 +36,8 @@
         android:layout_above="@id/postCreationLayout">
         <ListView android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            tools:listitem="@layout/post" />
 
         <TextView android:id="@+id/emptyText"
             android:layout_width="match_parent"

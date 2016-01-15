@@ -23,16 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            tools:layout="@layout/fragment_city"/>
+            android:layout_alignParentTop="true" />
 
         <FrameLayout
             android:id="@+id/fragment_container_bottom"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_below="@id/fragment_container_top"
-            tools:layout="@layout/fragment_listing_list"/>
+            android:layout_below="@id/fragment_container_top" />
 
     </RelativeLayout>
 
@@ -41,15 +39,15 @@
         android:name="com.aix.city.SearchMenuFragment"
         android:layout_height="match_parent"
         android:layout_width="@dimen/drawer_width"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         tools:layout="@layout/fragment_search_menu" />
 
-    <fragment
+    <!--<fragment
         android:id="@+id/fragment_right_menu"
         android:name="com.aix.city.UserMenuFragment"
         android:layout_height="match_parent"
         android:layout_width="@dimen/drawer_width"
         android:layout_gravity="right"
-        tools:layout="@layout/fragment_user_menu" />
+        tools:layout="@layout/fragment_user_menu" />-->
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,56 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.aix.city.view.PostView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/post" android:orientation="vertical"
-    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    android:id="@+id/post"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/post_min_heigth"
+    android:background="@color/accent_material_dark"
+    android:paddingTop="8dp"
+    android:paddingBottom="0dp"
+    android:paddingLeft="16dp"
+    android:paddingStart="16dp"
+    android:paddingRight="12dp"
+    android:paddingEnd="12dp">
 
-    <TextView android:id="@+id/content"
-        android:layout_width="fill_parent"
+    <TextView android:id="@+id/post_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TEXT ONE"
-        android:padding="20dip"
-        android:background="@android:color/background_light"
+        android:text="content"
+        android:textSize="@dimen/post_content_text_size"
+        android:textColor="@color/post_text_color"
+        android:minLines="2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:clickable="false" />
 
-    <Button
+    <TextView
+        android:id="@+id/post_location"
+        android:text="location"
+        android:textColor="@color/post_text_color"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/post_location_text_size"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onClick"
+        android:clickable="true"/>
+
+    <LinearLayout
+        android:id="@+id/post_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="like"
-        android:id="@+id/likeButton"
-        android:layout_gravity="right"
-        android:layout_below="@id/content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:padding="0dp" >
+
+        <ImageButton
+            android:id="@+id/post_like_btn"
+            android:layout_width="@dimen/btn_like_size"
+            android:layout_height="@dimen/btn_like_size"
+            android:background="@drawable/btn_like"
+            android:contentDescription="@string/btn_like_description"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/post_like_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/post_text_color"
+            android:textSize="@dimen/post_like_counter_size"
+            android:padding="0dp"
+            android:layout_gravity="center_horizontal"
+            android:clickable="false" />
+
+    </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/commentCounterLayout"
+        android:id="@+id/post_comments"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:minWidth="32dp"
-        android:layout_below="@id/content"
-        android:layout_toLeftOf="@+id/likeButton"
-        android:gravity="center_vertical">
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="0dp" >
         <TextView
-            android:id="@+id/commentCounter"
+            android:id="@+id/post_comments_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
-            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/post_text_color"
+            android:layout_gravity="center"
             android:onClick="onClick"
             android:clickable="true"/>
     </FrameLayout>
 
-
-    <TextView android:padding="20dip"
-        android:background="@android:color/background_light"
-        android:id="@+id/locationName"
+    <TextView
+        android:id="@+id/post_time"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:text="TEXT TWO"
-        android:layout_below="@id/content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/commentCounterLayout"
-        android:onClick="onClick"
-        android:clickable="true"/>
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:padding="0dp"
+        android:textSize="@dimen/post_time_text_size"
+        android:text="20:00"
+        android:textColor="#99FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </com.aix.city.view.PostView>
 

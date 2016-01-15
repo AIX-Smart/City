@@ -4,9 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
@@ -15,8 +14,9 @@ import com.aix.city.R;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Post;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Thomas on 17.10.2015.
@@ -24,14 +24,16 @@ import java.util.List;
 public class PostAdapter extends ArrayAdapter<Post>{
     private final PostListingFragment fragment;
     private final List<Post> posts;
-    private final List<PostView> viewList = new ArrayList<PostView>();
+    private final Set<PostView> createdViews = new HashSet<PostView>();
 
 
     static class ViewHolder {
         TextView contentView;
         TextView locationNameView;
         TextView commentCounterView;
-        Button likeButton;
+        ImageButton likeButton;
+        TextView likeCounter;
+        TextView creationTime;
     }
 
     public PostAdapter(PostListingFragment fragment, List<Post> posts) {
@@ -51,13 +53,17 @@ public class PostAdapter extends ArrayAdapter<Post>{
             postView = (PostView) inflater.inflate(R.layout.post, parent, false);
 
             holder = new ViewHolder();
-            holder.contentView = (TextView) postView.findViewById(R.id.content);
-            holder.locationNameView = (TextView) postView.findViewById(R.id.locationName);
-            holder.commentCounterView = (TextView) postView.findViewById(R.id.commentCounter);
-            holder.likeButton = (Button) postView.findViewById(R.id.likeButton);
+            holder.contentView = (TextView) postView.findViewById(R.id.post_content);
+            holder.locationNameView = (TextView) postView.findViewById(R.id.post_location);
+            holder.commentCounterView = (TextView) postView.findViewById(R.id.post_comments_counter);
+            holder.likeButton = (ImageButton) postView.findViewById(R.id.post_like_btn);
+            holder.likeCounter = (TextView) postView.findViewById(R.id.post_like_counter);
+            holder.creationTime = (TextView) postView.findViewById(R.id.post_time);
             postView.setTag(holder);
             postView.init(this);
-            viewList.add(postView);
+            if (!createdViews.contains(postView)){
+                createdViews.add(postView);
+            }
         }
 
         final Post post = getItem(position);
@@ -68,7 +74,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
     }
 
     public void updateVisibleViews(){
-        for (PostView v : viewList){
+        for (PostView v : createdViews){
             v.update();
         }
     }

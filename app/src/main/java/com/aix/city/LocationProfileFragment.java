@@ -1,7 +1,6 @@
 package com.aix.city;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
-import com.aix.city.dummy.DummyContent;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -40,7 +38,7 @@ public class LocationProfileFragment extends ListingSourceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-        locationNameView = (TextView) view.findViewById(R.id.locationName);
+        locationNameView = (TextView) view.findViewById(R.id.post_location);
         locationNameView.setText(location.getName());
 
         Button backButton = (Button) view.findViewById(R.id.backButton);

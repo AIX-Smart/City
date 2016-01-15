@@ -32,7 +32,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
     private PostListingFragment postListingFragment;
 
     private LinearLayout searchMenu;
-    private LinearLayout userMenu;
+    //private LinearLayout userMenu;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
     private RelativeLayout mainLayout;
@@ -47,15 +47,15 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
         searchMenu = (LinearLayout) findViewById(R.id.fragment_left_menu);
-        userMenu = (LinearLayout) findViewById(R.id.fragment_right_menu);
+        //userMenu = (LinearLayout) findViewById(R.id.fragment_right_menu);
 
         createMainLayout();
         createSearchMenu();
-        createUserMenu();
+        //createUserMenu();
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
+                //if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
                 float moveFactor = (searchMenu.getWidth() * slideOffset);
                 mainLayout.setTranslationX(moveFactor);
             }
@@ -90,11 +90,11 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
     }
 
-    private void createUserMenu(){
+    /*private void createUserMenu(){
         ListView userMenuList = (ListView) findViewById(R.id.right_menu_list);
         ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
         userMenuList.setAdapter(rightListAdapter);
-    }
+    }*/
 
     public ListingSource getListingSource() {
         return listingSourceFragment.getListingSource();
@@ -129,7 +129,7 @@ public class BaseListingActivity extends FragmentActivity implements PostListing
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(searchMenu) || drawerLayout.isDrawerOpen(userMenu)){
+        if(drawerLayout.isDrawerOpen(searchMenu)/* || drawerLayout.isDrawerOpen(userMenu)*/){
             drawerLayout.closeDrawers();
         }
         else{

@@ -32,4 +32,5 @@
     <string name="postCreationMessage_not_allowed">Unerlaubte Aktion</string>
     <string name="postDeletionMessage_failed">Löschung fehlgeschlagen</string>
     <string name="postDeletionMessage_not_allowed">Unerlaubte Löschung</string>
+    <string name="btn_like_description">like button</string>
 </resources>

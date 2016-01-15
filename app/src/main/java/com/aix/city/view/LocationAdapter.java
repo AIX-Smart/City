@@ -26,7 +26,7 @@ import java.util.List;
 public class LocationAdapter extends ArrayAdapter<Location> implements Filterable {
     private final Fragment fragment;
     private List<Location> allLocations;
-    private CharSequence filterConstraint;
+    private CharSequence filterConstraint = "";
 
     static class ViewHolder {
         FrameLayout locationLayout;
@@ -102,6 +102,7 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
     }
 
     public void filter(CharSequence constraint){
+        if (constraint == null) constraint = "";
         filterConstraint = constraint;
         getFilter().filter(constraint);
     }
@@ -130,6 +131,7 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
 
 
             private List<Location> getFilteredResults(CharSequence constraint){
+                if (constraint == null) constraint = "";
                 ArrayList<Location> listResult = new ArrayList<Location>();
                 for (Location location : allLocations){
                     if (location.getName().toLowerCase().startsWith(constraint.toString().toLowerCase())){

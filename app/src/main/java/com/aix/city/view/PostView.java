@@ -13,21 +13,27 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.aix.city.BaseListingActivity;
+import com.aix.city.R;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by Thomas on 17.10.2015.
  */
 public class PostView extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener {
 
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm");
+
     private PostAdapter adapter;
-
     private Post post;
-
     private boolean likeVisible;
 
     public PostView(Context context) {
@@ -79,15 +85,17 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
     public void update(){
         final PostAdapter.ViewHolder h = getViewHolder();
         h.contentView.setText(post.getContent());
-        h.likeButton.setText(String.valueOf(post.getLikeCount()));
+        h.likeCounter.setText(String.valueOf(post.getLikeCount()));
+        String dateString = DATE_FORMAT.format(new Date(post.getCreationTime()));
+        h.creationTime.setText(dateString);
 
         if(post.isLiked()) {
             likeVisible = true;
-            h.likeButton.setBackgroundColor(Color.CYAN);
+            h.likeButton.setSelected(true);
         }
         else {
             likeVisible = false;
-            h.likeButton.setBackgroundResource(android.R.drawable.btn_default);
+            h.likeButton.setSelected(false);
         }
 
         if(post instanceof Event){

@@ -19,7 +19,7 @@
     <TextView android:text="@string/locationProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/locationName"
+        android:id="@+id/post_location"
         android:textSize="28sp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"

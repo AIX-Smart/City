@@ -26,7 +26,7 @@ import java.util.List;
 public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
     private final Fragment fragment;
     private List<Tag> allTags;
-    private CharSequence filterConstraint;
+    private CharSequence filterConstraint = "";
 
     static class ViewHolder {
         FrameLayout tagLayout;
@@ -101,6 +101,7 @@ public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
     }
 
     public void filter(CharSequence constraint){
+        if (constraint == null) constraint = "";
         filterConstraint = constraint;
         getFilter().filter(constraint);
     }
@@ -129,6 +130,7 @@ public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
 
 
             private List<Tag> getFilteredResults(CharSequence constraint){
+                if (constraint == null) constraint = "";
                 ArrayList<Tag> listResult = new ArrayList<Tag>();
                 for (Tag tag : allTags){
                     if (tag.getName().toLowerCase().startsWith(constraint.toString().toLowerCase())){

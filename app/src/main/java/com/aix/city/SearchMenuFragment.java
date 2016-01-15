@@ -40,6 +40,8 @@ import java.util.Observer;
 public class SearchMenuFragment extends Fragment implements Observer, TabLayout.OnTabSelectedListener {
 
     public static final String ARG_STATE = "SearchMenuFragment.state";
+    public static final String M_TAG_ADAPTER = "SearchMenuFragment.tagAdapter";
+    public static final String M_LOCATION_ADAPTER = "SearchMenuFragment.locationAdapter";
 
     public enum State{
         TAG_SELECTED,
@@ -135,6 +137,9 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
         else{
             this.state = State.get(0);
         }
+
+        tagAdapter = new TagAdapter(this, AIxDataManager.getInstance().getTags());
+        locationAdapter = new LocationAdapter(this, AIxDataManager.getInstance().getCityLocations());
     }
 
     @Override
@@ -161,14 +166,14 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
                 if (listView.getAdapter() == locationAdapter) {
                     for (int i = 0; i < locationAdapter.getCount(); i++) {
                         Location location = (Location) locationAdapter.getItem(i);
-                        if (locationAdapter.getCount() == 1 || location.getName().toLowerCase().equals(query.toLowerCase())) {
+                        if (locationAdapter.getCount() == 1 || location.getName().equalsIgnoreCase(query)) {
                             locationAdapter.startBaseListingActivity(location);
                         }
                     }
                 } else if (listView.getAdapter() == tagAdapter) {
                     for (int i = 0; i < tagAdapter.getCount(); i++) {
                         Tag tag = (Tag) tagAdapter.getItem(i);
-                        if (tagAdapter.getCount() == 1 || tag.getName().toLowerCase().equals(query.toLowerCase())){
+                        if (tagAdapter.getCount() == 1 || tag.getName().equalsIgnoreCase(query)) {
                             tagAdapter.startBaseListingActivity(tag);
                         }
                     }
@@ -222,8 +227,6 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
     public void onStart(){
         super.onStart();
 
-        tagAdapter = new TagAdapter(this, AIxDataManager.getInstance().getTags());
-        locationAdapter = new LocationAdapter(this, AIxDataManager.getInstance().getCityLocations());
         AIxDataManager.getInstance().addObserver(this);
         updateViews();
     }

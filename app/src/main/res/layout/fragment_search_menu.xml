@@ -8,20 +8,21 @@
     <!--android:descendantFocusability="blocksDescendants"-->
 
     <android.support.design.widget.TabLayout
+        android:id="@+id/left_tab_layout"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/left_tab_layout"/>
+        android:layout_width="match_parent" />
 
     <android.support.v7.widget.SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/searchView"
         android:queryHint="@string/search_hint"
         android:iconifiedByDefault="false" />
 
-    <ListView android:layout_height="fill_parent"
-        android:layout_width="match_parent"
+    <ListView
         android:id="@+id/left_menu_list"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:background="@color/accent_material_light"/>
 
 </LinearLayout>
