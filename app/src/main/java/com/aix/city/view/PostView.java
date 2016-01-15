@@ -1,21 +1,13 @@
 package com.aix.city.view;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.aix.city.BaseListingActivity;
-import com.aix.city.R;
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -23,7 +15,6 @@ import com.aix.city.core.data.Post;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Thomas on 17.10.2015.
@@ -78,7 +69,7 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
         final PostAdapter.ViewHolder h = getViewHolder();
         this.setOnLongClickListener(this);
         h.locationNameView.setOnClickListener(this);
-        h.commentCounterView.setOnClickListener(this);
+        h.commentLayout.setOnClickListener(this);
         h.likeButton.setOnClickListener(this);
     }
 
@@ -88,6 +79,8 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
         h.likeCounter.setText(String.valueOf(post.getLikeCount()));
         String dateString = DATE_FORMAT.format(new Date(post.getCreationTime()));
         h.creationTime.setText(dateString);
+
+        setBackgroundColor(adapter.getPostColor(post));
 
         if(post.isLiked()) {
             likeVisible = true;
@@ -139,7 +132,7 @@ public class PostView extends RelativeLayout implements View.OnClickListener, Vi
         if(v == getViewHolder().locationNameView){
             onLocationNameClick();
         }
-        else if(v == getViewHolder().commentCounterView){
+        else if(v == getViewHolder().commentLayout){
             onCommentCounterClick();
         }
         else if(v == getViewHolder().likeButton){

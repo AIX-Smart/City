@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="post_text_color">#FFFFFF</color>
+    <color name="post_color_blue">#58B2D7</color>
+    <color name="post_color_yellow">#E4B81E</color>
+    <color name="post_color_green">#31D169</color>
+    <color name="post_color_red">#A84028</color>
 </resources>

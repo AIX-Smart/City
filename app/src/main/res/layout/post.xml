@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/post_min_heigth"
-    android:background="@color/accent_material_dark"
+    android:background="@color/post_color_blue"
     android:paddingTop="8dp"
     android:paddingBottom="0dp"
     android:paddingLeft="16dp"
@@ -68,25 +68,33 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/post_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="32dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="0dp" >
+        android:orientation="horizontal"
+        android:padding="1dp"
+        android:clickable="true" >
+        <ImageView
+            android:layout_width="@dimen/post_comment_icon_size"
+            android:layout_height="@dimen/post_comment_icon_size"
+            android:background="@drawable/kommentar"
+            android:layout_margin="1dp"
+            android:layout_gravity="end" />
         <TextView
             android:id="@+id/post_comments_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="@dimen/post_comment_counter_text_size"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
             android:text="0"
             android:textColor="@color/post_text_color"
-            android:layout_gravity="center"
-            android:onClick="onClick"
-            android:clickable="true"/>
-    </FrameLayout>
+            android:layout_gravity="start|bottom" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/post_time"
