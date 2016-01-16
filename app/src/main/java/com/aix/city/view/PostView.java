@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.aix.city.core.AIxDataManager;
@@ -15,13 +16,14 @@ import com.aix.city.core.data.Post;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Thomas on 17.10.2015.
  */
-public class PostView extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener {
+public class PostView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm", Locale.GERMAN);
 
     private PostAdapter adapter;
     private Post post;

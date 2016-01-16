@@ -230,7 +230,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
         //load posts
         if(mPostListing.getPosts().isEmpty()){
-            mPostListing.loadPosts();
+            mPostListing.loadInitialPosts();
         }
     }
 
@@ -337,22 +337,24 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
                 break;
-            case PostListing.OBSERVER_KEY_UPTODATE:
-                setLoading(false);
-                break;
         }
     }
 
     public void update(){
-        Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
-            @Override
-            public void onResponse(Boolean response) {
-                if (!response){
-                    loadNewerPosts();
+        if (mPostListing.isEmpty()){
+            mPostListing.loadInitialPosts();
+        }
+        else{
+            Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
+                @Override
+                public void onResponse(Boolean response) {
+                    if (!response){
+                        loadNewerPosts();
+                    }
                 }
-            }
-        };
-        AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+            };
+            AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+        }
     }
 
     @Override
@@ -368,16 +370,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        /*final int currentFirstVisibleItem = mListView.getFirstVisiblePosition();
 
-        if(currentFirstVisibleItem > lastFirstVisibleItem) {
-            isScrollingUp = false;
-        }
-        else if(currentFirstVisibleItem < lastFirstVisibleItem) {
-            isScrollingUp = true;
-        }
-
-        this.scrollState = scrollState;
-        lastFirstVisibleItem = currentFirstVisibleItem;*/
     }
 }

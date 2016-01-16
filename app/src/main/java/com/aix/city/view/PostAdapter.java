@@ -110,6 +110,11 @@ public class PostAdapter extends ArrayAdapter<Post>{
 
     public void dyePost(final Post post){
         if (!postColorMap.containsKey(post)) {
+
+            if (!posts.contains(post)){
+                throw new IllegalArgumentException();
+            }
+
             int colorIndex;
             int color;
 
@@ -176,11 +181,6 @@ public class PostAdapter extends ArrayAdapter<Post>{
 
     @Override
     public void notifyDataSetChanged() {
-        for (Post post : posts){
-            if (!postColorMap.containsKey(post)){
-                postColorMap.remove(post);
-            }
-        }
         super.notifyDataSetChanged();
     }
 }

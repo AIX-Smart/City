@@ -1,5 +1,6 @@
 package com.aix.city.core;
 
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -21,7 +22,7 @@ import java.util.Observer;
 public class PostListing extends Observable implements Observer, Parcelable {
 
     /** Defines the default number of posts for a database GET-request */
-    public static final int POST_REQUEST_NUM = 20;
+    public static final int POST_REQUEST_NUM = 10;
 
     public static final int PARCEL_DESCRIPTION_POST_LISTING = 0;
     public static final int PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING = 1;
@@ -30,9 +31,9 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public static final String OBSERVER_KEY_CHANGED_DATASET = "dataSet";
     public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
     public static final String OBSERVER_KEY_FINISHED = "finished";
-    public static final String OBSERVER_KEY_UPTODATE = "up-to-date";
 
-    protected static final Response.ErrorListener errorListener = new Response.ErrorListener() {
+    public final Handler requestRetryHandler = new Handler();
+    public static final Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             //TODO:
@@ -48,6 +49,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
     private boolean finished = false;
+    private boolean waitForInit = true;
 
     /**
      * INTERNAL USE ONLY: use instead listingSource.createPostListing()
@@ -62,6 +64,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         in.readTypedList(posts, Post.CREATOR);
         listingSource = in.readParcelable(ListingSource.class.getClassLoader());
         finished = (in.readInt() != 0);
+        waitForInit = (in.readInt() != 0);
     }
 
     public ListingSource getListingSource() {
@@ -109,10 +112,6 @@ public class PostListing extends Observable implements Observer, Parcelable {
                     //TODO: more new posts have to be loaded from the database
                 }
             }
-            else{
-                setChanged();
-                notifyObservers(OBSERVER_KEY_UPTODATE);
-            }
         }
     }
 
@@ -154,14 +153,19 @@ public class PostListing extends Observable implements Observer, Parcelable {
         }
     }
 
-    public void loadPosts() {
-        loadOlderPosts();
+    public void loadInitialPosts() {
+        if (waitForInit){
+            loadOlderPosts();
+        }
     }
 
     public void loadOlderPosts() {
 
         Post oldestPost = null;
-        if(!posts.isEmpty()){
+        if(posts.isEmpty()){
+            waitForInit = false;
+        }
+        else{
             oldestPost = posts.get(posts.size() - 1);
         }
 
@@ -175,31 +179,43 @@ public class PostListing extends Observable implements Observer, Parcelable {
             }
         };
 
-        //send request to server
-        listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost);
-    }
-
-    public void loadNewerPosts() {
-
-        Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
-            public void onResponse(Post[] response) {
-                if (posts.size() > 0){
-                    addNewerPosts(response);
-                }
-                else{
-                    addPosts(response);
+            public void onErrorResponse(VolleyError error) {
+                if (posts.isEmpty() && !isFinished()){
+                    waitForInit = true;
                 }
             }
         };
 
         //send request to server
-        listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, null);
+        listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost);
+
+    }
+
+    public boolean loadNewerPosts() {
+        if (!waitForInit) {
+            Response.Listener<Post[]> listener = new Response.Listener<Post[]>() {
+                @Override
+                public void onResponse(Post[] response) {
+                    if (posts.size() > 0) {
+                        addNewerPosts(response);
+                    } else {
+                        addPosts(response);
+                    }
+                }
+            };
+
+            //send request to server
+            listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, null);
+            return true;
+        }
+        return false;
     }
 
     public void refresh() {
         posts.clear();
-        loadPosts();
+        loadInitialPosts();
     }
 
     /**
@@ -246,6 +262,10 @@ public class PostListing extends Observable implements Observer, Parcelable {
         return null;
     }
 
+    public boolean isEmpty() {
+        return posts.isEmpty();
+    }
+
     @Override
     public void update(Observable observable, Object data) {
         setChanged();
@@ -263,6 +283,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         dest.writeTypedList(getPosts());
         dest.writeParcelable(getListingSource(), flags);
         dest.writeInt(isFinished() ? 1 : 0);
+        dest.writeInt(waitForInit  ? 1 : 0);
     }
 
     public static final Parcelable.Creator<PostListing> CREATOR =

@@ -9,5 +9,5 @@
     <item android:state_pressed="true" android:state_selected="true"
         android:drawable="@drawable/klenkes_kontur_weiss" />
     <!--<item android:state_enabled="true"
-        android:drawable="@drawable/klenkes_kontur_weiss" />-->
+        android:drawable="@drawable/klenkes_kontur_weiss_square" />-->
 </selector>
