@@ -18,6 +18,14 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     //timer delay for a retry after a failed login in milliseconds
     private static final int LOGIN_RETRY_DELAY_MS = 1000;
 
+    private final Handler retryHandler = new Handler();
+    private final Runnable retryRunnable = new Runnable() {
+        @Override
+        public void run() {
+            AIxLoginModule.getInstance().login();
+        }
+    };
+
     private boolean loginFailed = false;
     private Toast loginFailureToast;
 
@@ -25,29 +33,29 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        AIxNetworkManager.getInstance().init();
     }
 
     @Override
     protected void onStart() {
-        super.onStart();
-        AIxNetworkManager.getInstance().init();
         AIxLoginModule.getInstance().addObserver(this);
-        sendInitialRequests();
-    }
 
-    public void sendInitialRequests(){
         AIxLoginModule.getInstance().login();
         AIxDataManager.getInstance().init();
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        AIxLoginModule.getInstance().deleteObserver(this);
+        retryHandler.removeCallbacks(retryRunnable);
+        super.onStop();
     }
 
     public void loginFailure() {
-        Handler retryHandler = new Handler();
-        retryHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendInitialRequests();
-            }
-        }, LOGIN_RETRY_DELAY_MS);
+        retryHandler.postDelayed(retryRunnable, LOGIN_RETRY_DELAY_MS);
 
         if (!loginFailed){
             loginFailureToast = Toast.makeText(this, this.getResources().getString(R.string.loginFailure), Toast.LENGTH_LONG);
@@ -64,8 +72,6 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     }
 
     public void finishLoginActivity(){
-        AIxLoginModule.getInstance().deleteObserver(this);
-
         Intent intent = new Intent(this, BaseListingActivity.class);
         startActivity(intent);
         finish();

@@ -1,6 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Search  -->
+    <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="never"
+        android:title="@string/action_search"/>
+
+    <!-- Create -->
+    <item
+        android:id="@+id/action_create"
+        android:icon="@drawable/kommentar"
+        app:showAsAction="never"
+        android:title="@string/action_create"/>
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
 </menu>

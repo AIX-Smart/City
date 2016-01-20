@@ -1,9 +1,7 @@
 package com.aix.city.core;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
-import com.aix.city.core.AIxNetworkManager;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -38,7 +36,8 @@ public abstract class Likeable extends Observable {
         return liked;
     }
 
-    protected void setLiked(boolean liked) {
+    /**Internal use only!*/
+    public void rawSetLiked(boolean liked) {
         if(this.liked != liked){
             this.liked = liked;
             setChanged();
@@ -49,7 +48,8 @@ public abstract class Likeable extends Observable {
         return likeCount;
     }
 
-    protected void setLikeCount(int likeCount) {
+    /**Internal use only!*/
+    protected void rawSetLikeCount(int likeCount) {
         if(this.likeCount != likeCount){
             this.likeCount = likeCount;
             setChanged();
@@ -58,13 +58,14 @@ public abstract class Likeable extends Observable {
 
     public abstract int getId();
 
-    public void like() {
+    public void setLike() {
         if (!isLiked()) {
+            final int futureLikeCount = getLikeCount() + 1;
             Response.Listener<Boolean> listener = new Response.Listener<Boolean>(){
                 @Override
                 public void onResponse(Boolean response) {
-                    if (!isLiked() && getLikeCount() < Integer.MAX_VALUE) setLikeCount(getLikeCount() + 1);
-                    setLiked(true);
+                    if (!isLiked()) rawSetLikeCount(futureLikeCount);
+                    rawSetLiked(true);
                     notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
@@ -81,11 +82,12 @@ public abstract class Likeable extends Observable {
 
     public void resetLike() {
         if (isLiked()) {
+            final int futureLikeCount = getLikeCount() - 1;
             Response.Listener<Boolean> listener = new Response.Listener<Boolean>(){
                 @Override
                 public void onResponse(Boolean response) {
-                    if (isLiked() && getLikeCount() > 0) setLikeCount(getLikeCount() - 1);
-                    setLiked(false);
+                    if (isLiked()) rawSetLikeCount(futureLikeCount);
+                    rawSetLiked(false);
                     notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };

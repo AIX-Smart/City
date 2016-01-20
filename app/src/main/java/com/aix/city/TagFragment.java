@@ -39,16 +39,9 @@ public class TagFragment extends ListingSourceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tag, container, false);
-        tagNameView = (TextView) view.findViewById(R.id.tagElementName);
+        tagNameView = (TextView) view.findViewById(R.id.list_item_tag_name);
         tagNameView.setText(tag.getName());
 
-        Button backButton = (Button) view.findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getListener().onFragmentInteraction(INTERACTION_KEY_BACK);
-            }
-        });
         return view;
     }
 

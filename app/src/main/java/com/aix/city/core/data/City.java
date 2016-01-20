@@ -2,6 +2,7 @@ package com.aix.city.core.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.ListingSource;
@@ -31,6 +32,7 @@ public class City implements ListingSource {
         this.id = id;
     }
 
+    @NonNull
     public String getName() {
         if(name == null){
             name = "";

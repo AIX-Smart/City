@@ -41,6 +41,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     //bundle argument key for creation
     public static final String ARG_POST_LISTING = "PostListingFragment.PostListing";
+    //bundle key
+    public static final String STATE_KEY_INITIALIZED = "PostListingFragment.INITIALIZED";
     //timer delay for update requests in milliseconds
     public static final int UPDATE_DELAY_MS = 5000;
     //handler for timed updates
@@ -86,7 +88,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     private View mPostCreationView;
 
     //true if fragment waits for a response of the server
-    private boolean mIsLoading = true;
+    private boolean mIsLoading = false;
 
 
     /**
@@ -126,6 +128,12 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             if(obj != null && obj instanceof PostListing){
                 mPostListing = (PostListing)obj;
             }
+            else{
+                throw new IllegalStateException();
+            }
+        }
+        else{
+            throw new IllegalStateException();
         }
 
         //create postview-adapter
@@ -223,20 +231,28 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     @Override
     public void onStart() {
-        super.onStart();
-
         mPostListing.addObserver(this);
         AIxDataManager.getInstance().addObserver(this);
 
+        super.onStart();
+
         //load posts
-        if(mPostListing.getPosts().isEmpty()){
+        if(mPostListing.isWaitingForInit()){
             mPostListing.loadInitialPosts();
+            setLoading(true);
         }
+        else{
+            setLoading(false);
+        }
+
+        mUpdateTaskHandler.postDelayed(mUpdateTask, UPDATE_DELAY_MS);
     }
 
     @Override
     public void onStop() {
+        mUpdateTaskHandler.removeCallbacks(mUpdateTask);
         super.onStop();
+
         mPostListing.deleteObserver(this);
         AIxDataManager.getInstance().deleteObserver(this);
     }
@@ -245,13 +261,11 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void onResume() {
         super.onResume();
         mAdapter.updateVisibleViews();
-        mUpdateTaskHandler.postDelayed(mUpdateTask, UPDATE_DELAY_MS);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mUpdateTaskHandler.removeCallbacks(mUpdateTask);
     }
 
     @Override
@@ -341,7 +355,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public void update(){
-        if (mPostListing.isEmpty()){
+        if (mPostListing.isWaitingForInit()){
             mPostListing.loadInitialPosts();
         }
         else{

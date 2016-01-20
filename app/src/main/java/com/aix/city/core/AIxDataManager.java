@@ -81,6 +81,7 @@ public class AIxDataManager extends Observable {
         return allTags;
     }
 
+    @NonNull
     public City getCurrentCity() {
         return currentCity;
     }

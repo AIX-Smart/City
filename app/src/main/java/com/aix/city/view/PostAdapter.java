@@ -45,6 +45,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
         ImageButton likeButton;
         TextView likeCounter;
         TextView creationTime;
+        ImageButton gpsButton;
     }
 
     public PostAdapter(PostListingFragment fragment, List<Post> posts) {
@@ -78,6 +79,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
             holder.likeButton = (ImageButton) postView.findViewById(R.id.post_like_btn);
             holder.likeCounter = (TextView) postView.findViewById(R.id.post_like_counter);
             holder.creationTime = (TextView) postView.findViewById(R.id.post_time);
+            holder.gpsButton = (ImageButton) postView.findViewById(R.id.post_gpsIcon);
             postView.setTag(holder);
             postView.init(this);
             if (parent == fragment.getListView()){
@@ -166,9 +168,9 @@ public class PostAdapter extends ArrayAdapter<Post>{
         }
     }
 
-    public void startBaseListingActivity(ListingSource listingSource){
+    public void startActivity(ListingSource listingSource){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startBaseListingActivity(listingSource);
+        activity.startActivity(listingSource);
     }
 
     public List<Post> getPosts() {

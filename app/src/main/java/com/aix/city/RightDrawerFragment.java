@@ -1,7 +1,6 @@
 package com.aix.city;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,12 +11,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link UserMenuFragment.OnFragmentInteractionListener} interface
+ * {@link RightDrawerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link UserMenuFragment#newInstance} factory method to
+ * Use the {@link RightDrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserMenuFragment extends Fragment {
+public class RightDrawerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -25,16 +24,16 @@ public class UserMenuFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment UserMenuFragment.
+     * @return A new instance of fragment RightDrawerFragment.
      */
-    public static UserMenuFragment newInstance() {
-        UserMenuFragment fragment = new UserMenuFragment();
+    public static RightDrawerFragment newInstance() {
+        RightDrawerFragment fragment = new RightDrawerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public UserMenuFragment() {
+    public RightDrawerFragment() {
         // Required empty public constructor
     }
 
@@ -49,7 +48,7 @@ public class UserMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_menu, container, false);
+        return inflater.inflate(R.layout.fragment_drawer_right, container, false);
     }
 
     @Override

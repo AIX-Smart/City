@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:orientation="vertical"
+    tools:context="com.aix.city.LeftDrawerFragment">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/drawer_left_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <SearchView
+        android:id="@+id/drawer_left_searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="@string/search_hint"
+        android:iconifiedByDefault="false" />
+
+    <ListView
+        android:id="@+id/drawer_left_list"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        tools:listitem="@layout/list_item_location" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RadioButton android:id="@+id/drawer_left_radio_newest_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/drawer_left_radio_newest_first_text"/>
+        <RadioButton android:id="@+id/drawer_left_radio_popular_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/drawer_left_radio_popular_first_text"/>
+    </RadioGroup>
+
+</LinearLayout>

@@ -39,16 +39,6 @@ public class CityFragment extends ListingSourceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_city, container, false);
-        TextView cityNameView = (TextView) view.findViewById(R.id.cityName);
-        cityNameView.setText(city.getName());
-
-        Button openSearchMenuButton = (Button) view.findViewById(R.id.openLeft);
-        openSearchMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getListener().onFragmentInteraction(INTERACTION_KEY_OPEN_LEFT);
-            }
-        });
 
         return view;
     }

@@ -1,7 +1,6 @@
 package com.aix.city.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
-import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Tag;
 
 import java.util.ArrayList;
@@ -58,11 +56,11 @@ public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
 
         if (convertView == null || !(convertView.getTag() instanceof TagAdapter.ViewHolder)) {
             LayoutInflater inflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_element_tag, parent, false);
+            convertView = inflater.inflate(R.layout.list_item_tag, parent, false);
 
             holder = new ViewHolder();
-            holder.tagNameView = (TextView) convertView.findViewById(R.id.tagElementName);
-            holder.tagLayout = (FrameLayout) convertView.findViewById(R.id.tagElementLayout);
+            holder.tagNameView = (TextView) convertView.findViewById(R.id.list_item_tag_name);
+            holder.tagLayout = (FrameLayout) convertView.findViewById(R.id.list_item_tag);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -97,7 +95,7 @@ public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
 
     public void startBaseListingActivity(Tag tag){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startBaseListingActivity(tag);
+        activity.startActivity(tag);
     }
 
     public void filter(CharSequence constraint){

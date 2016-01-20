@@ -26,7 +26,7 @@
             android:minLines="2"
             android:text="content"
             android:textSize="@dimen/post_content_text_size"
-            android:textColor="@color/post_text_color"
+            android:textColor="?android:textColorPrimaryInverse"
             android:paddingTop="12dp"
             android:paddingBottom="0dp"
             android:clickable="false" />
@@ -46,6 +46,7 @@
                 android:id="@+id/post_like_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 android:background="@null"
                 android:src="@drawable/btn_like"
                 android:scaleType="centerCrop"
@@ -58,11 +59,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@color/post_text_color"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="@dimen/post_like_counter_size"
                 android:singleLine="true"
                 android:padding="0dp"
-                android:includeFontPadding="false"
                 android:layout_gravity="center_horizontal"
                 android:clickable="false" />
 
@@ -85,16 +85,19 @@
         android:clipToPadding="false"
         android:orientation="horizontal">
         
-        <ImageView
+        <ImageButton
+            android:id="@+id/post_gpsIcon"
             android:layout_width="@dimen/post_comment_icon_size"
             android:layout_height="@dimen/post_comment_icon_size"
             android:background="@drawable/gps"
+            android:contentDescription="@string/post_gps_description"
+            android:focusable="false"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="3dp"
-            android:layout_marginRight="3dp" />
+            android:layout_marginRight="3dp"/>
 
         <TextView
             android:id="@+id/post_location"
@@ -103,15 +106,16 @@
             android:layout_weight="37"
             android:text="location"
             android:singleLine="true"
-            android:textColor="@color/post_text_color"
+            android:textColor="?android:textColorPrimaryInverse"
             android:textSize="@dimen/post_location_text_size"
-            android:includeFontPadding="false"
             android:layout_marginLeft="2dp"
             android:layout_marginStart="2dp"
             android:layout_marginRight="-2dp"
             android:layout_marginEnd="-2dp"
             android:onClick="onClick"
             android:clickable="true"/>
+
+        <!--android:textColor="?android:textColorPrimaryInverse"-->
 
         <LinearLayout
             android:id="@+id/post_comments"
@@ -141,7 +145,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
                 android:text="0"
-                android:textColor="@color/post_text_color"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:layout_gravity="start|bottom" />
         </LinearLayout>
 

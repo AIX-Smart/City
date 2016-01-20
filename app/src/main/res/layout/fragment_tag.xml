@@ -7,26 +7,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/fragment_text_vertical_margin"
     android:paddingBottom="@dimen/fragment_text_vertical_margin"
-    tools:context="com.aix.city.TagFragment"
-    android:background="@color/accent_material_light">
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="back"
-        android:textSize="8sp"
-        android:id="@+id/backButton"
-        android:layout_gravity="left|top" />
+    tools:context="com.aix.city.TagFragment">
 
     <TextView android:text="tagName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tagElementName"
+        android:id="@+id/list_item_tag_name"
         android:textSize="28sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:layout_toRightOf="@id/backButton"/>
+        android:gravity="center"/>
 
 </FrameLayout>

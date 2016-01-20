@@ -44,14 +44,6 @@ public class EventFragment extends ListingSourceFragment {
         eventNameView = (TextView) view.findViewById(R.id.sourceEvent);
         eventNameView.setText(event.getContent());
 
-        Button backButton = (Button) view.findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getListener().onFragmentInteraction(INTERACTION_KEY_BACK);
-            }
-        });
-
         return view;
     }
 

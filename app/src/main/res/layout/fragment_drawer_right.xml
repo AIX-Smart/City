@@ -2,13 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@color/accent_material_light"
     android:orientation="vertical"
-    tools:context="com.aix.city.UserMenuFragment">
+    tools:context="com.aix.city.RightDrawerFragment">
 
     <ListView android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:id="@+id/right_menu_list"
-        android:background="@color/accent_material_light"/>
+        android:id="@+id/drawer_right_list"/>
 
 </LinearLayout>

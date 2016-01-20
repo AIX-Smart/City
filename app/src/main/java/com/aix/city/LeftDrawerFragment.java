@@ -1,20 +1,13 @@
 package com.aix.city;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -24,7 +17,6 @@ import com.aix.city.core.data.Tag;
 import com.aix.city.view.LocationAdapter;
 import com.aix.city.view.TagAdapter;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -32,16 +24,16 @@ import java.util.Observer;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchMenuFragment.OnFragmentInteractionListener} interface
+ * {@link LeftDrawerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SearchMenuFragment#newInstance} factory method to
+ * Use the {@link LeftDrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchMenuFragment extends Fragment implements Observer, TabLayout.OnTabSelectedListener {
+public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.OnTabSelectedListener {
 
-    public static final String ARG_STATE = "SearchMenuFragment.state";
-    public static final String M_TAG_ADAPTER = "SearchMenuFragment.tagAdapter";
-    public static final String M_LOCATION_ADAPTER = "SearchMenuFragment.locationAdapter";
+    public static final String ARG_STATE = "LeftDrawerFragment.state";
+    public static final String M_TAG_ADAPTER = "LeftDrawerFragment.tagAdapter";
+    public static final String M_LOCATION_ADAPTER = "LeftDrawerFragment.locationAdapter";
 
     public enum State{
         TAG_SELECTED,
@@ -62,7 +54,7 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
     private TagAdapter tagAdapter;
     private LocationAdapter locationAdapter;
 
-    LinearLayout searchMenuLayout;
+    LinearLayout leftDrawerLayout;
     private ListView listView;
     private SearchView searchView;
     private TabLayout tabLayout;
@@ -75,17 +67,17 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment SearchMenuFragment.
+     * @return A new instance of fragment LeftDrawerFragment.
      */
-    public static SearchMenuFragment newInstance(State state) {
-        SearchMenuFragment fragment = new SearchMenuFragment();
+    public static LeftDrawerFragment newInstance(State state) {
+        LeftDrawerFragment fragment = new LeftDrawerFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_STATE, state.ordinal());
         fragment.setArguments(args);
         return fragment;
     }
 
-    public SearchMenuFragment() {
+    public LeftDrawerFragment() {
         // Required empty public constructor
     }
 
@@ -146,10 +138,10 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        searchMenuLayout = (LinearLayout) inflater.inflate(R.layout.fragment_search_menu, container, false);
-        listView = (ListView) searchMenuLayout.findViewById(R.id.left_menu_list);
-        searchView = (SearchView) searchMenuLayout.findViewById(R.id.searchView);
-        tabLayout = (TabLayout) searchMenuLayout.findViewById(R.id.left_tab_layout);
+        leftDrawerLayout = (LinearLayout) inflater.inflate(R.layout.fragment_drawer_left, container, false);
+        listView = (ListView) leftDrawerLayout.findViewById(R.id.drawer_left_list);
+        searchView = (SearchView) leftDrawerLayout.findViewById(R.id.drawer_left_searchView);
+        tabLayout = (TabLayout) leftDrawerLayout.findViewById(R.id.drawer_left_layout);
 
         searchView.setIconifiedByDefault(false);
         tagTab = tabLayout.newTab().setText(R.string.left_tab_tags);
@@ -197,7 +189,7 @@ public class SearchMenuFragment extends Fragment implements Observer, TabLayout.
             }
         });
 
-        return searchMenuLayout;
+        return leftDrawerLayout;
     }
 
     @Override

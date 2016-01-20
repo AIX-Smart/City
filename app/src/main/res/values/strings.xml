@@ -1,15 +1,8 @@
 <resources>
-    <string name="app_name">City</string>
+    <string name="app_name">Citisfy</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_location">LocationActivity</string>
     <string name="locationProfile">Location Profile</string>
-    <string name="title_activity_base_listing">BaseListingActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_city">CityActivity</string>
-    <string name="title_activity_group">GroupActivity</string>
-    <string name="title_activity_event">EventActivity</string>
     <string name="groupName">Group Name</string>
     <string name="cityName">City Name</string>
     <string name="event">Event</string>
@@ -33,4 +26,9 @@
     <string name="postDeletionMessage_failed">Löschung fehlgeschlagen</string>
     <string name="postDeletionMessage_not_allowed">Unerlaubte Löschung</string>
     <string name="btn_like_description">like button</string>
+    <string name="post_gps_description">gps</string>
+    <string name="drawer_left_radio_popular_first_text">populärste zuerst</string>
+    <string name="drawer_left_radio_newest_first_text">neueste zuerst</string>
+    <string name="action_create">Post Erstellen</string>
+    <string name="action_search">Suche</string>
 </resources>

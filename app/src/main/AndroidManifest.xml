@@ -12,12 +12,16 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".BaseListingActivity"
-            android:label="@string/title_activity_base_listing"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:parentActivityName="com.aix.city.BaseListingActivity" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.aix.city.BaseListingActivity" />
+
         </activity>
-        <activity android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="ANDROID.INTENT.CATEGORY.LAUNCHER" />

@@ -1,7 +1,6 @@
 package com.aix.city.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
-import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
 
 import java.util.ArrayList;
@@ -58,11 +56,11 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
 
         if (convertView == null || !(convertView.getTag() instanceof LocationAdapter.ViewHolder)) {
             LayoutInflater inflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_element_location, parent, false);
+            convertView = inflater.inflate(R.layout.list_item_location, parent, false);
 
             holder = new ViewHolder();
-            holder.locationNameView = (TextView) convertView.findViewById(R.id.locationElementName);
-            holder.locationLayout = (FrameLayout) convertView.findViewById(R.id.locationElementLayout);
+            holder.locationNameView = (TextView) convertView.findViewById(R.id.list_item_location_name);
+            holder.locationLayout = (FrameLayout) convertView.findViewById(R.id.list_item_location);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -98,7 +96,7 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
 
     public void startBaseListingActivity(Location location){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startBaseListingActivity(location);
+        activity.startActivity(location);
     }
 
     public void filter(CharSequence constraint){

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.data.Event;
@@ -73,6 +72,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         h.locationNameView.setOnClickListener(this);
         h.commentLayout.setOnClickListener(this);
         h.likeButton.setOnClickListener(this);
+        h.gpsButton.setOnClickListener(this);
     }
 
     public void update(){
@@ -100,7 +100,8 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         }
         else{
             h.locationNameView.setVisibility(View.INVISIBLE);
-            h.commentCounterView.setVisibility(View.INVISIBLE);
+            h.commentLayout.setVisibility(View.INVISIBLE);
+            h.gpsButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -108,7 +109,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         if(post instanceof Event) {
             final Location location = ((Event)post).getLocation();
             if (location != AIxDataManager.EMPTY_LOCATION) {
-                adapter.startBaseListingActivity(location);
+                adapter.startActivity(location);
             }
         }
     }
@@ -116,29 +117,36 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     public void onCommentCounterClick(){
         if(post instanceof Event) {
             final Event event = (Event)post;
-            adapter.startBaseListingActivity(event);
+            adapter.startActivity(event);
         }
     }
 
     public void onLikeButtonClick(){
-        if(likeVisible){
+        if (likeVisible){
             post.resetLike();
         }
         else{
-            post.like();
+            post.setLike();
         }
+    }
+
+    public void onGpsButtonClick(){
+        onLocationNameClick();
     }
 
     @Override
     public void onClick(View v) {
-        if(v == getViewHolder().locationNameView){
+        if (v == getViewHolder().locationNameView){
             onLocationNameClick();
         }
-        else if(v == getViewHolder().commentLayout){
+        else if (v == getViewHolder().commentLayout){
             onCommentCounterClick();
         }
-        else if(v == getViewHolder().likeButton){
+        else if (v == getViewHolder().likeButton){
             onLikeButtonClick();
+        }
+        else if (v == getViewHolder().gpsButton){
+            onGpsButtonClick();
         }
     }
 

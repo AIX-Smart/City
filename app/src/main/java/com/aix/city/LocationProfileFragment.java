@@ -41,13 +41,6 @@ public class LocationProfileFragment extends ListingSourceFragment {
         locationNameView = (TextView) view.findViewById(R.id.post_location);
         locationNameView.setText(location.getName());
 
-        Button backButton = (Button) view.findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getListener().onFragmentInteraction(INTERACTION_KEY_BACK);
-            }
-        });
         return view;
     }
 

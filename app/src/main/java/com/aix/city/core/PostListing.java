@@ -49,7 +49,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
     private boolean finished = false;
-    private boolean waitForInit = true;
+    private boolean waitingForInit = true;
 
     /**
      * INTERNAL USE ONLY: use instead listingSource.createPostListing()
@@ -64,7 +64,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         in.readTypedList(posts, Post.CREATOR);
         listingSource = in.readParcelable(ListingSource.class.getClassLoader());
         finished = (in.readInt() != 0);
-        waitForInit = (in.readInt() != 0);
+        waitingForInit = (in.readInt() != 0);
     }
 
     public ListingSource getListingSource() {
@@ -145,6 +145,10 @@ public class PostListing extends Observable implements Observer, Parcelable {
         return finished;
     }
 
+    public boolean isWaitingForInit() {
+        return waitingForInit;
+    }
+
     public void setFinished() {
         if(!finished) {
             finished = true;
@@ -154,7 +158,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     }
 
     public void loadInitialPosts() {
-        if (waitForInit){
+        if (waitingForInit){
             loadOlderPosts();
         }
     }
@@ -163,7 +167,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
         Post oldestPost = null;
         if(posts.isEmpty()){
-            waitForInit = false;
+            waitingForInit = false;
         }
         else{
             oldestPost = posts.get(posts.size() - 1);
@@ -183,7 +187,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (posts.isEmpty() && !isFinished()){
-                    waitForInit = true;
+                    waitingForInit = true;
                 }
             }
         };
@@ -194,7 +198,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     }
 
     public boolean loadNewerPosts() {
-        if (!waitForInit) {
+        if (!waitingForInit) {
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>() {
                 @Override
                 public void onResponse(Post[] response) {
@@ -283,7 +287,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         dest.writeTypedList(getPosts());
         dest.writeParcelable(getListingSource(), flags);
         dest.writeInt(isFinished() ? 1 : 0);
-        dest.writeInt(waitForInit  ? 1 : 0);
+        dest.writeInt(waitingForInit ? 1 : 0);
     }
 
     public static final Parcelable.Creator<PostListing> CREATOR =
