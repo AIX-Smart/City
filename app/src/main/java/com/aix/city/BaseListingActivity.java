@@ -31,7 +31,6 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     private DrawerLayout drawerLayout;
     private LinearLayout leftDrawerLayout;
     //private LinearLayout rightDrawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
     private LinearLayout mainLayout;
 
     private ListingSource listingSource;
@@ -56,7 +55,8 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         createLeftDrawer();
         //createRightDrawer();
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
+            @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 //if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
                 float moveFactor = (leftDrawerLayout.getWidth() * slideOffset);
@@ -153,20 +153,34 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     }
 
     public void startActivity(ListingSource ls){
-        Intent intent = new Intent(this, BaseListingActivity.class);
-        intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, ls);
-        this.startActivity(intent);
-        /*switch(getListingSource().getType()){
-            case CITY:
-                break;
-            case EVENT:
-                finish();
-                break;
-            default:
-                if (ls.getType() != ListingSourceType.EVENT){
+        if (!ls.equals(getListingSource())){
+            mainLayout.requestFocus();
+            drawerLayout.closeDrawers();
+
+            Intent intent = new Intent(this, BaseListingActivity.class);
+            intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, ls);
+            this.startActivity(intent);
+            switch(getListingSource().getType()){
+                case EVENT:
                     finish();
-                }
-        }*/
+                    break;
+                case LOCATION:
+                    if (ls.getType() != ListingSourceType.EVENT){
+                        finish();
+                    }
+                    break;
+                case TAG:
+                    if (ls.getType() == ListingSourceType.TAG || ls.getType() == ListingSourceType.CITY){
+                        finish();
+                    }
+                    break;
+                case CITY:
+                    if (ls.getType() == ListingSourceType.CITY){
+                        finish();
+                    }
+                    break;
+            }
+        }
     }
 
     @Override
