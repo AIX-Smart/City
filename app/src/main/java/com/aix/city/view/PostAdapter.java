@@ -73,7 +73,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
 
             holder = new ViewHolder();
             holder.contentView = (TextView) postView.findViewById(R.id.post_content);
-            holder.locationNameView = (TextView) postView.findViewById(R.id.post_location);
+            holder.locationNameView = (TextView) postView.findViewById(R.id.location_name);
             holder.commentLayout = (LinearLayout) postView.findViewById(R.id.post_comments);
             holder.commentCounterView = (TextView) holder.commentLayout.findViewById(R.id.post_comments_counter);
             holder.likeButton = (ImageButton) postView.findViewById(R.id.post_like_btn);

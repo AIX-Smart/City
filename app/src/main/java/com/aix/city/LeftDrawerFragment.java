@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.TabLayout;
+import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +30,13 @@ import java.util.Observer;
  * Use the {@link LeftDrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.OnTabSelectedListener {
+public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.OnTabSelectedListener, View.OnClickListener {
 
     public static final String ARG_STATE = "LeftDrawerFragment.state";
     public static final String M_TAG_ADAPTER = "LeftDrawerFragment.tagAdapter";
     public static final String M_LOCATION_ADAPTER = "LeftDrawerFragment.locationAdapter";
+    public static final String INTERACTION_KEY_POPULAR_FIRST = "POPULAR_FIRST";
+    public static final String INTERACTION_KEY_NEWEST_FIRST = "NEWEST_FIRST";
 
     public enum State{
         TAG_SELECTED,
@@ -60,6 +63,8 @@ public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.
     private TabLayout tabLayout;
     private TabLayout.Tab locationTab;
     private TabLayout.Tab tagTab;
+    private RadioButton newestFirstButon;
+    private RadioButton popularFirstButon;
 
     private OnFragmentInteractionListener mListener;
 
@@ -142,6 +147,8 @@ public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.
         listView = (ListView) leftDrawerLayout.findViewById(R.id.drawer_left_list);
         searchView = (SearchView) leftDrawerLayout.findViewById(R.id.drawer_left_searchView);
         tabLayout = (TabLayout) leftDrawerLayout.findViewById(R.id.drawer_left_layout);
+        newestFirstButon = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_newest_first);
+        popularFirstButon = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_popular_first);
 
         searchView.setIconifiedByDefault(false);
         tagTab = tabLayout.newTab().setText(R.string.left_tab_tags);
@@ -151,6 +158,9 @@ public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.
         tabLayout.addTab(tagTab);
         tabLayout.addTab(locationTab);
         tabLayout.setOnTabSelectedListener(this);
+
+        newestFirstButon.setOnClickListener(this);
+        popularFirstButon.setOnClickListener(this);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -243,6 +253,24 @@ public class LeftDrawerFragment extends Fragment implements Observer, TabLayout.
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        boolean checked = ((RadioButton) v).isChecked();
+
+        switch(v.getId()) {
+            case R.id.drawer_left_radio_newest_first:
+                if (checked){
+                    mListener.onFragmentInteraction(INTERACTION_KEY_NEWEST_FIRST);
+                }
+                break;
+            case R.id.drawer_left_radio_popular_first:
+                if (checked){
+                    mListener.onFragmentInteraction(INTERACTION_KEY_POPULAR_FIRST);
+                }
+                break;
+        }
     }
 
     @Override

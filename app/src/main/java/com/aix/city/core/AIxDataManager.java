@@ -83,6 +83,9 @@ public class AIxDataManager extends Observable {
 
     @NonNull
     public City getCurrentCity() {
+        if (currentCity == null){
+            currentCity = DummyContent.AACHEN;
+        }
         return currentCity;
     }
 

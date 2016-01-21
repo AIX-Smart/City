@@ -108,8 +108,8 @@ public class AIxNetworkManager {
         }
     }
 
-    public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource){
-        GetPostsRequest request = new GetPostsRequest(listener, errorListener, postNum, lastPost, listingSource);
+    public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
+        GetPostsRequest request = new GetPostsRequest(listener, errorListener, postNum, lastPost, listingSource, order);
         addRequest(request);
     }
 

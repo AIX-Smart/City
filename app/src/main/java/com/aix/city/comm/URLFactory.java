@@ -5,6 +5,7 @@ import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.EditableListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
+import com.aix.city.core.PostListing;
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
@@ -29,6 +30,8 @@ public class URLFactory {
     public static final String COMMENT = "comment";
     public static final String USER = "user";
     public static final String ALL = "all";
+    public static final String POPULAR = "popular";
+    public static final String NEW = "new";
 
     //"http://www.citevents.de:8080/service" as HttpUrl
     private HttpUrl serviceUrl;
@@ -57,7 +60,7 @@ public class URLFactory {
         return serviceUrl;
     }
 
-    public String createGetPostsURL(int postNum, Post lastPost, ListingSource listingSource){
+    public String createGetPostsURL(int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
         urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
         if(listingSource.getType() == ListingSourceType.TAG){
@@ -69,6 +72,32 @@ public class URLFactory {
         if(lastPost != null){
             urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
         }
+        if (order != null){
+            switch(order){
+                case NEWEST_FIRST:
+                    urlBuilder.addPathSegment(NEW);
+                    break;
+                case POPULAR_FIRST:
+                    urlBuilder.addPathSegment(POPULAR);
+                    break;
+            }
+        }
+        return urlBuilder.build().toString();
+    }
+
+    public String createGetPopularPostsURL(int postNum, Post lastPost, ListingSource listingSource){
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
+        if(listingSource.getType() == ListingSourceType.TAG){
+            urlBuilder.addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()));
+        }
+        urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        urlBuilder.addPathSegment(String.valueOf(postNum));
+        if(lastPost != null){
+            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
+        }
+        urlBuilder.addPathSegment(POPULAR);
         return urlBuilder.build().toString();
     }
 

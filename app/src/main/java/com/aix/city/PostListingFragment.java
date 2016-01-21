@@ -21,8 +21,6 @@ import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
-import com.aix.city.core.data.Event;
-import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.aix.city.view.PostAdapter;
 import com.android.volley.Response;
@@ -296,6 +294,10 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         }
     }
 
+    public void setOrder(PostListing.Order order) {
+        mPostListing.setOrder(order);
+    }
+
     public void setLoading(boolean isLoading){
         this.mIsLoading = isLoading;
         if (isLoading){
@@ -321,7 +323,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void loadOlderPosts(){
         setLoading(true);
-        mPostListing.loadOlderPosts();
+        mPostListing.loadPosts();
     }
 
     @Override
@@ -361,15 +363,25 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             mPostListing.loadInitialPosts();
         }
         else{
-            Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
-                @Override
-                public void onResponse(Boolean response) {
-                    if (!response){
-                        loadNewerPosts();
-                    }
-                }
-            };
-            AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+            PostListing.Order order = mPostListing.getOrder();
+            if (order == null){
+                order = PostListing.Order.NEWEST_FIRST;
+            }
+            switch(order){
+                case NEWEST_FIRST:
+                    Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
+                        @Override
+                        public void onResponse(Boolean response) {
+                            if (!response){
+                                loadNewerPosts();
+                            }
+                        }
+                    };
+                    AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+                    break;
+                case POPULAR_FIRST:
+                    break;
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.aix.city.comm;
 
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Post;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -15,8 +16,8 @@ public class GetPostsRequest extends AIxJsonRequest<Post[]> {
     private final Post lastPost;
     private final ListingSource listingSource;
 
-    public GetPostsRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource){
-        super(Request.Method.GET, URLFactory.get().createGetPostsURL(postNum, lastPost, listingSource), null, Post[].class, listener, errorListener, false);
+    public GetPostsRequest(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
+        super(Request.Method.GET, URLFactory.get().createGetPostsURL(postNum, lastPost, listingSource, order), null, Post[].class, listener, errorListener, false);
         this.postNum = postNum;
         this.lastPost = lastPost;
         this.listingSource = listingSource;

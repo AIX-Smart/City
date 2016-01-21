@@ -4,11 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
-import com.android.volley.Response;
 
 /**
  * Created by Thomas on 11.10.2015.
@@ -42,11 +40,6 @@ public class City implements ListingSource {
 
     public int getId() {
         return id;
-    }
-
-    @Override
-    public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost) {
-        AIxNetworkManager.getInstance().requestPosts(listener, errorListener, postNum, lastPost, this);
     }
 
     @Override

@@ -100,7 +100,7 @@
             android:layout_marginRight="3dp"/>
 
         <TextView
-            android:id="@+id/post_location"
+            android:id="@+id/location_name"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="37"

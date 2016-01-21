@@ -196,6 +196,14 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                     startActivity(intent);
                     finish();
                     break;
+                case LeftDrawerFragment.INTERACTION_KEY_NEWEST_FIRST:
+                    getPostListingFragment().setOrder(PostListing.Order.NEWEST_FIRST);
+                    drawerLayout.closeDrawers();
+                    break;
+                case LeftDrawerFragment.INTERACTION_KEY_POPULAR_FIRST:
+                    getPostListingFragment().setOrder(PostListing.Order.POPULAR_FIRST);
+                    drawerLayout.closeDrawers();
+                    break;
             }
         }
     }

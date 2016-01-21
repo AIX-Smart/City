@@ -4,11 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
-import com.android.volley.Response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -54,11 +52,6 @@ public class Event extends Post implements ListingSource {
     @Override
     public boolean isComment(){
         return false;
-    }
-
-    @Override
-    public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost) {
-        AIxNetworkManager.getInstance().requestPosts(listener, errorListener, postNum, lastPost, this);
     }
 
     @Override

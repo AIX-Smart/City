@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -9,8 +9,14 @@
     <TextView android:text="@string/locationProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/post_location"
+        android:id="@+id/location_name"
         android:textSize="28sp"
         android:gravity="center"/>
 
-</FrameLayout>
+    <!--<View
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_below="@id/location_name"
+        android:background="@android:color/darker_gray"/>-->
+
+</RelativeLayout>

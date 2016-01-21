@@ -22,7 +22,7 @@ import java.util.Observer;
 public class PostListing extends Observable implements Observer, Parcelable {
 
     /** Defines the default number of posts for a database GET-request */
-    public static final int POST_REQUEST_NUM = 10;
+    public static final int POST_REQUEST_NUM = 20;
 
     public static final int PARCEL_DESCRIPTION_POST_LISTING = 0;
     public static final int PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING = 1;
@@ -50,6 +50,12 @@ public class PostListing extends Observable implements Observer, Parcelable {
     private ListingSource listingSource;
     private boolean finished = false;
     private boolean waitingForInit = true;
+    private Order order = null;
+
+    public enum Order{
+        NEWEST_FIRST,
+        POPULAR_FIRST;
+    }
 
     /**
      * INTERNAL USE ONLY: use instead listingSource.createPostListing()
@@ -157,13 +163,24 @@ public class PostListing extends Observable implements Observer, Parcelable {
         }
     }
 
-    public void loadInitialPosts() {
-        if (waitingForInit){
-            loadOlderPosts();
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        if (this.order != order){
+            this.order = order;
+            refresh();
         }
     }
 
-    public void loadOlderPosts() {
+    public void loadInitialPosts() {
+        if (waitingForInit){
+            loadPosts();
+        }
+    }
+
+    public void loadPosts() {
 
         Post oldestPost = null;
         if(posts.isEmpty()){
@@ -193,7 +210,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         };
 
         //send request to server
-        listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost);
+        AIxNetworkManager.getInstance().requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost, listingSource, order);
 
     }
 
@@ -211,7 +228,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             };
 
             //send request to server
-            listingSource.requestPosts(listener, errorListener, POST_REQUEST_NUM, null);
+            AIxNetworkManager.getInstance().requestPosts(listener, errorListener, POST_REQUEST_NUM, null, listingSource, order);
             return true;
         }
         return false;
@@ -219,6 +236,9 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     public void refresh() {
         posts.clear();
+        setChanged();
+        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
+        waitingForInit = true;
         loadInitialPosts();
     }
 
