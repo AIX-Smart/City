@@ -5,15 +5,21 @@
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
         android:title="@string/action_search"/>
 
     <!-- Create -->
     <item
         android:id="@+id/action_create"
         android:icon="@drawable/kommentar"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
         android:title="@string/action_create"/>
+
+    <!-- Refresh -->
+    <item
+        android:id="@+id/action_refresh"
+        app:showAsAction="never"
+        android:title="@string/action_refresh"/>
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

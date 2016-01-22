@@ -236,10 +236,10 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     public void refresh() {
         posts.clear();
-        setChanged();
-        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
         waitingForInit = true;
         loadInitialPosts();
+        setChanged();
+        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     /**

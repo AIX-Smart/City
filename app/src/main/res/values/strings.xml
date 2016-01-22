@@ -31,4 +31,5 @@
     <string name="drawer_left_radio_newest_first_text">neueste zuerst</string>
     <string name="action_create">Post Erstellen</string>
     <string name="action_search">Suche</string>
+    <string name="action_refresh">Refresh</string>
 </resources>
