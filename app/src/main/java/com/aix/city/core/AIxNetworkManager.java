@@ -12,6 +12,7 @@ import com.aix.city.comm.PutLikeRequest;
 import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
 import com.aix.city.comm.PostCreationRequest;
+import com.aix.city.comm.URLFactory;
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -106,6 +107,18 @@ public class AIxNetworkManager {
         if (getRequestQueue() != null) {
             getRequestQueue().cancelAll(tag);
         }
+    }
+
+    public void clearCache(){
+        getRequestQueue().getCache().clear();
+    }
+
+    public void clearCityLocationsCache(City city){
+        getRequestQueue().getCache().remove(URLFactory.get().createGetCityLocationsURL(city));
+    }
+
+    public void clearTagsCache(){
+        getRequestQueue().getCache().remove(URLFactory.get().createGetAllTagsURL());
     }
 
     public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){

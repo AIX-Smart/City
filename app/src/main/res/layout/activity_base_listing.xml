@@ -23,7 +23,7 @@
         android:paddingTop="0dp">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/my_toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -50,6 +50,7 @@
         android:layout_height="match_parent"
         android:layout_width="@dimen/drawer_width"
         android:layout_gravity="start"
+        android:background="@color/drawer_left_background_color"
         tools:layout="@layout/fragment_drawer_left" />
 
     <!--<fragment

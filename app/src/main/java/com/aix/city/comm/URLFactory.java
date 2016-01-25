@@ -75,7 +75,7 @@ public class URLFactory {
         if (order != null){
             switch(order){
                 case NEWEST_FIRST:
-                    urlBuilder.addPathSegment(NEW);
+                    //urlBuilder.addPathSegment(NEW);
                     break;
                 case POPULAR_FIRST:
                     urlBuilder.addPathSegment(POPULAR);
@@ -85,69 +85,17 @@ public class URLFactory {
         return urlBuilder.build().toString();
     }
 
-    public String createGetPopularPostsURL(int postNum, Post lastPost, ListingSource listingSource){
-        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
-        urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
-        if(listingSource.getType() == ListingSourceType.TAG){
-            urlBuilder.addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()));
-        }
-        urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
-        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
-        urlBuilder.addPathSegment(String.valueOf(postNum));
-        if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
-        }
-        urlBuilder.addPathSegment(POPULAR);
-        return urlBuilder.build().toString();
-    }
-
     public String createUpToDateURL(Post newestPost, ListingSource listingSource) {
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
         urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
-        if(listingSource.getType() == ListingSourceType.TAG){
+        //TODO: server keine city id
+        /*if(listingSource.getType() == ListingSourceType.TAG){
             urlBuilder.addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()));
-        }
+        }*/
         urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
         urlBuilder.addPathSegment(String.valueOf(newestPost.getId()));
         return urlBuilder.build().toString();
     }
-
-    /*public String createGetLocationEventsURL(int postNum, Post lastPost, Location location){
-        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
-                .addPathSegment(LOCATION)
-                .addPathSegment(String.valueOf(location.getId()))
-                .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
-        if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
-        }
-        return urlBuilder.build().toString();
-    }
-
-    public String createGetTagEventsURL(int postNum, Post lastPost, Tag tag){
-        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
-                .addPathSegment(TAG)
-                .addPathSegment(String.valueOf(tag.getId()))
-                .addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()))
-                .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
-        if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
-        }
-        return urlBuilder.build().toString();
-    }
-
-    public String createGetEventCommentsURL(int postNum, Post lastPost, Event event){
-        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()
-                .addPathSegment(EVENT)
-                .addPathSegment(String.valueOf(event.getId()))
-                .addPathSegment(String.valueOf(postNum))
-                .addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
-        if(lastPost != null){
-            urlBuilder.addPathSegment(String.valueOf(lastPost.getId()));
-        }
-        return urlBuilder.build().toString();
-    }*/
 
     public String createGetCityLocationsURL(City city){
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder()

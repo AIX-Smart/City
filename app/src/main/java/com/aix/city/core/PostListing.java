@@ -39,12 +39,6 @@ public class PostListing extends Observable implements Observer, Parcelable {
             //TODO:
         }
     };
-    private static final Comparator<Post> newestFirstComparator = new Comparator<Post>() {
-        @Override
-        public int compare(Post lhs, Post rhs) {
-            return rhs.getId() - lhs.getId();
-        }
-    };
 
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
@@ -237,6 +231,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public void refresh() {
         posts.clear();
         waitingForInit = true;
+        finished = false;
         loadInitialPosts();
         setChanged();
         notifyObservers(OBSERVER_KEY_CHANGED_DATASET);

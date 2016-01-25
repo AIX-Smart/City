@@ -26,7 +26,7 @@
             android:minLines="2"
             android:text="content"
             android:textSize="@dimen/post_content_text_size"
-            android:textColor="?android:textColorPrimaryInverse"
+            android:textColor="@android:color/white"
             android:paddingTop="12dp"
             android:paddingBottom="0dp"
             android:clickable="false" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="15"
             android:gravity="top|center_horizontal"
-            android:layout_gravity="top|end"
+            android:layout_gravity="center_vertical|end"
             android:orientation="vertical"
             android:layout_margin="0dp"
             android:padding="8dp" >
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="?android:textColorPrimaryInverse"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/post_like_counter_size"
                 android:singleLine="true"
                 android:padding="0dp"
@@ -106,7 +106,7 @@
             android:layout_weight="37"
             android:text="location"
             android:singleLine="true"
-            android:textColor="?android:textColorPrimaryInverse"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/post_location_text_size"
             android:layout_marginLeft="2dp"
             android:layout_marginStart="2dp"
@@ -145,7 +145,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
                 android:text="0"
-                android:textColor="?android:textColorPrimaryInverse"
+                android:textColor="@android:color/white"
                 android:layout_gravity="start|bottom" />
         </LinearLayout>
 
@@ -168,7 +168,7 @@
                 android:layout_marginBottom="-6dp"
                 android:textSize="36dp"
                 android:text="20:00"
-                android:textColor="#64FFFFFF" />
+                android:textColor="#60FFFFFF" />
 
         </FrameLayout>
 

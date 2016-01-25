@@ -33,6 +33,10 @@ public class AIxDataManager extends Observable {
     public static final String OBSERVER_KEY_CHANGED_CITY = "city";
     public static final Location EMPTY_LOCATION = new Location();
     private static final int REQUEST_RETRY_DELAY = 2000;
+    public static final int HUNGRIG_ID = 2;
+    public static final int DURSTIG_ID = 1;
+    public static final int PARTY_ID = -1;
+    public static final int ALLES_ANDERE_ID = -1;
 
     private static AIxDataManager instance;
     private final Context context;
@@ -217,5 +221,4 @@ public class AIxDataManager extends Observable {
 
         AIxNetworkManager.getInstance().requestLocation(listener, errorListener, locationId);
     }
-
 }

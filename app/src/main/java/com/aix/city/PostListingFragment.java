@@ -44,7 +44,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     //bundle key
     public static final String STATE_KEY_INITIALIZED = "PostListingFragment.INITIALIZED";
     //timer delay for update requests in milliseconds
-    public static final int UPDATE_DELAY_MS = 5000;
+    public static final int UPDATE_DELAY_MS = 8000;
     //handler for timed updates
     private final Handler mUpdateTaskHandler = new Handler();
     private final Runnable mUpdateTask = new Runnable() {
@@ -296,6 +296,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void setOrder(PostListing.Order order) {
         mPostListing.setOrder(order);
+        mLoadingPanel.setVisibility(View.VISIBLE);
     }
 
     public void setLoading(boolean isLoading){

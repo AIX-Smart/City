@@ -10,11 +10,11 @@
     <string name="postCreationMessage_successful">Post erfolgreich erstellt</string>
     <string name="postCreationMessage_failed">Erstellung von Post fehlgeschlagen</string>
     <string name="loginFailure">Verbindungsfehler</string>
-    <string name="empty">Empty</string>
+    <string name="empty">Leer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="acc_drawer_open">open</string>
     <string name="acc_drawer_close">close</string>
-    <string name="search_location_hint">Suche Orte</string>
+    <string name="search_location_hint">Suche Lokation</string>
     <string name="search_tag_hint">Suche Tag</string>
     <string name="search_hint">Suche</string>
     <string name="app_label">City</string>
@@ -32,4 +32,5 @@
     <string name="action_create">Post Erstellen</string>
     <string name="action_search">Suche</string>
     <string name="action_refresh">Refresh</string>
+    <string name="drawer_left_sort_text">Sortierung:</string>
 </resources>

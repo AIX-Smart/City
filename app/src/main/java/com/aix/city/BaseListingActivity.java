@@ -1,7 +1,16 @@
 package com.aix.city;
 
+import android.annotation.TargetApi;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.MatrixCursor;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,27 +22,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.SearchView;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
-import com.aix.city.core.data.City;
 
 
-public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener, RightDrawerFragment.OnFragmentInteractionListener {
+public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
 
     public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.core.ListingSource";
-    public final static String POST_LISTING_FRAGMENT_TAG = "com.aix.city.PostListingFragment";
-    public final static String LISTING_SOURCE_FRAGMENT_TAG = "com.aix.city.ListingSourceFragment";
+    public final static String POST_LISTING_FRAGMENT_TAG = "PostListingFragment";
+    public final static String LISTING_SOURCE_FRAGMENT_TAG = "ListingSourceFragment";
 
     private DrawerLayout drawerLayout;
     private LinearLayout leftDrawerLayout;
-    //private LinearLayout rightDrawerLayout;
     private LinearLayout mainLayout;
-
-    private ListingSource listingSource;
+    private ActionBarDrawerToggle drawerToggle;
+    private Menu menu;
 
     public BaseListingActivity(){}
 
@@ -42,53 +49,59 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_listing);
 
-        Intent intent = getIntent();
-        listingSource = intent.getParcelableExtra(EXTRAS_LISTING_SOURCE);
-
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
         leftDrawerLayout = (LinearLayout) findViewById(R.id.fragment_drawer_left);
-        //rightDrawerLayout = (LinearLayout) findViewById(R.id.fragment_drawer_right);
 
         createActionBar();
         createMainLayout();
-        createLeftDrawer();
-        //createRightDrawer();
+    }
 
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, null/*R.drawable.ic_drawer*/, R.string.acc_drawer_open, R.string.acc_drawer_close) {
+    protected void createActionBar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null){
+            throw new IllegalStateException();
+        }
+
+        actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.acc_drawer_open, R.string.acc_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 //if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
                 float moveFactor = (leftDrawerLayout.getWidth() * slideOffset);
                 mainLayout.setTranslationX(moveFactor);
             }
-        };
-        drawerLayout.setDrawerListener(drawerToggle);
-    }
 
-    protected void createActionBar(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
-
-            if (listingSource != null && !listingSource.equals(AIxDataManager.getInstance().getCurrentCity())){
-                actionBar.setDisplayHomeAsUpEnabled(true);
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //actionBar.setTitle("Navigation!");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
-        }
+
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerListener(drawerToggle);
+        //drawerLayout.setScrimColor(Color.TRANSPARENT);
     }
 
     protected void createMainLayout(){
-        if (listingSource == null){
-            listingSource = AIxDataManager.getInstance().getCurrentCity();
-        }
-
-        PostListing postListing = listingSource.createPostListing();
-
-        //create fragments with data
-        PostListingFragment postListingFragment = PostListingFragment.newInstance(postListing);
-        ListingSourceFragment listingSourceFragment = ListingSourceFragment.newInstance(listingSource);
+        //get or create fragments with data
+        PostListingFragment postListingFragment = getPostListingFragment();
+        ListingSourceFragment listingSourceFragment = getListingSourceFragment();
 
         // Create transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -101,21 +114,51 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         transaction.commit();
     }
 
-    protected void createLeftDrawer(){
-
-    }
-
-    /*private void createRightDrawer(){
-        ListView userMenuList = (ListView) findViewById(R.id.right_menu_list);
-        ArrayAdapter<String> rightListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, DummyContent.RIGHT_MENU_ELEMENTS);
-        userMenuList.setAdapter(rightListAdapter);
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
+
+        /*SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
+        search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                loadHistory(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+        });*/
+
         return true;
+    }
+
+   /* private void loadHistory(String query) {
+        // Cursor
+        String[] columns = new String[] { "_id", "text" };
+        Object[] temp = new Object[] { 0, "default" };
+        MatrixCursor cursor = new MatrixCursor(columns);
+
+        for(int i = 0; i < items.size(); i++) {
+            temp[0] = i;
+            temp[1] = items.get(i);replaced s with i as s not used anywhere.
+                    cursor.addRow(temp);
+        }
+
+        // SearchView
+        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
+        search.setSuggestionsAdapter(new ExampleAdapter(this, cursor, items));
+    }*/
+
+    public void createPost(String content){
+        getPostListingFragment().createPost(content);
     }
 
     @Override
@@ -128,28 +171,57 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         super.onSaveInstanceState(outState);
     }
 
+    @NonNull
     public ListingSource getListingSource() {
-        PostListingFragment fragment = getPostListingFragment();
-        if (fragment == null){
-            return null;
+        ListingSource listingSource = null;
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
+
+        if (fragment != null && fragment instanceof PostListingFragment){
+            listingSource = ((PostListingFragment) fragment).getPostListing().getListingSource();
         }
-        return fragment.getPostListing().getListingSource();
+        else{
+            listingSource = getIntent().getParcelableExtra(EXTRAS_LISTING_SOURCE);
+            if (listingSource == null){
+                listingSource = AIxDataManager.getInstance().getCurrentCity();
+            }
+        }
+
+        return listingSource;
     }
 
+    @NonNull
     public PostListing getPostListing(){
-        PostListingFragment fragment = getPostListingFragment();
-        if (fragment == null){
-            return null;
-        }
-        return fragment.getPostListing();
+        return getPostListingFragment().getPostListing();
     }
 
+    @NonNull
     public PostListingFragment getPostListingFragment(){
-        return (PostListingFragment) getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
+        if (fragment == null){
+            fragment = PostListingFragment.newInstance(getListingSource().createPostListing());
+        }
+
+        if (fragment instanceof PostListingFragment){
+            return (PostListingFragment) fragment;
+        }
+        else{
+            throw new IllegalStateException();
+        }
     }
 
+    @NonNull
     public ListingSourceFragment getListingSourceFragment(){
-        return (ListingSourceFragment) getSupportFragmentManager().findFragmentByTag(LISTING_SOURCE_FRAGMENT_TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LISTING_SOURCE_FRAGMENT_TAG);
+        if (fragment == null){
+            fragment = ListingSourceFragment.newInstance(getListingSource());
+        }
+
+        if (fragment instanceof ListingSourceFragment){
+            return (ListingSourceFragment) fragment;
+        }
+        else{
+            throw new IllegalStateException();
+        }
     }
 
     public void startActivity(ListingSource ls){
@@ -187,15 +259,12 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     public void onFragmentInteraction(String key) {
         if (key != null){
             switch(key){
-                case ListingSourceFragment.INTERACTION_KEY_OPEN_LEFT:
-                    drawerLayout.openDrawer(GravityCompat.START);
-                    break;
-                case ListingSourceFragment.INTERACTION_KEY_BACK:
+                /*case ListingSourceFragment.INTERACTION_KEY_BACK:
                     Intent intent = new Intent(this, BaseListingActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-                    break;
+                    break;*/
                 case LeftDrawerFragment.INTERACTION_KEY_NEWEST_FIRST:
                     getPostListingFragment().setOrder(PostListing.Order.NEWEST_FIRST);
                     drawerLayout.closeDrawers();
@@ -235,10 +304,25 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                 return true;
 
             default:
+                if (drawerToggle.onOptionsItemSelected(item)) {
+                    return true;
+                }
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 }

@@ -5,4 +5,5 @@
     <color name="post_color_green">#31D169</color>
     <color name="post_color_red">#A84028</color>
     <color name="drawer_left_background_color">#4b4b4b</color>
+    <color name="drawer_left_pressed_textview">#A5A5A5</color>
 </resources>
