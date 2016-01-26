@@ -139,24 +139,6 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         return true;
     }
 
-   /* private void loadHistory(String query) {
-        // Cursor
-        String[] columns = new String[] { "_id", "text" };
-        Object[] temp = new Object[] { 0, "default" };
-        MatrixCursor cursor = new MatrixCursor(columns);
-
-        for(int i = 0; i < items.size(); i++) {
-            temp[0] = i;
-            temp[1] = items.get(i);replaced s with i as s not used anywhere.
-                    cursor.addRow(temp);
-        }
-
-        // SearchView
-        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
-        search.setSuggestionsAdapter(new ExampleAdapter(this, cursor, items));
-    }*/
-
     public void createPost(String content){
         getPostListingFragment().createPost(content);
     }
@@ -267,11 +249,11 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                     break;*/
                 case LeftDrawerFragment.INTERACTION_KEY_NEWEST_FIRST:
                     getPostListingFragment().setOrder(PostListing.Order.NEWEST_FIRST);
-                    drawerLayout.closeDrawers();
+                    //drawerLayout.closeDrawers();
                     break;
                 case LeftDrawerFragment.INTERACTION_KEY_POPULAR_FIRST:
                     getPostListingFragment().setOrder(PostListing.Order.POPULAR_FIRST);
-                    drawerLayout.closeDrawers();
+                    //drawerLayout.closeDrawers();
                     break;
             }
         }

@@ -7,11 +7,12 @@ import android.support.annotation.NonNull;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.Searchable;
 
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class City implements ListingSource {
+public class City implements ListingSource, Searchable {
 
     private int id;
     private String name;

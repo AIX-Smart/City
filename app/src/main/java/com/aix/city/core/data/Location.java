@@ -8,6 +8,7 @@ import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
+import com.aix.city.core.Searchable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Created by Thomas on 11.10.2015.
  */
-public class Location extends Likeable implements ListingSource {
+public class Location extends Likeable implements ListingSource, Searchable {
 
     private int id;
     private String name;

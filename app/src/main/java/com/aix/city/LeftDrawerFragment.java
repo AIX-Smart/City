@@ -1,7 +1,6 @@
 package com.aix.city;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.RadioButton;
@@ -13,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.Searchable;
 import com.aix.city.core.data.Tag;
-import com.aix.city.view.LocationAdapter;
+import com.aix.city.view.SearchSuggestionAdapter;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -33,13 +34,12 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     public static final String INTERACTION_KEY_POPULAR_FIRST = "POPULAR_FIRST";
     public static final String INTERACTION_KEY_NEWEST_FIRST = "NEWEST_FIRST";
 
-    private LocationAdapter locationAdapter;
-
     LinearLayout leftDrawerLayout;
     private ListView listView;
     private SearchView searchView;
-    private RadioButton newestFirstButon;
-    private RadioButton popularFirstButon;
+    private RadioButton newestFirstButton;
+    private RadioButton popularFirstButton;
+    private SearchSuggestionAdapter searchAdapter;
 
     private BaseListingActivity mActivity;
 
@@ -61,8 +61,6 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        locationAdapter = new LocationAdapter(this, AIxDataManager.getInstance().getCityLocations());
     }
 
     @Override
@@ -72,8 +70,8 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
         leftDrawerLayout = (LinearLayout) inflater.inflate(R.layout.fragment_drawer_left, container, false);
         //listView = (ListView) leftDrawerLayout.findViewById(R.id.drawer_left_list);
         searchView = (SearchView) leftDrawerLayout.findViewById(R.id.drawer_left_searchView);
-        newestFirstButon = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_newest_first);
-        popularFirstButon = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_popular_first);
+        newestFirstButton = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_newest_first);
+        popularFirstButton = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_popular_first);
 
         leftDrawerLayout.findViewById(R.id.drawer_left_hungrig).setOnClickListener(this);
         leftDrawerLayout.findViewById(R.id.drawer_left_durstig).setOnClickListener(this);
@@ -81,9 +79,46 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
         leftDrawerLayout.findViewById(R.id.drawer_left_alles_andere).setOnClickListener(this);
 
         searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && (searchAdapter == null || searchAdapter.isInvalidated())) {
+                    searchAdapter = new SearchSuggestionAdapter(getContext(), new ArrayList<Searchable>(AIxDataManager.getInstance().getCityLocations()));
+                    searchView.setSuggestionsAdapter(searchAdapter);
+                }
+            }
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
 
-        newestFirstButon.setOnClickListener(this);
-        popularFirstButon.setOnClickListener(this);
+            @Override
+            public boolean onSuggestionClick(int position) {
+                mActivity.startActivity(searchAdapter.getSearchableItem(position));
+                return true;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!searchAdapter.getSearchableItems().isEmpty()){
+                    Searchable item = searchAdapter.getSearchableItem(0);
+                    searchView.setQuery(item.getName(), false);
+                    mActivity.startActivity(item);
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        newestFirstButton.setOnClickListener(this);
+        popularFirstButton.setOnClickListener(this);
 
         return leftDrawerLayout;
     }
@@ -155,8 +190,9 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
             String key = data.toString();
             switch(key){
                 case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
-                    locationAdapter.setAllLocations(AIxDataManager.getInstance().getCityLocations());
-                    locationAdapter.filter(locationAdapter.getFilterConstraint());
+                    searchAdapter.invalidate();
+                    /*locationAdapter.setAllLocations(AIxDataManager.getInstance().getCityLocations());
+                    locationAdapter.filter(locationAdapter.getFilterConstraint());*/
                     break;
                 /*case AIxDataManager.OBSERVER_KEY_CHANGED_TAGS:
                     tagAdapter.setAllTags(AIxDataManager.getInstance().getTags());
