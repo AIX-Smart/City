@@ -265,6 +265,9 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             drawerLayout.closeDrawers();
         }
         else{
+            if (getListingSource().equals(AIxDataManager.getInstance().getCurrentCity())){
+                getPostListing().clear();
+            }
             super.onBackPressed();
         }
     }

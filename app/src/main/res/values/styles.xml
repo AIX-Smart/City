@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
         <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
         <!-- Customize your theme here. -->
     </style>
     <style name="AppTheme.NoActionBar">

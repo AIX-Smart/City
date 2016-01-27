@@ -90,7 +90,7 @@
             android:layout_width="@dimen/post_comment_icon_size"
             android:layout_height="@dimen/post_comment_icon_size"
             android:background="@drawable/gps"
-            android:contentDescription="@string/post_gps_description"
+            android:contentDescription="@string/gps_description"
             android:focusable="false"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="0dp"
@@ -100,7 +100,7 @@
             android:layout_marginRight="3dp"/>
 
         <TextView
-            android:id="@+id/location_name"
+            android:id="@+id/post_location_name"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="37"

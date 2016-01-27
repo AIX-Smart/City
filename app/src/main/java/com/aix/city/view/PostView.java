@@ -1,6 +1,7 @@
 package com.aix.city.view;
 
 import android.content.Context;
+import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,6 +15,7 @@ import com.aix.city.core.data.Post;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -22,7 +24,8 @@ import java.util.Locale;
  */
 public class PostView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm", Locale.GERMAN);
+    private static final DateFormat FORMAT_TIME = new SimpleDateFormat("HH:mm", Locale.GERMAN);
+    private static final DateFormat FORMAT_DATE = new SimpleDateFormat("dd/MM", Locale.GERMAN);
 
     private PostAdapter adapter;
     private Post post;
@@ -79,7 +82,19 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         final PostAdapter.ViewHolder h = getViewHolder();
         h.contentView.setText(post.getContent());
         h.likeCounter.setText(String.valueOf(post.getLikeCount()));
-        String dateString = DATE_FORMAT.format(new Date(post.getCreationTime()));
+
+        String dateString;
+        Calendar now = Calendar.getInstance(Locale.GERMAN);
+        Calendar creationTime = Calendar.getInstance(Locale.GERMAN);
+        creationTime.setTimeInMillis(post.getCreationTime());
+        boolean createdToday = now.get(Calendar.YEAR) == creationTime.get(Calendar.YEAR) &&
+                now.get(Calendar.DAY_OF_YEAR) == creationTime.get(Calendar.DAY_OF_YEAR);
+        if (createdToday){
+            dateString = FORMAT_TIME.format(creationTime.getTime());
+        }
+        else {
+            dateString = FORMAT_DATE.format(creationTime.getTime());
+        }
         h.creationTime.setText(dateString);
 
         setBackgroundColor(adapter.getPostColor(post));

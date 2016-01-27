@@ -236,16 +236,11 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
         super.onStart();
 
-        //load posts
-        if(mPostListing.isWaitingForInit()){
-            mPostListing.loadInitialPosts();
-            setLoading(true);
-        }
-        else{
+        if (!mPostListing.isWaitingForInit()){
             setLoading(false);
         }
 
-        mUpdateTaskHandler.postDelayed(mUpdateTask, UPDATE_DELAY_MS);
+        mUpdateTaskHandler.post(mUpdateTask);
     }
 
     @Override
@@ -361,6 +356,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void update(){
         if (mPostListing.isWaitingForInit()){
+            setLoading(true);
             mPostListing.loadInitialPosts();
         }
         else{

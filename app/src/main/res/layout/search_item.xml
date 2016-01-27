@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    style="?attr/actionDropDownStyle">
+    android:layout_height="fill_parent">
 
     <TextView
         android:id="@+id/search_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceSearchResultTitle"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <!--android:textAppearance="?android:attr/textAppearanceLargePopupMenu"-->
 
 </RelativeLayout>

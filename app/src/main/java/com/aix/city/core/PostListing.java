@@ -209,14 +209,12 @@ public class PostListing extends Observable implements Observer, Parcelable {
     }
 
     public boolean loadNewerPosts() {
-        if (!waitingForInit) {
+        if (!isEmpty()) {
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>() {
                 @Override
                 public void onResponse(Post[] response) {
                     if (posts.size() > 0) {
                         addNewerPosts(response);
-                    } else {
-                        addPosts(response);
                     }
                 }
             };
@@ -228,10 +226,14 @@ public class PostListing extends Observable implements Observer, Parcelable {
         return false;
     }
 
-    public void refresh() {
+    public void clear() {
         posts.clear();
         waitingForInit = true;
         finished = false;
+    }
+
+    public void refresh() {
+        clear();
         loadInitialPosts();
         setChanged();
         notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
