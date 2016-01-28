@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/create_post_background_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,13 +18,15 @@
     <EditText
         android:id="@+id/postCreationTextField"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:gravity="start|top"
         android:hint="@string/postContentHint"
-        android:textColor="?android:textColorPrimaryInverse"
-        android:textColorHint="?android:textColorHintInverse"
+        android:textSize="@dimen/post_content_text_size"
         android:inputType="textImeMultiLine"
-        android:background="@color/post_color_blue"
         android:imeOptions="actionDone"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        style="@style/EditTextCustom"/>
 
 </LinearLayout>

@@ -102,6 +102,32 @@ public abstract class Likeable extends Observable {
         }
     }
 
+    public void updateLikeable(){
+        Response.Listener<Boolean> likeStatusListener = new Response.Listener<Boolean>(){
+            @Override
+            public void onResponse(Boolean response) {
+                rawSetLiked(response);
+                notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
+            }
+        };
+        Response.Listener<Integer> likeCountListener = new Response.Listener<Integer>(){
+            @Override
+            public void onResponse(Integer response) {
+                rawSetLikeCount(response);
+                notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
+            }
+        };
+
+        AIxNetworkManager.getInstance().requestLikeStatus(likeStatusListener, errorListener, this);
+        AIxNetworkManager.getInstance().requestLikeCount(likeCountListener, errorListener, this);
+    }
+
     //implements Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(isLiked() ? 1 : 0);

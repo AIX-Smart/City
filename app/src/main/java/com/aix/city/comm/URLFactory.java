@@ -32,6 +32,8 @@ public class URLFactory {
     public static final String ALL = "all";
     public static final String POPULAR = "popular";
     public static final String NEW = "new";
+    public static final String LIKE_COUNT = "likecount";
+    public static final String LIKE_STATUS = "";
 
     //"http://www.citevents.de:8080/service" as HttpUrl
     private HttpUrl serviceUrl;
@@ -147,6 +149,23 @@ public class URLFactory {
         }
         urlBuilder.addPathSegment(String.valueOf(likeable.getId()));
         urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        return urlBuilder.build().toString();
+    }
+
+    public String createGetLikeStatusURL(Likeable likeable) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(LOCATION);
+        urlBuilder.addPathSegment(String.valueOf(likeable.getId()));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser()));
+        urlBuilder.addPathSegment(LIKE_STATUS);
+        return urlBuilder.build().toString();
+    }
+
+    public String createGetLikeCountURL(Likeable likeable) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(LOCATION);
+        urlBuilder.addPathSegment(String.valueOf(likeable.getId()));
+        urlBuilder.addPathSegment(LIKE_COUNT);
         return urlBuilder.build().toString();
     }
 

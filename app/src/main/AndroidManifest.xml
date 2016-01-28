@@ -26,6 +26,8 @@
                 <category android:name="ANDROID.INTENT.CATEGORY.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CreatePostSubActivity">
+        </activity>
         <activity android:name=".SearchableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

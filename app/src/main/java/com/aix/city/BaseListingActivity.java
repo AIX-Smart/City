@@ -1,18 +1,11 @@
 package com.aix.city;
 
-import android.annotation.TargetApi;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.MatrixCursor;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
@@ -32,9 +24,10 @@ import com.aix.city.core.PostListing;
 
 public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
 
-    public final static String EXTRAS_LISTING_SOURCE = "com.aix.city.core.ListingSource";
+    public final static String INTENT_EXTRA_LISTING_SOURCE = "com.aix.city.core.ListingSource";
     public final static String POST_LISTING_FRAGMENT_TAG = "PostListingFragment";
     public final static String LISTING_SOURCE_FRAGMENT_TAG = "ListingSourceFragment";
+    public static final int CREATE_POST_REQUEST_CODE = 100;
 
     private DrawerLayout drawerLayout;
     private LinearLayout leftDrawerLayout;
@@ -116,26 +109,9 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
-
-        /*SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
-        search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String query) {
-                loadHistory(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-        });*/
-
+        updatePostCreationVisibility();
         return true;
     }
 
@@ -162,7 +138,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             listingSource = ((PostListingFragment) fragment).getPostListing().getListingSource();
         }
         else{
-            listingSource = getIntent().getParcelableExtra(EXTRAS_LISTING_SOURCE);
+            listingSource = getIntent().getParcelableExtra(INTENT_EXTRA_LISTING_SOURCE);
             if (listingSource == null){
                 listingSource = AIxDataManager.getInstance().getCurrentCity();
             }
@@ -212,7 +188,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             drawerLayout.closeDrawers();
 
             Intent intent = new Intent(this, BaseListingActivity.class);
-            intent.putExtra(BaseListingActivity.EXTRAS_LISTING_SOURCE, ls);
+            intent.putExtra(BaseListingActivity.INTENT_EXTRA_LISTING_SOURCE, ls);
             this.startActivity(intent);
             switch(getListingSource().getType()){
                 case EVENT:
@@ -255,7 +231,31 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                     getPostListingFragment().setOrder(PostListing.Order.POPULAR_FIRST);
                     //drawerLayout.closeDrawers();
                     break;
+                case PostListingFragment.INTERACTION_KEY_CHANGED_EDITABILITY:
+                    updatePostCreationVisibility();
+                    break;
             }
+        }
+    }
+
+    public void updatePostCreationVisibility(){
+        final MenuItem createEvent = menu.findItem(R.id.action_create);
+        final MenuItem createComment = menu.findItem(R.id.action_create_comment);
+
+        createEvent.setVisible(false);
+        createEvent.setEnabled(false);
+        createComment.setVisible(false);
+        createComment.setEnabled(false);
+
+        switch (getListingSource().getType()){
+            case LOCATION:
+                createEvent.setVisible(true);
+                createEvent.setEnabled(true);
+                break;
+            case EVENT:
+                createComment.setVisible(true);
+                createComment.setEnabled(true);
+                break;
         }
     }
 
@@ -278,25 +278,22 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             case R.id.action_settings:
                 return true;
 
-            case R.id.action_search:
-                return true;
-
             case R.id.action_create:
+                Intent intent = new Intent(this, CreatePostSubActivity.class);
+                intent.putExtra(CreatePostSubActivity.INTENT_EXTRA_LISTING_SOURCE, getListingSource());
+                startActivityForResult(intent, CREATE_POST_REQUEST_CODE);
                 return true;
 
             case R.id.action_refresh:
                 getPostListingFragment().refresh();
                 return true;
-
-            default:
-                if (drawerToggle.onOptionsItemSelected(item)) {
-                    return true;
-                }
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
         }
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // If we got here, the user's action was not recognized.
+        // Invoke the superclass to handle it.
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -309,5 +306,14 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CREATE_POST_REQUEST_CODE && resultCode == CreatePostSubActivity.SUCCESS_RETURN_CODE){
+            String content = data.getStringExtra(CreatePostSubActivity.INTENT_EXTRA_POST_CONTENT);
+            getPostListingFragment().createPost(content);
+        }
     }
 }

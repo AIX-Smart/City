@@ -6,4 +6,5 @@
     <color name="post_color_red">#A84028</color>
     <color name="drawer_left_background_color">#4b4b4b</color>
     <color name="drawer_left_pressed_textview">#A5A5A5</color>
+    <color name="create_post_background_color">#DD5F5F</color>
 </resources>

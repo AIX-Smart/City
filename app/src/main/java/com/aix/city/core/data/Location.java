@@ -27,6 +27,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
     private String street;
     private String houseNumber;
     private String phoneNumber;
+    private String plz;
     private String gps;
     //TODO: öffnungszeiten
 
@@ -44,6 +45,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
         street = in.readString();
         houseNumber = in.readString();
         phoneNumber = in.readString();
+        plz = in.readString();
         gps = in.readString();
     }
 
@@ -122,6 +124,14 @@ public class Location extends Likeable implements ListingSource, Searchable {
     }
 
     @NonNull
+    public String getPlz() {
+        if(plz == null){
+            plz = "52062";
+        }
+        return plz;
+    }
+
+    @NonNull
     public String getGps() {
         if(gps == null){
             gps = "";
@@ -182,6 +192,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
         dest.writeString(getStreet());
         dest.writeString(getHouseNumber());
         dest.writeString(getPhoneNumber());
+        dest.writeString(getPlz());
         dest.writeString(getGps());
     }
 

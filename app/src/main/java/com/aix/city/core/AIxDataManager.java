@@ -33,6 +33,7 @@ public class AIxDataManager extends Observable {
     public static final String OBSERVER_KEY_CHANGED_LOCATIONS = "locations";
     public static final String OBSERVER_KEY_CHANGED_CITY = "city";
     public static final Location EMPTY_LOCATION = new Location();
+    public static final City EMPTY_CITY = new City(0, "");
     private static final int REQUEST_RETRY_DELAY = 2000;
     public static final int HUNGRIG_ID = 2;
     public static final int DURSTIG_ID = 1;
@@ -98,12 +99,12 @@ public class AIxDataManager extends Observable {
         return AIxLoginModule.getInstance().getLoggedInUser();
     }
 
-    @Nullable
+    @NonNull
     public City getCity(int id){
         for(City city: allCities){
             if(city.getId() == id) return city;
         }
-        return null;
+        return EMPTY_CITY;
     }
 
     @Nullable

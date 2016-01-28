@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.aix.city.comm.DeletePostRequest;
 import com.aix.city.comm.GetCityLocationsRequest;
+import com.aix.city.comm.GetLikeCountRequest;
+import com.aix.city.comm.GetLikeStatusRequest;
 import com.aix.city.comm.GetLocationRequest;
 import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.comm.GetTagsRequest;
@@ -32,6 +34,10 @@ import com.squareup.okhttp.OkHttpClient;
  * Created by Thomas on 31.10.2015.
  */
 public class AIxNetworkManager {
+
+    public static final String TAG_GET_LIKE_COUNT = "GetLikeCountRequest";
+    public static final String TAG_GET_LIKE_STATUS = "GetLikeStatusRequest";
+    public static final String TAG_PUT_LIKE_CHANGE = "PutLikeRequest";
 
     public static final Response.ErrorListener DEFAULT_ERROR_LISTENER = new Response.ErrorListener() {
         @Override
@@ -133,7 +139,7 @@ public class AIxNetworkManager {
 
     public void requestLikeChange(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
         PutLikeRequest request = new PutLikeRequest(listener, errorListener, likeable, liked);
-        addRequest(request);
+        addRequest(request, TAG_PUT_LIKE_CHANGE);
     }
 
     public void requestLogin(Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
@@ -170,5 +176,15 @@ public class AIxNetworkManager {
             IsUpToDateRequest request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
             addRequest(request);
         }
+    }
+
+    public void requestLikeStatus(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable){
+        GetLikeStatusRequest request = new GetLikeStatusRequest(listener, errorListener, likeable);
+        addRequest(request, TAG_GET_LIKE_STATUS);
+    }
+
+    public void requestLikeCount(Response.Listener<Integer> listener, Response.ErrorListener errorListener, Likeable likeable){
+        GetLikeCountRequest request = new GetLikeCountRequest(listener, errorListener, likeable);
+        addRequest(request, TAG_GET_LIKE_COUNT);
     }
 }

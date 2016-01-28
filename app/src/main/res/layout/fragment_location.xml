@@ -1,9 +1,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="140dp">
+    android:layout_height="150dp">
 
-    <ImageView
+    <com.aix.city.view.ImageViewTopCrop
         android:id="@+id/location_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,30 +19,31 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_height="128dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:orientation="horizontal"
             tools:context="com.aix.city.LocationProfileFragment">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:layout_gravity="start"
                 android:paddingTop="0dp"
                 android:paddingBottom="0dp"
                 android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:padding="0dp"
-                    android:layout_margin="0dp">
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start|top"
+                        android:layout_marginTop="-4dp"
+                        android:paddingBottom="0dp"
                         android:orientation="horizontal">
 
                         <ImageButton
@@ -53,7 +54,7 @@
                             android:contentDescription="@string/gps_description"
                             android:layout_gravity="center"
                             android:focusable="false"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:layout_marginTop="0dp"
                             android:layout_marginLeft="0dp"
                             android:layout_marginStart="0dp"
@@ -67,29 +68,45 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="36sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:textColor="@android:color/black"/>
 
                     </LinearLayout>
 
-                </FrameLayout>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"/>
 
-                <TextView
-                    android:id="@+id/location_open_hours"
-                    android:text="@string/location_open_hours_text"
-                    android:textSize="16sp"
-                    android:textColor="?android:attr/textColorSecondary"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="0dp"
+                    android:layout_margin="0dp">
+
+                    <TextView
+                        android:text="@string/location_open_hours_text"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"/>
+
+                    <TextView
+                        android:id="@+id/location_open_hours"
+                        android:text="@string/location_open_hours_text_time"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
 
             </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="end|top"
-                android:padding="0dp">
 
                 <LinearLayout
                     android:id="@+id/location_like"
@@ -99,8 +116,8 @@
                     android:gravity="top|center_horizontal"
                     android:orientation="vertical"
                     android:layout_margin="0dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="0dp">
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp">
 
                     <ImageButton
                         android:id="@+id/location_like_btn"
@@ -119,7 +136,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textColor="@android:color/black"
                         android:textSize="@dimen/post_like_counter_size"
                         android:singleLine="true"
                         android:padding="0dp"
@@ -129,19 +146,18 @@
 
                 </LinearLayout>
 
-            </FrameLayout>
-
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/location_expand_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:paddingTop="20dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/location_gpsIcon"
+                android:id="@+id/location_gpsIcon_small"
                 android:layout_width="@dimen/post_comment_icon_size"
                 android:layout_height="@dimen/post_comment_icon_size"
                 android:background="@drawable/gps_schwarz"
@@ -160,8 +176,8 @@
                 android:text="@string/location_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="15sp"
+                android:textColor="@android:color/black"
                 android:onClick="onClick"
                 android:clickable="true"/>
 
@@ -169,7 +185,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/location_expand"
+        android:id="@+id/location_expand_button"
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:background="#66000000"

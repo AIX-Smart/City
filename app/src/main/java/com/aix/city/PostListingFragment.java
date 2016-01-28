@@ -43,6 +43,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public static final String ARG_POST_LISTING = "PostListingFragment.PostListing";
     //bundle key
     public static final String STATE_KEY_INITIALIZED = "PostListingFragment.INITIALIZED";
+    public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
     //timer delay for update requests in milliseconds
     public static final int UPDATE_DELAY_MS = 8000;
     //handler for timed updates
@@ -84,8 +85,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     private TextView mEmptyView;
 
     private ProgressBar mLoadingPanel;
-
-    private View mPostCreationView;
 
     //true if fragment waits for a response of the server
     private boolean mIsLoading = false;
@@ -154,24 +153,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         mListView.setOnScrollListener(this);
         mEmptyView.setVisibility(View.GONE);
 
-        //initialize post creation view (text field)
-        mPostCreationView = view.findViewById(R.id.postCreationLayout);
-        setPostCreationVisibility(mPostListing.isEditable());
-
-        final InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        final EditText editText = (EditText)view.findViewById(R.id.postCreationTextField);
-        editText.setHorizontallyScrolling(false);
-        editText.setMaxLines(5);
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
-        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                createPost(editText.getText().toString());
-                editText.setText("");
-                inputManager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                return true;
-            }
-        });
         return view;
     }
 
@@ -280,15 +261,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         mListener = null;
     }
 
-    public void setPostCreationVisibility(boolean isVisible){
-        if(isVisible){
-            mPostCreationView.setVisibility(View.VISIBLE);
-        }
-        else{
-            mPostCreationView.setVisibility(View.GONE);
-        }
-    }
-
     public void setOrder(PostListing.Order order) {
         mPostListing.setOrder(order);
         mLoadingPanel.setVisibility(View.VISIBLE);
@@ -336,8 +308,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                     mEmptyView.setVisibility(View.GONE);
                 }
                 break;
-            case PostListing.OBSERVER_KEY_CHANGED_EDITABILITY:
-                setPostCreationVisibility(mPostListing.isEditable());
+            case INTERACTION_KEY_CHANGED_EDITABILITY:
+                mListener.onFragmentInteraction(PostListing.OBSERVER_KEY_CHANGED_EDITABILITY);
                 break;
             case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
                 mAdapter.updateVisibleViews();

@@ -18,7 +18,7 @@ public class City implements ListingSource, Searchable {
     private String name;
 
     //no-argument constructor for JSON
-    private City(){}
+    public City(){}
 
     //Parcelable constructor
     public City(Parcel in){
