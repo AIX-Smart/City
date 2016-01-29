@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     public static final String INTERACTION_KEY_POPULAR_FIRST = "POPULAR_FIRST";
     public static final String INTERACTION_KEY_NEWEST_FIRST = "NEWEST_FIRST";
 
-    LinearLayout leftDrawerLayout;
+    private ScrollView leftDrawerLayout;
     private ListView listView;
     private SearchView searchView;
     private RadioButton newestFirstButton;
@@ -67,7 +68,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        leftDrawerLayout = (LinearLayout) inflater.inflate(R.layout.fragment_drawer_left, container, false);
+        leftDrawerLayout = (ScrollView) inflater.inflate(R.layout.fragment_drawer_left, container, false);
         //listView = (ListView) leftDrawerLayout.findViewById(R.id.drawer_left_list);
         searchView = (SearchView) leftDrawerLayout.findViewById(R.id.drawer_left_searchView);
         newestFirstButton = (RadioButton) leftDrawerLayout.findViewById(R.id.drawer_left_radio_newest_first);
@@ -83,7 +84,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && (searchAdapter == null || searchAdapter.isInvalidated())) {
-                    searchAdapter = new SearchSuggestionAdapter(getContext(), new ArrayList<Searchable>(AIxDataManager.getInstance().getCityLocations()));
+                    searchAdapter = new SearchSuggestionAdapter(getContext(), new ArrayList<Searchable>(AIxDataManager.getInstance().getCityLocations()), mActivity.getListingSource());
                     searchView.setSuggestionsAdapter(searchAdapter);
                 }
             }
@@ -103,7 +104,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!searchAdapter.getSearchableItems().isEmpty()){
+                if (!searchAdapter.getSearchableItems().isEmpty() && searchAdapter.isFiltered()){
                     Searchable item = searchAdapter.getSearchableItem(0);
                     searchView.setQuery(item.getName(), false);
                     mActivity.startActivity(item);

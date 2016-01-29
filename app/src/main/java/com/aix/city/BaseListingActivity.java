@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
@@ -30,7 +31,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     public static final int CREATE_POST_REQUEST_CODE = 100;
 
     private DrawerLayout drawerLayout;
-    private LinearLayout leftDrawerLayout;
+    private ScrollView leftDrawerLayout;
     private LinearLayout mainLayout;
     private ActionBarDrawerToggle drawerToggle;
     private Menu menu;
@@ -44,7 +45,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-        leftDrawerLayout = (LinearLayout) findViewById(R.id.fragment_drawer_left);
+        leftDrawerLayout = (ScrollView) findViewById(R.id.fragment_drawer_left);
 
         createActionBar();
         createMainLayout();
@@ -60,6 +61,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         }
 
         actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
+        //actionBar.setSubtitle("Hungrig");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
@@ -251,10 +253,12 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             case LOCATION:
                 createEvent.setVisible(true);
                 createEvent.setEnabled(true);
+                menu.add(R.string.action_create);
                 break;
             case EVENT:
                 createComment.setVisible(true);
                 createComment.setEnabled(true);
+                menu.add(R.string.action_create_comment);
                 break;
         }
     }

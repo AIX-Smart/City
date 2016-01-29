@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
+import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.ListingSource;
 import com.aix.city.core.Searchable;
 
 import java.util.ArrayList;
@@ -36,7 +39,6 @@ public class SearchSuggestionAdapter extends CursorAdapter implements FilterQuer
     };
 
     private final ThemedSpinnerAdapter.Helper dropDownHelper;
-    private BaseListingActivity activity;
     private TextView text;
     private final List<Searchable> allItems;
     private List<Searchable> filteredItems;
@@ -45,12 +47,18 @@ public class SearchSuggestionAdapter extends CursorAdapter implements FilterQuer
 
     public SearchSuggestionAdapter(Context context, List<Searchable> items) {
         super(context, createCursor(items), false);
-        this.activity = activity;
         this.allItems = items;
         Collections.sort(allItems, suggestionComparator);
         this.filteredItems = this.allItems;
         dropDownHelper = new ThemedSpinnerAdapter.Helper(context);
         setFilterQueryProvider(this);
+    }
+
+    public SearchSuggestionAdapter(Context context, List<Searchable> items, @NonNull ListingSource listingSource) {
+        this(context, items);
+        if (listingSource instanceof Searchable){
+            allItems.remove(listingSource);
+        }
     }
 
 
@@ -124,6 +132,10 @@ public class SearchSuggestionAdapter extends CursorAdapter implements FilterQuer
 
     public boolean isInvalidated() {
         return invalidated;
+    }
+
+    public boolean isFiltered(){
+        return allItems != filteredItems;
     }
 
     @Override
