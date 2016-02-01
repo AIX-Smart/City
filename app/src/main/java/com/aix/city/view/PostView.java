@@ -1,7 +1,6 @@
 package com.aix.city.view;
 
 import android.content.Context;
-import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,7 +15,6 @@ import com.aix.city.core.data.Post;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -132,7 +130,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     public void onCommentCounterClick(){
         if(post instanceof Event) {
             final Event event = (Event)post;
-            adapter.startActivity(event);
+            adapter.startActivity(event, adapter.getPostColor(post));
         }
     }
 

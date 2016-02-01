@@ -27,14 +27,8 @@ public abstract class ListingSourceFragment extends Fragment {
         ListingSourceFragment fragment;
         if(listingSource == null) listingSource = AIxDataManager.getInstance().getCurrentCity();
         switch (listingSource.getType()) {
-            case CITY:
-                fragment = CityFragment.newInstance((City) listingSource);
-                break;
             case LOCATION:
                 fragment = LocationProfileFragment.newInstance((Location) listingSource);
-                break;
-            case TAG:
-                fragment = TagFragment.newInstance((Tag) listingSource);
                 break;
             case EVENT:
                 fragment = EventFragment.newInstance((Event) listingSource);

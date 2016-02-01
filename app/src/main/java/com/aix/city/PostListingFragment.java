@@ -22,6 +22,7 @@ import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Post;
+import com.aix.city.view.MonochromePostAdapter;
 import com.aix.city.view.PostAdapter;
 import com.android.volley.Response;
 
@@ -41,6 +42,9 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     //bundle argument key for creation
     public static final String ARG_POST_LISTING = "PostListingFragment.PostListing";
+    //optional bundle argument key for creation
+    public static final String ARG_POST_COLOR = "PostListingFragment.color";
+    public static final int DEFAULT_COLOR_VALUE = -1;
     //bundle key
     public static final String STATE_KEY_INITIALIZED = "PostListingFragment.INITIALIZED";
     public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
@@ -97,9 +101,14 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     private PostAdapter mAdapter;
 
     public static PostListingFragment newInstance(PostListing postListing) {
+        return newInstance(postListing, DEFAULT_COLOR_VALUE);
+    }
+
+    public static PostListingFragment newInstance(PostListing postListing, int postColor) {
         PostListingFragment fragment = new PostListingFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_LISTING, postListing);
+        args.putInt(ARG_POST_COLOR, postColor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,10 +129,12 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         super.onCreate(savedInstanceState);
 
         mListener = (OnFragmentInteractionListener) getActivity();
+        int postColor;
 
         //get instance data
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_POST_LISTING);
+            postColor = getArguments().getInt(ARG_POST_COLOR, DEFAULT_COLOR_VALUE);
             if(obj != null && obj instanceof PostListing){
                 mPostListing = (PostListing)obj;
             }
@@ -136,7 +147,12 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         }
 
         //create postview-adapter
-        mAdapter = new PostAdapter(this, mPostListing.getPosts());
+        if (postColor == DEFAULT_COLOR_VALUE){
+            mAdapter = new PostAdapter(this, mPostListing.getPosts());
+        }
+        else{
+            mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor);
+        }
     }
 
     @Override

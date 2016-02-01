@@ -29,7 +29,7 @@
     <string name="gps_description">gps</string>
     <string name="drawer_left_radio_popular_first_text">populärste zuerst</string>
     <string name="drawer_left_radio_newest_first_text">neueste zuerst</string>
-    <string name="action_create">Post schreiben</string>
+    <string name="action_create">Post erstellen</string>
     <string name="action_create_comment">Kommentar schreiben</string>
     <string name="action_search">Suche</string>
     <string name="action_refresh">Refresh</string>
@@ -42,4 +42,5 @@
     <string name="confirm">Bestätigen</string>
     <string name="cancel">Abbrechen</string>
     <string name="create_post_dialog_title">Post senden</string>
+    <string name="action_post">senden</string>
 </resources>

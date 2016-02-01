@@ -172,7 +172,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
                 }
                 break;
             case R.id.location_like_btn:
-                if (location.isLiked()){
+                if (likeButton.isSelected()){
                     location.resetLike();
                 }
                 else{

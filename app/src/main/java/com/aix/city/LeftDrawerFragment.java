@@ -62,6 +62,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override

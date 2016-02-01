@@ -24,8 +24,7 @@
         android:gravity="start|top"
         android:hint="@string/postContentHint"
         android:textSize="@dimen/post_content_text_size"
-        android:inputType="textImeMultiLine"
-        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
         android:scrollbars="vertical"
         style="@style/EditTextCustom"/>
 

@@ -18,7 +18,7 @@ public class GetLikeCountRequest extends AIxJsonRequest<Integer> {
 
     @Override
     public Priority getPriority() {
-        return Priority.LOW;
+        return Priority.NORMAL;
     }
 
     public Likeable getLikeable() {

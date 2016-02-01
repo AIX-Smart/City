@@ -3,11 +3,11 @@
     <item android:state_pressed="false" android:state_selected="false"
         android:drawable="@drawable/klenkes_kontur_schwarz" />
     <item android:state_pressed="true" android:state_selected="false"
-        android:drawable="@drawable/klenkes_schwarz" />
+        android:drawable="@drawable/klenkes_kontur_schwarz" />
     <item android:state_pressed="false" android:state_selected="true"
         android:drawable="@drawable/klenkes_schwarz" />
     <item android:state_pressed="true" android:state_selected="true"
-        android:drawable="@drawable/klenkes_kontur_schwarz" />
+        android:drawable="@drawable/klenkes_schwarz" />
     <!--<item android:state_enabled="true"
         android:drawable="@drawable/klenkes_kontur_weiss_square" />-->
 </selector>

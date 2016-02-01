@@ -162,15 +162,16 @@ public class PostAdapter extends ArrayAdapter<Post>{
 
     public void putPostColor(Post post, int color){
         postColorMap.put(post, color);
-        PostView view = getVisibleView(post);
-        if (view != null){
-            view.update();
-        }
     }
 
     public void startActivity(ListingSource listingSource){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
         activity.startActivity(listingSource);
+    }
+
+    public void startActivity(ListingSource listingSource, int postColor){
+        BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
+        activity.startActivity(listingSource, postColor);
     }
 
     public List<Post> getPosts() {

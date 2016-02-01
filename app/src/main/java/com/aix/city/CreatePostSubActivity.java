@@ -29,10 +29,10 @@ import com.aix.city.core.data.Post;
 public class CreatePostSubActivity extends AppCompatActivity {
 
     public static final int SUCCESS_RETURN_CODE = 1;
+    public static final int CANCEL_RETURN_CODE = 0;
     public static final String INTENT_EXTRA_LISTING_SOURCE = "com.aix.city.core.ListingSource";
     public static final String INTENT_EXTRA_POST_CONTENT = "CreatePostSubActivity.content";
 
-    private Location location;
     EditText editText;
 
     @Override
@@ -49,24 +49,25 @@ public class CreatePostSubActivity extends AppCompatActivity {
         Object obj = getIntent().getParcelableExtra(INTENT_EXTRA_LISTING_SOURCE);
         if(obj != null){
             if (obj instanceof Location){
-                location = ((Location)obj);
+                Location location = (Location) obj;
+                actionBar.setTitle(location.getName());
             }
             else if (obj instanceof Event){
-                location = ((Event) obj).getLocation();
+                Event event = (Event) obj;
+                actionBar.setTitle(event.getContent());
             }
         }
         else{
             throw  new IllegalStateException();
         }
 
-        actionBar.setTitle(location.getName());
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
         editText = (EditText) findViewById(R.id.postCreationTextField);
         editText.setHorizontallyScrolling(false);
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
-        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        /*editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (!v.getText().toString().equals("")){
@@ -75,7 +76,7 @@ public class CreatePostSubActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
     }
 
     @Override
@@ -116,7 +117,12 @@ public class CreatePostSubActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                Intent intent = new Intent();
+                setResult(CANCEL_RETURN_CODE, intent);
+                finish();
+                return true;
+            case R.id.action_post:
+                createPost();
                 return true;
         }
 

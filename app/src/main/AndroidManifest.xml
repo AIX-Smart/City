@@ -12,6 +12,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".BaseListingActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".BaseListingActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -19,7 +21,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.aix.city.BaseListingActivity" />
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +32,9 @@
         </activity>
         <activity android:name=".CreatePostSubActivity">
         </activity>
-        <activity android:name=".SearchableActivity">
+        <activity android:name=".SearchableActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

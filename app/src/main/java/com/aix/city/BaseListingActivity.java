@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +22,7 @@ import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.data.Tag;
 
 
 public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
@@ -34,6 +36,8 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     private ScrollView leftDrawerLayout;
     private LinearLayout mainLayout;
     private ActionBarDrawerToggle drawerToggle;
+    private ActionBar actionBar;
+    private ListingSource listingSource;
     private Menu menu;
 
     public BaseListingActivity(){}
@@ -54,55 +58,65 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     protected void createActionBar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
 
         if (actionBar == null){
             throw new IllegalStateException();
         }
 
         actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
-        //actionBar.setSubtitle("Hungrig");
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (getListingSource().getType() == ListingSourceType.TAG){
+            actionBar.setSubtitle(((Tag) getListingSource()).getName());
+        }
         actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.acc_drawer_open, R.string.acc_drawer_close) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                //if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
-                float moveFactor = (leftDrawerLayout.getWidth() * slideOffset);
-                mainLayout.setTranslationX(moveFactor);
-            }
+        if (getListingSource().getType() != ListingSourceType.EVENT) {
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //actionBar.setTitle("Navigation!");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.acc_drawer_open, R.string.acc_drawer_close) {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+                    //if (drawerView.getId() == R.id.fragment_right_menu) slideOffset *= -1;
+                    float moveFactor = (leftDrawerLayout.getWidth() * slideOffset);
+                    mainLayout.setTranslationX(moveFactor);
+                }
 
-            @Override
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                //actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    //actionBar.setTitle("Navigation!");
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
 
-        drawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(drawerToggle);
-        //drawerLayout.setScrimColor(Color.TRANSPARENT);
+                @Override
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    //actionBar.setTitle(AIxDataManager.getInstance().getCurrentCity().getName());
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
+            };
+
+            drawerToggle.setDrawerIndicatorEnabled(true);
+            drawerLayout.setDrawerListener(drawerToggle);
+        }
     }
 
     protected void createMainLayout(){
         //get or create fragments with data
         PostListingFragment postListingFragment = getPostListingFragment();
-        ListingSourceFragment listingSourceFragment = getListingSourceFragment();
 
         // Create transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Replace fragment container with actual fragment
-        transaction.replace(R.id.fragment_container_top, listingSourceFragment, LISTING_SOURCE_FRAGMENT_TAG);
+        switch(getListingSource().getType()){
+            case LOCATION:
+                transaction.replace(R.id.fragment_container_top, LocationProfileFragment.newInstance(getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
+                break;
+            case EVENT:
+                transaction.replace(R.id.fragment_container_top, EventFragment.newInstance(getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
+                break;
+        }
         transaction.replace(R.id.fragment_container_bottom, postListingFragment, POST_LISTING_FRAGMENT_TAG);
 
         // Commit the transaction
@@ -133,16 +147,17 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
 
     @NonNull
     public ListingSource getListingSource() {
-        ListingSource listingSource = null;
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
+        if(listingSource == null){
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
 
-        if (fragment != null && fragment instanceof PostListingFragment){
-            listingSource = ((PostListingFragment) fragment).getPostListing().getListingSource();
-        }
-        else{
-            listingSource = getIntent().getParcelableExtra(INTENT_EXTRA_LISTING_SOURCE);
-            if (listingSource == null){
-                listingSource = AIxDataManager.getInstance().getCurrentCity();
+            if (fragment != null && fragment instanceof PostListingFragment){
+                listingSource = ((PostListingFragment) fragment).getPostListing().getListingSource();
+            }
+            else{
+                listingSource = getIntent().getParcelableExtra(INTENT_EXTRA_LISTING_SOURCE);
+                if (listingSource == null){
+                    listingSource = AIxDataManager.getInstance().getCurrentCity();
+                }
             }
         }
 
@@ -158,7 +173,8 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     public PostListingFragment getPostListingFragment(){
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
         if (fragment == null){
-            fragment = PostListingFragment.newInstance(getListingSource().createPostListing());
+            int postColor = getIntent().getIntExtra(PostListingFragment.ARG_POST_COLOR, PostListingFragment.DEFAULT_COLOR_VALUE);
+            fragment = PostListingFragment.newInstance(getListingSource().createPostListing(), postColor);
         }
 
         if (fragment instanceof PostListingFragment){
@@ -169,28 +185,20 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         }
     }
 
-    @NonNull
-    public ListingSourceFragment getListingSourceFragment(){
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LISTING_SOURCE_FRAGMENT_TAG);
-        if (fragment == null){
-            fragment = ListingSourceFragment.newInstance(getListingSource());
-        }
-
-        if (fragment instanceof ListingSourceFragment){
-            return (ListingSourceFragment) fragment;
-        }
-        else{
-            throw new IllegalStateException();
-        }
+    public void startActivity(ListingSource ls){
+        startActivity(ls, PostListingFragment.DEFAULT_COLOR_VALUE);
     }
 
-    public void startActivity(ListingSource ls){
+    public void startActivity(ListingSource ls, int postColor){
         if (!ls.equals(getListingSource())){
             mainLayout.requestFocus();
             drawerLayout.closeDrawers();
 
             Intent intent = new Intent(this, BaseListingActivity.class);
             intent.putExtra(BaseListingActivity.INTENT_EXTRA_LISTING_SOURCE, ls);
+            if (postColor != PostListingFragment.DEFAULT_COLOR_VALUE){
+                intent.putExtra(PostListingFragment.ARG_POST_COLOR, postColor);
+            }
             this.startActivity(intent);
             switch(getListingSource().getType()){
                 case EVENT:
@@ -244,22 +252,22 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         final MenuItem createEvent = menu.findItem(R.id.action_create);
         final MenuItem createComment = menu.findItem(R.id.action_create_comment);
 
-        createEvent.setVisible(false);
-        createEvent.setEnabled(false);
-        createComment.setVisible(false);
-        createComment.setEnabled(false);
-
         switch (getListingSource().getType()){
             case LOCATION:
-                createEvent.setVisible(true);
-                createEvent.setEnabled(true);
+                createComment.setVisible(false);
+                createComment.setEnabled(false);
                 menu.add(R.string.action_create);
                 break;
             case EVENT:
-                createComment.setVisible(true);
-                createComment.setEnabled(true);
+                createEvent.setVisible(false);
+                createEvent.setEnabled(false);
                 menu.add(R.string.action_create_comment);
                 break;
+            default:
+                createEvent.setVisible(false);
+                createEvent.setEnabled(false);
+                createComment.setVisible(false);
+                createComment.setEnabled(false);
         }
     }
 
@@ -279,10 +287,17 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                if (getListingSource().getType() == ListingSourceType.EVENT){
+                    onBackPressed();
+                    return true;
+                }
+                return drawerToggle.onOptionsItemSelected(item);
             case R.id.action_settings:
                 return true;
 
             case R.id.action_create:
+            case R.id.action_create_comment:
                 Intent intent = new Intent(this, CreatePostSubActivity.class);
                 intent.putExtra(CreatePostSubActivity.INTENT_EXTRA_LISTING_SOURCE, getListingSource());
                 startActivityForResult(intent, CREATE_POST_REQUEST_CODE);
@@ -292,9 +307,6 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                 getPostListingFragment().refresh();
                 return true;
         }
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         // If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
@@ -303,13 +315,17 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
+        if (getListingSource().getType() != ListingSourceType.EVENT){
+            drawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
+        if (getListingSource().getType() != ListingSourceType.EVENT){
+            drawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override

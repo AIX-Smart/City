@@ -90,10 +90,9 @@ public class URLFactory {
     public String createUpToDateURL(Post newestPost, ListingSource listingSource) {
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
         urlBuilder.addPathSegment(listingSource.getType().name().toLowerCase());
-        //TODO: server keine city id
-        /*if(listingSource.getType() == ListingSourceType.TAG){
+        if(listingSource.getType() == ListingSourceType.TAG){
             urlBuilder.addPathSegment(String.valueOf(AIxDataManager.getInstance().getCurrentCity().getId()));
-        }*/
+        }
         urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
         urlBuilder.addPathSegment(String.valueOf(newestPost.getId()));
         return urlBuilder.build().toString();
