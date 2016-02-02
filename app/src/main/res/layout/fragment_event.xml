@@ -1,18 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:background="@android:color/darker_gray"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.aix.city.EventFragment">
+    android:layout_width="match_parent"
+    android:orientation="vertical">
 
-    <TextView android:text="@string/event"
+    <com.aix.city.view.MaxHeightScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sourceEvent"/>
+        android:layout_height="wrap_content">
 
-</RelativeLayout>
+        <include layout="@layout/post"/>
+
+    </com.aix.city.view.MaxHeightScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/transparent_black">
+
+        <LinearLayout
+            android:id="@+id/fragment_event_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            android:clickable="true" >
+            <ImageView
+                android:layout_width="@dimen/post_comment_icon_size"
+                android:layout_height="@dimen/post_comment_icon_size"
+                android:background="@drawable/kommentar"
+                android:layout_marginBottom="-2dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginEnd="1dp"/>
+            <TextView
+                android:id="@+id/post_comments_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/post_comment_counter_text_size"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginBottom="-2dp"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:text="0"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -114,8 +114,6 @@
             android:onClick="onClick"
             android:clickable="true"/>
 
-        <!--android:textColor="?android:textColorPrimaryInverse"-->
-
         <LinearLayout
             android:id="@+id/post_comments"
             android:layout_width="0dp"

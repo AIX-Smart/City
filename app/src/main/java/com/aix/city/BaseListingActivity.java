@@ -22,10 +22,12 @@ import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.data.Event;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Tag;
 
 
-public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, ListingSourceFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
+public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
 
     public final static String INTENT_EXTRA_LISTING_SOURCE = "com.aix.city.core.ListingSource";
     public final static String POST_LISTING_FRAGMENT_TAG = "PostListingFragment";
@@ -111,10 +113,11 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         // Replace fragment container with actual fragment
         switch(getListingSource().getType()){
             case LOCATION:
-                transaction.replace(R.id.fragment_container_top, LocationProfileFragment.newInstance(getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
+                transaction.replace(R.id.fragment_container_top, LocationProfileFragment.newInstance((Location)getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
                 break;
             case EVENT:
-                transaction.replace(R.id.fragment_container_top, EventFragment.newInstance(getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
+                int postColor = getIntent().getIntExtra(PostListingFragment.ARG_POST_COLOR, PostListingFragment.DEFAULT_COLOR_VALUE);
+                transaction.replace(R.id.fragment_container_top, EventFragment.newInstance((Event)getListingSource(), postColor), LISTING_SOURCE_FRAGMENT_TAG);
                 break;
         }
         transaction.replace(R.id.fragment_container_bottom, postListingFragment, POST_LISTING_FRAGMENT_TAG);

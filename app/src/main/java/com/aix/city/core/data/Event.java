@@ -44,6 +44,10 @@ public class Event extends Post implements ListingSource {
         return commentCount;
     }
 
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
     @JsonIgnore
     public Location getLocation(){
         return AIxDataManager.getInstance().getLocation(locationId);

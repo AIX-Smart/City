@@ -61,6 +61,24 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
+            if(obj != null && obj instanceof Location){
+                location = ((Location)obj);
+            }
+            else{
+                throw  new IllegalStateException();
+            }
+        }
+        else{
+            throw  new IllegalStateException();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_location, container, false);
@@ -88,24 +106,6 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         collapse();
 
         return mainLayout;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
-            if(obj != null && obj instanceof Location){
-                location = ((Location)obj);
-            }
-            else{
-                throw  new IllegalStateException();
-            }
-        }
-        else{
-            throw  new IllegalStateException();
-        }
     }
 
     @Override
@@ -197,7 +197,9 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         }
     }
 
-    public void updateLocation(){
-        location.updateLikeable();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_LISTING_SOURCE, location);
     }
 }

@@ -17,45 +17,7 @@ public abstract class ListingSourceFragment extends Fragment {
 
     public final static String ARG_LISTING_SOURCE = "listingSource";
 
-    private OnFragmentInteractionListener mListener;
-
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(String key);
-    }
-
-    public static ListingSourceFragment newInstance(ListingSource listingSource) {
-        ListingSourceFragment fragment;
-        if(listingSource == null) listingSource = AIxDataManager.getInstance().getCurrentCity();
-        switch (listingSource.getType()) {
-            case LOCATION:
-                fragment = LocationProfileFragment.newInstance((Location) listingSource);
-                break;
-            case EVENT:
-                fragment = EventFragment.newInstance((Event) listingSource);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        return fragment;
-    }
-
     public ListingSourceFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mListener = (OnFragmentInteractionListener) getActivity();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(ARG_LISTING_SOURCE, getListingSource());
-        super.onSaveInstanceState(outState);
-    }
-
-    public OnFragmentInteractionListener getListener() {
-        return mListener;
     }
 
     public abstract ListingSource getListingSource();

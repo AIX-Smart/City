@@ -5,9 +5,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.aix.city.R;
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -25,9 +29,17 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     private static final DateFormat FORMAT_TIME = new SimpleDateFormat("HH:mm", Locale.GERMAN);
     private static final DateFormat FORMAT_DATE = new SimpleDateFormat("dd/MM", Locale.GERMAN);
 
-    private PostAdapter adapter;
+    private PostViewContext postContext;
     private Post post;
-    private boolean likeVisible;
+
+    private TextView contentView;
+    private TextView locationNameView;
+    private LinearLayout commentLayout;
+    private TextView commentCounterView;
+    private ImageButton likeButton;
+    private TextView likeCounterView;
+    private TextView creationTimeView;
+    private ImageButton gpsButton;
 
     public PostView(Context context) {
         super(context);
@@ -62,24 +74,28 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         this.post = post;
     }
 
-    public PostAdapter.ViewHolder getViewHolder(){
-        return (PostAdapter.ViewHolder) super.getTag();
-    }
+    public void init(PostViewContext postContext){
+        this.postContext = postContext;
 
-    public void init(PostAdapter adapter){
-        this.adapter = adapter;
-        final PostAdapter.ViewHolder h = getViewHolder();
+        contentView = (TextView) findViewById(R.id.post_content);
+        locationNameView = (TextView) findViewById(R.id.post_location_name);
+        commentLayout = (LinearLayout) findViewById(R.id.post_comments);
+        commentCounterView = (TextView) commentLayout.findViewById(R.id.post_comments_counter);
+        likeButton = (ImageButton) findViewById(R.id.post_like_btn);
+        likeCounterView = (TextView) findViewById(R.id.post_like_counter);
+        creationTimeView = (TextView) findViewById(R.id.post_time);
+        gpsButton = (ImageButton) findViewById(R.id.post_gpsIcon);
+
         this.setOnLongClickListener(this);
-        h.locationNameView.setOnClickListener(this);
-        h.commentLayout.setOnClickListener(this);
-        h.likeButton.setOnClickListener(this);
-        h.gpsButton.setOnClickListener(this);
+        locationNameView.setOnClickListener(this);
+        commentLayout.setOnClickListener(this);
+        likeButton.setOnClickListener(this);
+        gpsButton.setOnClickListener(this);
     }
 
     public void update(){
-        final PostAdapter.ViewHolder h = getViewHolder();
-        h.contentView.setText(post.getContent());
-        h.likeCounter.setText(String.valueOf(post.getLikeCount()));
+        contentView.setText(post.getContent());
+        likeCounterView.setText(String.valueOf(post.getLikeCount()));
 
         String dateString;
         Calendar now = Calendar.getInstance(Locale.GERMAN);
@@ -93,28 +109,26 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         else {
             dateString = FORMAT_DATE.format(creationTime.getTime());
         }
-        h.creationTime.setText(dateString);
+        creationTimeView.setText(dateString);
 
-        setBackgroundColor(adapter.getPostColor(post));
+        setBackgroundColor(postContext.getPostColor(post));
 
         if(post.isLiked()) {
-            likeVisible = true;
-            h.likeButton.setSelected(true);
+            likeButton.setSelected(true);
         }
         else {
-            likeVisible = false;
-            h.likeButton.setSelected(false);
+            likeButton.setSelected(false);
         }
 
         if(post instanceof Event){
             final Event event = (Event) post;
-            h.locationNameView.setText(event.getLocation().getName());
-            h.commentCounterView.setText(String.valueOf(event.getCommentCount()));
+            locationNameView.setText(event.getLocation().getName());
+            commentCounterView.setText(String.valueOf(event.getCommentCount()));
         }
         else{
-            h.locationNameView.setVisibility(View.INVISIBLE);
-            h.commentLayout.setVisibility(View.INVISIBLE);
-            h.gpsButton.setVisibility(View.INVISIBLE);
+            locationNameView.setVisibility(View.INVISIBLE);
+            commentLayout.setVisibility(View.INVISIBLE);
+            gpsButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -122,7 +136,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         if(post instanceof Event) {
             final Location location = ((Event)post).getLocation();
             if (location != AIxDataManager.EMPTY_LOCATION) {
-                adapter.startActivity(location);
+                postContext.startActivity(location);
             }
         }
     }
@@ -130,12 +144,12 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     public void onCommentCounterClick(){
         if(post instanceof Event) {
             final Event event = (Event)post;
-            adapter.startActivity(event, adapter.getPostColor(post));
+            postContext.startActivity(event, postContext.getPostColor(post));
         }
     }
 
     public void onLikeButtonClick(){
-        if (likeVisible){
+        if (likeButton.isSelected()){
             post.resetLike();
         }
         else{
@@ -149,24 +163,37 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     @Override
     public void onClick(View v) {
-        if (v == getViewHolder().locationNameView){
+        if (v == locationNameView){
             onLocationNameClick();
         }
-        else if (v == getViewHolder().commentLayout){
+        else if (v == commentLayout){
             onCommentCounterClick();
         }
-        else if (v == getViewHolder().likeButton){
+        else if (v == likeButton){
             onLikeButtonClick();
         }
-        else if (v == getViewHolder().gpsButton){
+        else if (v == gpsButton){
             onGpsButtonClick();
         }
+    }
+
+    public void setCommentLayout(LinearLayout commentLayout) {
+        if (this.commentLayout != commentLayout){
+            this.commentLayout.setVisibility(INVISIBLE);
+
+            this.commentLayout = commentLayout;
+            this.commentCounterView = (TextView) commentLayout.findViewById(R.id.post_comments_counter);
+        }
+    }
+
+    public TextView getContentView() {
+        return contentView;
     }
 
     @Override
     public boolean onLongClick(View v) {
         if (v == this){
-            adapter.deletePost(post);
+            postContext.deletePost(post);
             return true;
         }
         return false;

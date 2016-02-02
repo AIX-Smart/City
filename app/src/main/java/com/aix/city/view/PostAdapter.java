@@ -5,9 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.aix.city.BaseListingActivity;
 import com.aix.city.PostListingFragment;
@@ -26,7 +23,7 @@ import java.util.Set;
 /**
  * Created by Thomas on 17.10.2015.
  */
-public class PostAdapter extends ArrayAdapter<Post>{
+public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
     private static final List<Integer> POST_COLORS = new ArrayList<Integer>();
 
     private final PostListingFragment fragment;
@@ -36,17 +33,6 @@ public class PostAdapter extends ArrayAdapter<Post>{
 
     private Post firstColoredPost = null;
     private Post lastColoredPost = null;
-
-    static class ViewHolder {
-        TextView contentView;
-        TextView locationNameView;
-        LinearLayout commentLayout;
-        TextView commentCounterView;
-        ImageButton likeButton;
-        TextView likeCounter;
-        TextView creationTime;
-        ImageButton gpsButton;
-    }
 
     public PostAdapter(PostListingFragment fragment, List<Post> posts) {
         super(fragment.getContext(), -1, posts);
@@ -64,23 +50,12 @@ public class PostAdapter extends ArrayAdapter<Post>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder;
         PostView postView = (PostView) convertView;
 
         if(postView == null){
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             postView = (PostView) inflater.inflate(R.layout.post, parent, false);
 
-            holder = new ViewHolder();
-            holder.contentView = (TextView) postView.findViewById(R.id.post_content);
-            holder.locationNameView = (TextView) postView.findViewById(R.id.post_location_name);
-            holder.commentLayout = (LinearLayout) postView.findViewById(R.id.post_comments);
-            holder.commentCounterView = (TextView) holder.commentLayout.findViewById(R.id.post_comments_counter);
-            holder.likeButton = (ImageButton) postView.findViewById(R.id.post_like_btn);
-            holder.likeCounter = (TextView) postView.findViewById(R.id.post_like_counter);
-            holder.creationTime = (TextView) postView.findViewById(R.id.post_time);
-            holder.gpsButton = (ImageButton) postView.findViewById(R.id.post_gpsIcon);
-            postView.setTag(holder);
             postView.init(this);
             if (parent == fragment.getListView()){
                 createdViews.add(postView);
@@ -156,19 +131,23 @@ public class PostAdapter extends ArrayAdapter<Post>{
         }
     }
 
+    @Override
     public int getPostColor(Post post){
         return postColorMap.get(post);
     }
 
+    @Override
     public void putPostColor(Post post, int color){
         postColorMap.put(post, color);
     }
 
+    @Override
     public void startActivity(ListingSource listingSource){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
         activity.startActivity(listingSource);
     }
 
+    @Override
     public void startActivity(ListingSource listingSource, int postColor){
         BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
         activity.startActivity(listingSource, postColor);
@@ -178,6 +157,7 @@ public class PostAdapter extends ArrayAdapter<Post>{
         return posts;
     }
 
+    @Override
     public void deletePost(Post post){
         fragment.deletePost(post);
     }

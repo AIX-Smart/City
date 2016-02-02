@@ -1,26 +1,23 @@
 package com.aix.city;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
-import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
+import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 import com.aix.city.view.MonochromePostAdapter;
 import com.aix.city.view.PostAdapter;
@@ -44,7 +41,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public static final String ARG_POST_LISTING = "PostListingFragment.PostListing";
     //optional bundle argument key for creation
     public static final String ARG_POST_COLOR = "PostListingFragment.color";
-    public static final int DEFAULT_COLOR_VALUE = -1;
+    public static final int DEFAULT_COLOR_VALUE = 0xffffffff;
     //bundle key
     public static final String STATE_KEY_INITIALIZED = "PostListingFragment.INITIALIZED";
     public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
@@ -78,17 +75,18 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
     private PostListing mPostListing;
+    private int postColor;
 
     private OnFragmentInteractionListener mListener;
 
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private ListView mListView;
 
     private TextView mEmptyView;
 
-    private ProgressBar mLoadingPanel;
+    private View mLoadingPanel;
 
     //true if fragment waits for a response of the server
     private boolean mIsLoading = false;
@@ -129,7 +127,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         super.onCreate(savedInstanceState);
 
         mListener = (OnFragmentInteractionListener) getActivity();
-        int postColor;
 
         //get instance data
         if (getArguments() != null) {
@@ -145,14 +142,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         else{
             throw new IllegalStateException();
         }
-
-        //create postview-adapter
-        if (postColor == DEFAULT_COLOR_VALUE){
-            mAdapter = new PostAdapter(this, mPostListing.getPosts());
-        }
-        else{
-            mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor);
-        }
     }
 
     @Override
@@ -161,10 +150,22 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         View view = inflater.inflate(R.layout.fragment_listing, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView = (ListView) view.findViewById(android.R.id.list);
         mEmptyView = (TextView)view.findViewById(R.id.emptyText);
-        mLoadingPanel = (ProgressBar) view.findViewById(R.id.loadingPanel);
+        mLoadingPanel = inflater.inflate(R.layout.list_footer_loading, mListView, false);
 
+        //create postview-adapter
+        if (postColor == DEFAULT_COLOR_VALUE){
+            mAdapter = new PostAdapter(this, mPostListing.getPosts());
+            mListView.setDivider(null);
+            mListView.setDividerHeight(0);
+        }
+        else{
+            mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor);
+            mListView.setBackgroundColor(postColor);
+        }
+
+        mListView.addFooterView(mLoadingPanel);
         mListView.setAdapter(mAdapter);
         mListView.setOnScrollListener(this);
         mEmptyView.setVisibility(View.GONE);
@@ -174,8 +175,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(ARG_POST_LISTING, mPostListing);
         super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_POST_LISTING, mPostListing);
     }
 
     public void createPost(String postContent) {
@@ -184,6 +185,10 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             public void run() {
                 final String message = getResources().getString(R.string.postCreationMessage_successful);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                if (mPostListing instanceof EditableCommentListing){
+                    final Event event = ((EditableCommentListing)mPostListing).getEvent();
+                    event.setCommentCount(event.getCommentCount() + 1);
+                }
             }
         };
         Runnable errorCommand = new Runnable() {
@@ -208,6 +213,10 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             public void run() {
                 final String message = getResources().getString(R.string.postDeletionMessage_successful);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                if (mPostListing instanceof EditableCommentListing){
+                    final Event event = ((EditableCommentListing)mPostListing).getEvent();
+                    event.setCommentCount(event.getCommentCount() - 1);
+                }
             }
         };
         Runnable errorCommand = new Runnable() {
@@ -233,9 +242,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
         super.onStart();
 
-        if (!mPostListing.isWaitingForInit()){
-            setLoading(false);
-        }
+        setLoading(mPostListing.isWaitingForInit());
+        setFinished(mPostListing.isFinished());
 
         mUpdateTaskHandler.post(mUpdateTask);
     }
@@ -279,16 +287,26 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void setOrder(PostListing.Order order) {
         mPostListing.setOrder(order);
-        mLoadingPanel.setVisibility(View.VISIBLE);
+        setFinished(false);
+        setLoading(true);
     }
 
     public void setLoading(boolean isLoading){
         this.mIsLoading = isLoading;
-        if (isLoading){
-            /*mLoadingPanel.setVisibility(View.VISIBLE);*/
+    }
+
+    public void setFinished(boolean finished){
+        if (finished){
+            mListView.removeFooterView(mLoadingPanel);
+            if (mPostListing.getPosts().isEmpty()){
+                mEmptyView.setVisibility(View.VISIBLE);
+            }
         }
         else{
-            mLoadingPanel.setVisibility(View.GONE);
+            if (mListView.getFooterViewsCount() == 0){
+                mListView.addFooterView(mLoadingPanel);
+            }
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -297,8 +315,11 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public void refresh(){
-        setLoading(true);
-        mPostListing.refresh();
+        if (!isLoading()){
+            setLoading(true);
+            setFinished(false);
+            mPostListing.refresh();
+        }
     }
 
     public void loadNewerPosts(){
@@ -312,33 +333,31 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     @Override
     public void update(Observable observable, Object data) {
-        String key;
-        if(data == null) key = "";
-        else key = data.toString();
+        if (data != null) {
+            String key = data.toString();
 
-        switch(key){
-            case PostListing.OBSERVER_KEY_CHANGED_DATASET:
-                mAdapter.notifyDataSetChanged();
-                setLoading(false);
-                if (!mPostListing.getPosts().isEmpty()){
-                    mEmptyView.setVisibility(View.GONE);
-                }
-                break;
-            case INTERACTION_KEY_CHANGED_EDITABILITY:
-                mListener.onFragmentInteraction(PostListing.OBSERVER_KEY_CHANGED_EDITABILITY);
-                break;
-            case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
-                mAdapter.updateVisibleViews();
-                break;
-            case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
-                mAdapter.updateVisibleViews();
-                break;
-            case PostListing.OBSERVER_KEY_FINISHED:
-                setLoading(false);
-                if (mPostListing.getPosts().isEmpty()){
-                    mEmptyView.setVisibility(View.VISIBLE);
-                }
-                break;
+            switch (key) {
+                case PostListing.OBSERVER_KEY_CHANGED_DATASET:
+                    mAdapter.notifyDataSetChanged();
+                    setLoading(false);
+                    if (!mPostListing.getPosts().isEmpty()) {
+                        mEmptyView.setVisibility(View.GONE);
+                    }
+                    break;
+                case INTERACTION_KEY_CHANGED_EDITABILITY:
+                    mListener.onFragmentInteraction(PostListing.OBSERVER_KEY_CHANGED_EDITABILITY);
+                    break;
+                case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
+                    mAdapter.updateVisibleViews();
+                    break;
+                case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
+                    mAdapter.updateVisibleViews();
+                    break;
+                case PostListing.OBSERVER_KEY_FINISHED:
+                    setLoading(false);
+                    setFinished(true);
+                    break;
+            }
         }
     }
 
@@ -348,24 +367,26 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             mPostListing.loadInitialPosts();
         }
         else{
-            PostListing.Order order = mPostListing.getOrder();
-            if (order == null){
-                order = PostListing.Order.NEWEST_FIRST;
-            }
-            switch(order){
-                case NEWEST_FIRST:
-                    Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
-                        @Override
-                        public void onResponse(Boolean response) {
-                            if (!response){
-                                loadNewerPosts();
+            if (!mPostListing.isEmpty()){
+                PostListing.Order order = mPostListing.getOrder();
+                if (order == null){
+                    order = PostListing.Order.NEWEST_FIRST;
+                }
+                switch(order){
+                    case NEWEST_FIRST:
+                        Response.Listener<Boolean> upToDateListener = new Response.Listener<Boolean>(){
+                            @Override
+                            public void onResponse(Boolean response) {
+                                if (!response){
+                                    loadNewerPosts();
+                                }
                             }
-                        }
-                    };
-                    AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
-                    break;
-                case POPULAR_FIRST:
-                    break;
+                        };
+                        AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+                        break;
+                    case POPULAR_FIRST:
+                        break;
+                }
             }
         }
     }
@@ -373,7 +394,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-        if(!isLoading() && !mPostListing.isFinished() && visibleItemCount != 0){
+        if(!isLoading() && !mPostListing.isFinished() && visibleItemCount != 0 && !mPostListing.isEmpty()){
             final int lastVisibleItem = firstVisibleItem + visibleItemCount;
             if(lastVisibleItem == totalItemCount) {
                 loadOlderPosts();

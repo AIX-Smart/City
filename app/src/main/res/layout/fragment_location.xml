@@ -188,7 +188,7 @@
         android:id="@+id/location_expand_button"
         android:layout_width="match_parent"
         android:layout_height="22dp"
-        android:background="#66000000"
+        android:background="@color/transparent_black"
         android:layout_alignParentBottom="true"/>
 
     <ImageView

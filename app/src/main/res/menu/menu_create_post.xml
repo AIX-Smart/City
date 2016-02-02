@@ -5,7 +5,7 @@
     <!-- Post -->
     <item
         android:id="@+id/action_post"
-        android:icon="@drawable/send_mail"
+        android:icon="@drawable/send_icon"
         app:showAsAction="always"
         android:orderInCategory="1"
         android:title="@string/action_post"/>
