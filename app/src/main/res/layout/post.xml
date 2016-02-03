@@ -27,8 +27,7 @@
             android:textSize="@dimen/post_content_text_size"
             android:textColor="@android:color/white"
             android:paddingTop="8dp"
-            android:paddingBottom="0dp"
-            android:clickable="false" />
+            android:paddingBottom="0dp" />
 
         <LinearLayout
             android:id="@+id/post_like"
@@ -62,8 +61,7 @@
                 android:textSize="@dimen/post_like_counter_size"
                 android:singleLine="true"
                 android:padding="0dp"
-                android:layout_gravity="center_horizontal"
-                android:clickable="false" />
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
 

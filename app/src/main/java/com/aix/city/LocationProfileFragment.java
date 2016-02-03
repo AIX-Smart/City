@@ -1,6 +1,7 @@
 package com.aix.city;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,15 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
 
     public static final int MAX_HEIGHT_DP = 210;
     public static final int MIN_HEIGHT_DP = 150;
+    private static final int EXPAND_BUTTON_DELAY_MS = 600;
+
+    private final Handler handler = new Handler();
+    private final Runnable enableExpandButton = new Runnable() {
+        @Override
+        public void run() {
+            expandButtonIsEnabled = true;
+        }
+    };
 
     private Location location;
     private RelativeLayout mainLayout;
@@ -43,6 +53,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     private LinearLayout expandLayout;
 
     private boolean expanded = false;
+    private boolean expandButtonIsEnabled = true;
 
     public static LocationProfileFragment newInstance(Location location) {
         LocationProfileFragment fragment = new LocationProfileFragment();
@@ -125,6 +136,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     }
 
     public void expand(){
+
         ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
         params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MAX_HEIGHT_DP, getResources().getDisplayMetrics());
         mainLayout.setLayoutParams(params);
@@ -138,6 +150,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     }
 
     public void collapse(){
+
         ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
         params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_DP, getResources().getDisplayMetrics());
         mainLayout.setLayoutParams(params);
@@ -164,11 +177,16 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.location_expand_button:
-                if (expanded){
-                    collapse();
-                }
-                else{
-                    expand();
+                if (expandButtonIsEnabled){
+                    expandButtonIsEnabled = false;
+                    handler.postDelayed(enableExpandButton, EXPAND_BUTTON_DELAY_MS);
+
+                    if (expanded){
+                        collapse();
+                    }
+                    else{
+                        expand();
+                    }
                 }
                 break;
             case R.id.location_like_btn:
@@ -201,5 +219,9 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(ARG_LISTING_SOURCE, location);
+    }
+
+    public void refresh(){
+        location.updateLikeable();
     }
 }

@@ -11,7 +11,7 @@ import com.android.volley.VolleyError;
  */
 public abstract class EditableListing extends PostListing {
 
-    //true if creation and deletion of posts is enabled; false otherwise
+    //true if creation of posts is enabled; false otherwise
     private boolean editable = true;
 
     public EditableListing(ListingSource listingSource) {
@@ -24,11 +24,13 @@ public abstract class EditableListing extends PostListing {
 
     @Override
     public boolean createPost(String content, final Runnable successCommand, final Runnable errorCommand){
-        if(isEditable()){
+        if(isEditable() && content != null && !content.isEmpty()){
             Response.Listener<Post> listener = new Response.Listener<Post>() {
                 @Override
                 public void onResponse(Post response) {
-                    refresh();
+                    if(!loadNewerPosts()){
+                        refresh();
+                    }
                     successCommand.run();
                     setEditable(true);
                 }
@@ -43,35 +45,6 @@ public abstract class EditableListing extends PostListing {
 
             //send request to server
             AIxNetworkManager.getInstance().requestPostCreation(listener, errorListener, this, content);
-
-            //waiting for response
-            setEditable(false);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean deletePost(Post post, final Runnable successCommand, final Runnable errorCommand){
-        if(isEditable()){
-            Response.Listener<Post> listener = new Response.Listener<Post>() {
-                @Override
-                public void onResponse(Post response) {
-                    refresh();
-                    successCommand.run();
-                    setEditable(true);
-                }
-            };
-
-            Response.ErrorListener errorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    errorCommand.run();
-                    setEditable(true);
-                }
-            };
-            //send request to server
-            AIxNetworkManager.getInstance().requestPostDeletion(listener, errorListener, post);
 
             //waiting for response
             setEditable(false);

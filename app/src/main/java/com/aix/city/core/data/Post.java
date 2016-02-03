@@ -3,6 +3,7 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.Likeable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -21,7 +22,6 @@ public abstract class Post extends Likeable implements Parcelable {
     private String content;
     private long creationTime;
     private int authorId;
-    private transient boolean deleted = false;
 
     //no-argument constructor for JSON
     protected Post(){
@@ -67,15 +67,8 @@ public abstract class Post extends Likeable implements Parcelable {
     public abstract boolean isComment();
 
     @JsonIgnore
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    /**
-     * INTERNAL USE ONLY:
-     */
-    public void rawDelete() {
-        deleted = true;
+    public boolean isDeletionAllowed(){
+        return AIxLoginModule.getInstance().getLoggedInUser().getId() == authorId;
     }
 
     @Override

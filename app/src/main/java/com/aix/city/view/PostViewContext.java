@@ -1,7 +1,10 @@
 package com.aix.city.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 
+import com.aix.city.BaseListingActivity;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Post;
 
@@ -18,7 +21,7 @@ public interface PostViewContext {
 
     void startActivity(ListingSource listingSource, int postColor);
 
-    void deletePost(Post post);
+    Activity getActivity();
 
     Context getContext();
 }

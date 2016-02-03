@@ -159,6 +159,11 @@ public class Location extends Likeable implements ListingSource, Searchable {
         return ListingSourceType.LOCATION;
     }
 
+    @JsonIgnore
+    public boolean isAuthorized() {
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -211,5 +216,4 @@ public class Location extends Likeable implements ListingSource, Searchable {
                     return new Location[size];
                 }
             };
-
 }

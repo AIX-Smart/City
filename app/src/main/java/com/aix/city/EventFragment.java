@@ -112,11 +112,6 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
     }
 
     @Override
-    public void deletePost(Post post) {
-        //do nothing
-    }
-
-    @Override
     public int getPostColor(Post post) {
         return postColor;
     }
@@ -158,5 +153,9 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
                     break;
             }
         }
+    }
+
+    public void refresh(){
+        event.updateLikeable();
     }
 }

@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.aix.city.core.data.Tag;
 public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
 
     public final static String INTENT_EXTRA_LISTING_SOURCE = "com.aix.city.core.ListingSource";
+    public final static String INTENT_EXTRA_COLOR = PostListingFragment.ARG_POST_COLOR;
+    public final static int DEFAULT_COLOR_VALUE = PostListingFragment.DEFAULT_COLOR_VALUE;
     public final static String POST_LISTING_FRAGMENT_TAG = "PostListingFragment";
     public final static String LISTING_SOURCE_FRAGMENT_TAG = "ListingSourceFragment";
     public static final int CREATE_POST_REQUEST_CODE = 100;
@@ -116,7 +119,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                 transaction.replace(R.id.fragment_container_top, LocationProfileFragment.newInstance((Location)getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
                 break;
             case EVENT:
-                int postColor = getIntent().getIntExtra(PostListingFragment.ARG_POST_COLOR, PostListingFragment.DEFAULT_COLOR_VALUE);
+                int postColor = getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE);
                 transaction.replace(R.id.fragment_container_top, EventFragment.newInstance((Event)getListingSource(), postColor), LISTING_SOURCE_FRAGMENT_TAG);
                 break;
         }
@@ -124,14 +127,6 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
 
         // Commit the transaction
         transaction.commit();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        this.menu = menu;
-        updatePostCreationVisibility();
-        return true;
     }
 
     public void createPost(String content){
@@ -176,7 +171,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     public PostListingFragment getPostListingFragment(){
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
         if (fragment == null){
-            int postColor = getIntent().getIntExtra(PostListingFragment.ARG_POST_COLOR, PostListingFragment.DEFAULT_COLOR_VALUE);
+            int postColor = getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE);
             fragment = PostListingFragment.newInstance(getListingSource().createPostListing(), postColor);
         }
 
@@ -188,8 +183,13 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         }
     }
 
+    @Nullable
+    public ListingSourceFragment getListingSourceFragment(){
+        return (ListingSourceFragment) getSupportFragmentManager().findFragmentByTag(LISTING_SOURCE_FRAGMENT_TAG);
+    }
+
     public void startActivity(ListingSource ls){
-        startActivity(ls, PostListingFragment.DEFAULT_COLOR_VALUE);
+        startActivity(ls, DEFAULT_COLOR_VALUE);
     }
 
     public void startActivity(ListingSource ls, int postColor){
@@ -199,8 +199,8 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
 
             Intent intent = new Intent(this, BaseListingActivity.class);
             intent.putExtra(BaseListingActivity.INTENT_EXTRA_LISTING_SOURCE, ls);
-            if (postColor != PostListingFragment.DEFAULT_COLOR_VALUE){
-                intent.putExtra(PostListingFragment.ARG_POST_COLOR, postColor);
+            if (postColor != DEFAULT_COLOR_VALUE){
+                intent.putExtra(INTENT_EXTRA_COLOR, postColor);
             }
             this.startActivity(intent);
             switch(getListingSource().getType()){
@@ -255,22 +255,24 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         final MenuItem createEvent = menu.findItem(R.id.action_create);
         final MenuItem createComment = menu.findItem(R.id.action_create_comment);
 
-        switch (getListingSource().getType()){
-            case LOCATION:
-                createComment.setVisible(false);
-                createComment.setEnabled(false);
-                menu.add(R.string.action_create);
-                break;
-            case EVENT:
-                createEvent.setVisible(false);
-                createEvent.setEnabled(false);
-                menu.add(R.string.action_create_comment);
-                break;
-            default:
-                createEvent.setVisible(false);
-                createEvent.setEnabled(false);
-                createComment.setVisible(false);
-                createComment.setEnabled(false);
+        PostListing postListing = getPostListing();
+        if (postListing.isEditable()){
+            switch (postListing.getListingSource().getType()){
+                case LOCATION:
+                    createEvent.setVisible(true);
+                    createEvent.setEnabled(true);
+                    menu.add(createEvent.getGroupId(), createEvent.getItemId(), createEvent.getOrder(), createEvent.getTitle());
+                    break;
+                case EVENT:
+                    createComment.setVisible(true);
+                    createComment.setEnabled(true);
+                    menu.add(createComment.getGroupId(), createComment.getItemId(), createComment.getOrder(), createComment.getTitle());
+                    break;
+            }
+        }
+        else{
+            createEvent.setEnabled(false);
+            createComment.setEnabled(false);
         }
     }
 
@@ -285,6 +287,14 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             }
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
+        updatePostCreationVisibility();
+        return true;
     }
 
     @Override
@@ -303,10 +313,15 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
             case R.id.action_create_comment:
                 Intent intent = new Intent(this, CreatePostSubActivity.class);
                 intent.putExtra(CreatePostSubActivity.INTENT_EXTRA_LISTING_SOURCE, getListingSource());
+                intent.putExtra(INTENT_EXTRA_COLOR, getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE));
                 startActivityForResult(intent, CREATE_POST_REQUEST_CODE);
                 return true;
 
             case R.id.action_refresh:
+                ListingSourceFragment fragment = getListingSourceFragment();
+                if (fragment != null){
+                    fragment.refresh();
+                }
                 getPostListingFragment().refresh();
                 return true;
         }
@@ -314,6 +329,21 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
     }
+
+    /*@Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == android.R.id.list){
+            getPostListingFragment().onCreateContextMenu(menu, v, menuInfo);
+        }
+        else{
+            super.onCreateContextMenu(menu, v, menuInfo);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return getPostListingFragment().onContextItemSelected(item);
+    }*/
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -333,7 +363,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CREATE_POST_REQUEST_CODE && resultCode == CreatePostSubActivity.SUCCESS_RETURN_CODE){
             String content = data.getStringExtra(CreatePostSubActivity.INTENT_EXTRA_POST_CONTENT);
             getPostListingFragment().createPost(content);

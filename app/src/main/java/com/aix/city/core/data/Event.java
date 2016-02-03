@@ -59,6 +59,11 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
+    public boolean isDeletionAllowed(){
+        return super.isDeletionAllowed() || getLocation().isAuthorized();
+    }
+
+    @Override
     public EditableCommentListing createPostListing() {
         return new EditableCommentListing(this);
     }

@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -44,6 +43,8 @@ public class PostListing extends Observable implements Observer, Parcelable {
     private ListingSource listingSource;
     private boolean finished = false;
     private boolean waitingForInit = true;
+    private boolean isLoadingNewerPosts = false;
+    private boolean isLoadingPosts = false;
     private Order order = null;
 
     public enum Order{
@@ -174,48 +175,61 @@ public class PostListing extends Observable implements Observer, Parcelable {
         }
     }
 
-    public void loadPosts() {
+    public boolean loadPosts() {
+        if (!isLoadingPosts){
+            isLoadingPosts = true;
 
-        Post oldestPost = null;
-        if(posts.isEmpty()){
-            waitingForInit = false;
-        }
-        else{
-            oldestPost = posts.get(posts.size() - 1);
-        }
-
-        Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
-            @Override
-            public void onResponse(Post[] response) {
-                if(response.length < POST_REQUEST_NUM){
-                    setFinished();
-                }
-                addPosts(response);
+            Post oldestPost = null;
+            if(posts.isEmpty()){
+                waitingForInit = false;
             }
-        };
-
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (posts.isEmpty() && !isFinished()){
-                    waitingForInit = true;
-                }
+            else{
+                oldestPost = posts.get(posts.size() - 1);
             }
-        };
 
-        //send request to server
-        AIxNetworkManager.getInstance().requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost, listingSource, order);
+            Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
+                @Override
+                public void onResponse(Post[] response) {
+                    if(response.length < POST_REQUEST_NUM){
+                        setFinished();
+                    }
+                    addPosts(response);
+                    isLoadingPosts = false;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (posts.isEmpty() && !isFinished()){
+                        waitingForInit = true;
+                    }
+                    isLoadingPosts = false;
+                }
+            };
 
+            //send request to server
+            AIxNetworkManager.getInstance().requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost, listingSource, order);
+            return true;
+        }
+        return false;
     }
 
     public boolean loadNewerPosts() {
-        if (!isEmpty()) {
+        if (!isEmpty() && !isLoadingNewerPosts) {
+            isLoadingNewerPosts = true;
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>() {
                 @Override
                 public void onResponse(Post[] response) {
                     if (posts.size() > 0) {
                         addNewerPosts(response);
                     }
+                    isLoadingNewerPosts = false;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    isLoadingNewerPosts = false;
                 }
             };
 
@@ -259,7 +273,27 @@ public class PostListing extends Observable implements Observer, Parcelable {
      *@param errorCommand will be executed if an error occurred
      * @return returns true if the deletion is allowed in this context
      */
-    public boolean deletePost(Post post, Runnable successCommand, Runnable errorCommand){
+    public boolean deletePost(Post post, final Runnable successCommand, final Runnable errorCommand){
+        if (post.isDeletionAllowed()){
+            Response.Listener<Post> listener = new Response.Listener<Post>() {
+                @Override
+                public void onResponse(Post response) {
+                    removePost(response);
+                    successCommand.run();
+                }
+            };
+
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    errorCommand.run();
+                }
+            };
+            //send request to server
+            AIxNetworkManager.getInstance().requestPostDeletion(listener, errorListener, post);
+
+            return true;
+        }
         return false;
     }
 

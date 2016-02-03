@@ -7,12 +7,16 @@
         android:icon="@drawable/create_post_icon"
         app:showAsAction="ifRoom"
         android:orderInCategory="1"
+        android:enabled="false"
+        android:visible="false"
         android:title="@string/action_create"/>
     <item
         android:id="@+id/action_create_comment"
         android:icon="@drawable/create_post_icon"
         app:showAsAction="ifRoom"
         android:orderInCategory="2"
+        android:enabled="false"
+        android:visible="false"
         android:title="@string/action_create_comment"/>
 
     <!-- Refresh -->
@@ -25,6 +29,8 @@
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
+        android:enabled="false"
+        android:visible="false"
         app:showAsAction="never" />
 
 </menu>

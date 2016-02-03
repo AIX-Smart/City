@@ -1,23 +1,21 @@
 package com.aix.city;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
@@ -33,7 +31,8 @@ public class CreatePostSubActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_LISTING_SOURCE = "com.aix.city.core.ListingSource";
     public static final String INTENT_EXTRA_POST_CONTENT = "CreatePostSubActivity.content";
 
-    EditText editText;
+    private EditText editText;
+    private MenuItem sendItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,19 +63,35 @@ public class CreatePostSubActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-        editText = (EditText) findViewById(R.id.postCreationTextField);
+        editText = (EditText) findViewById(R.id.create_post_edit_text);
         editText.setHorizontallyScrolling(false);
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Post.MAX_CONTENT_LENGTH)});
-        /*editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (!v.getText().toString().equals("")){
-                    createPost();
-                    return true;
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
-        });*/
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (editText.getText().length() == 0) {
+                    if (sendItem.isEnabled()){
+                        sendItem.setEnabled(false);
+                        sendItem.setVisible(false);
+                    }
+                } else {
+                    if (!sendItem.isEnabled()){
+                        sendItem.setEnabled(true);
+                        sendItem.setVisible(true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -109,7 +124,9 @@ public class CreatePostSubActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_create_post, menu);
+        getMenuInflater().inflate(R.menu.create_post, menu);
+        sendItem = menu.findItem(R.id.action_send);
+
         return true;
     }
 
@@ -121,7 +138,7 @@ public class CreatePostSubActivity extends AppCompatActivity {
                 setResult(CANCEL_RETURN_CODE, intent);
                 finish();
                 return true;
-            case R.id.action_post:
+            case R.id.action_send:
                 createPost();
                 return true;
         }

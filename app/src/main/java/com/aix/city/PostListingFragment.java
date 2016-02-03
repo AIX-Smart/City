@@ -4,23 +4,29 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
+import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 import com.aix.city.view.MonochromePostAdapter;
 import com.aix.city.view.PostAdapter;
+import com.aix.city.view.PostView;
 import com.android.volley.Response;
 
 import java.util.Observable;
@@ -42,8 +48,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     //optional bundle argument key for creation
     public static final String ARG_POST_COLOR = "PostListingFragment.color";
     public static final int DEFAULT_COLOR_VALUE = 0xffffffff;
-    //bundle key
-    public static final String STATE_KEY_INITIALIZED = "PostListingFragment.INITIALIZED";
     public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
     //timer delay for update requests in milliseconds
     public static final int UPDATE_DELAY_MS = 8000;
@@ -169,6 +173,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         mListView.setAdapter(mAdapter);
         mListView.setOnScrollListener(this);
         mEmptyView.setVisibility(View.GONE);
+        registerForContextMenu(mListView);
 
         return view;
     }
@@ -207,7 +212,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         }
     }
 
-    public void deletePost(Post post) {
+    public void deletePost(final Post post) {
         Runnable successCommand = new Runnable() {
             @Override
             public void run() {
@@ -234,6 +239,11 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void editPost(Post post){
+        //TODO:
+    }
+
 
     @Override
     public void onStart() {
@@ -405,5 +415,73 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == android.R.id.list){
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            Post post = mAdapter.getItem(info.position);
+            getActivity().getMenuInflater().inflate(R.menu.context_post, menu);
+
+            for (int i = 0; i < menu.size(); i++){
+                MenuItem item = menu.getItem(i);
+                switch(item.getItemId()){
+                    case R.id.context_read_comments:
+                        if (post instanceof Event){
+                            item.setVisible(true);
+                            item.setEnabled(true);
+                        }
+                        break;
+                    case R.id.context_open_location:
+                        if (post instanceof Event){
+                            item.setTitle("Öffne " + ((Event) post).getLocation().getName() + "-Profil");
+                            item.setVisible(true);
+                            item.setEnabled(true);
+                        }
+                        break;
+                    case R.id.context_edit:
+                        if (AIxLoginModule.getInstance().getLoggedInUser().getId() == post.getAuthorId()){
+                            item.setVisible(true);
+                            item.setEnabled(true);
+                        }
+                        break;
+                    case R.id.context_delete:
+                        if (post.isDeletionAllowed()){
+                            item.setVisible(true);
+                            item.setEnabled(true);
+                        }
+                        break;
+                }
+            }
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        Post post;
+        PostView postView;
+        switch (item.getItemId()){
+            case R.id.context_read_comments:
+                postView = (PostView) info.targetView;
+                postView.openComments();
+                return true;
+            case R.id.context_open_location:
+                postView = (PostView) info.targetView;
+                postView.openLocation();
+                return true;
+            case R.id.context_edit:
+                post = mAdapter.getItem(info.position);
+                editPost(post);
+                return true;
+            case R.id.context_delete:
+                post = mAdapter.getItem(info.position);
+                deletePost(post);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 }

@@ -32,7 +32,7 @@
     <string name="action_create">Post erstellen</string>
     <string name="action_create_comment">Kommentar schreiben</string>
     <string name="action_search">Suche</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="action_refresh">Neu laden</string>
     <string name="drawer_left_sort_text">Sortierung:</string>
     <string name="location_address">"Kockerellstraße 15\n52024 Aachen"</string>
     <string name="location_open_hours_text">geöffnet:</string>
@@ -42,5 +42,9 @@
     <string name="confirm">Bestätigen</string>
     <string name="cancel">Abbrechen</string>
     <string name="create_post_dialog_title">Post senden</string>
-    <string name="action_post">senden</string>
+    <string name="action_post">absenden</string>
+    <string name="delete">Löschen</string>
+    <string name="edit">Editieren</string>
+    <string name="read_comments">Öffne Kommentare</string>
+    <string name="open_location">Öffne Locationprofil</string>
 </resources>

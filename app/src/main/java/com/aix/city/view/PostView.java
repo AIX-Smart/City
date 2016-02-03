@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.aix.city.R;
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -51,19 +50,6 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     public PostView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-        Log.e("SWIPED", "onLayout : " + Boolean.toString(changed));
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        super.onInterceptTouchEvent(event);
-        Log.e("SWIPED", "onInterceptTouchEvent : " + event.getAction());
-        return false;
     }
 
     public Post getPost() {
@@ -132,7 +118,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         }
     }
 
-    public void onLocationNameClick(){
+    public void openLocation(){
         if(post instanceof Event) {
             final Location location = ((Event)post).getLocation();
             if (location != AIxDataManager.EMPTY_LOCATION) {
@@ -141,7 +127,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         }
     }
 
-    public void onCommentCounterClick(){
+    public void openComments(){
         if(post instanceof Event) {
             final Event event = (Event)post;
             postContext.startActivity(event, postContext.getPostColor(post));
@@ -157,23 +143,19 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         }
     }
 
-    public void onGpsButtonClick(){
-        onLocationNameClick();
-    }
-
     @Override
     public void onClick(View v) {
         if (v == locationNameView){
-            onLocationNameClick();
+            openLocation();
         }
         else if (v == commentLayout){
-            onCommentCounterClick();
+            openComments();
         }
         else if (v == likeButton){
             onLikeButtonClick();
         }
         else if (v == gpsButton){
-            onGpsButtonClick();
+            openLocation();
         }
     }
 
@@ -192,10 +174,6 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     @Override
     public boolean onLongClick(View v) {
-        if (v == this){
-            postContext.deletePost(post);
-            return true;
-        }
         return false;
     }
 }

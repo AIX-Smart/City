@@ -21,4 +21,6 @@ public abstract class ListingSourceFragment extends Fragment {
     }
 
     public abstract ListingSource getListingSource();
+
+    public abstract void refresh();
 }

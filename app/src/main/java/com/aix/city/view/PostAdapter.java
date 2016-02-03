@@ -142,15 +142,18 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
     }
 
     @Override
+    public BaseListingActivity getActivity() {
+        return (BaseListingActivity) fragment.getActivity();
+    }
+
+    @Override
     public void startActivity(ListingSource listingSource){
-        BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startActivity(listingSource);
+        getActivity().startActivity(listingSource);
     }
 
     @Override
     public void startActivity(ListingSource listingSource, int postColor){
-        BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
-        activity.startActivity(listingSource, postColor);
+        getActivity().startActivity(listingSource, postColor);
     }
 
     public List<Post> getPosts() {
@@ -158,14 +161,11 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
     }
 
     @Override
-    public void deletePost(Post post){
-        fragment.deletePost(post);
-    }
-
-    @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
     }
+
+
 }
 
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/create_post_layout"
     android:orientation="vertical"
     android:background="@color/create_post_background_color"
     android:layout_width="match_parent"
@@ -15,17 +16,24 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <EditText
-        android:id="@+id/postCreationTextField"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp"
-        android:gravity="start|top"
-        android:hint="@string/postContentHint"
-        android:textSize="@dimen/post_content_text_size"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical"
-        style="@style/EditTextCustom"/>
+        android:foreground="?android:windowContentOverlay">
+
+            <EditText
+                android:id="@+id/create_post_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:gravity="start|top"
+                android:hint="@string/postContentHint"
+                android:textSize="@dimen/post_content_text_size"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical"
+                style="@style/EditTextCustom"/>
+
+    </FrameLayout>
 
 </LinearLayout>
