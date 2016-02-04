@@ -261,6 +261,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public void onStop() {
         mUpdateTaskHandler.removeCallbacks(mUpdateTask);
+        cancelRequests();
         super.onStop();
 
         mPostListing.deleteObserver(this);
@@ -295,10 +296,18 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         mListener = null;
     }
 
+    public void cancelRequests(){
+        AIxNetworkManager.getInstance().cancelAllRequests(AIxNetworkManager.TAG_UP_TO_DATE);
+        AIxNetworkManager.getInstance().cancelAllRequests(AIxNetworkManager.TAG_GET_POSTS);
+    }
+
     public void setOrder(PostListing.Order order) {
-        mPostListing.setOrder(order);
-        setFinished(false);
-        setLoading(true);
+        if (order != mPostListing.getOrder()){
+            cancelRequests();
+            setFinished(false);
+            setLoading(true);
+            mPostListing.setOrder(order);
+        }
     }
 
     public void setLoading(boolean isLoading){
@@ -326,6 +335,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void refresh(){
         if (!isLoading()){
+            cancelRequests();
             setLoading(true);
             setFinished(false);
             mPostListing.refresh();

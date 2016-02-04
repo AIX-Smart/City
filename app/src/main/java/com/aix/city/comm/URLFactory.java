@@ -32,8 +32,8 @@ public class URLFactory {
     public static final String ALL = "all";
     public static final String POPULAR = "popular";
     public static final String NEW = "new";
-    public static final String LIKE_COUNT = "likecount";
-    public static final String LIKE_STATUS = "";
+    public static final String LIKE_COUNT = "likeCount";
+    public static final String LIKE_STATUS = "isLiked";
 
     //"http://www.citevents.de:8080/service" as HttpUrl
     private HttpUrl serviceUrl;
@@ -77,7 +77,7 @@ public class URLFactory {
         if (order != null){
             switch(order){
                 case NEWEST_FIRST:
-                    //urlBuilder.addPathSegment(NEW);
+                    urlBuilder.addPathSegment(NEW);
                     break;
                 case POPULAR_FIRST:
                     urlBuilder.addPathSegment(POPULAR);
@@ -95,6 +95,7 @@ public class URLFactory {
         }
         urlBuilder.addPathSegment(String.valueOf(listingSource.getId()));
         urlBuilder.addPathSegment(String.valueOf(newestPost.getId()));
+        urlBuilder.addPathSegment(NEW);
         return urlBuilder.build().toString();
     }
 

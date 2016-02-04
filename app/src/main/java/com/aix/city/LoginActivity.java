@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        AIxNetworkManager.getInstance().init();
+        AIxNetworkManager.getInstance().start();
     }
 
     @Override

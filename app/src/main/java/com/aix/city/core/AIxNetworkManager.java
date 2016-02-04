@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.aix.city.comm.DeletePostRequest;
 import com.aix.city.comm.GetCityLocationsRequest;
@@ -38,6 +39,8 @@ public class AIxNetworkManager {
     public static final String TAG_GET_LIKE_COUNT = "GetLikeCountRequest";
     public static final String TAG_GET_LIKE_STATUS = "GetLikeStatusRequest";
     public static final String TAG_PUT_LIKE_CHANGE = "PutLikeRequest";
+    public static final String TAG_GET_POSTS = "GetPostsRequest";
+    public static final String TAG_UP_TO_DATE = "IsUpToDateRequest";
 
     public static final Response.ErrorListener DEFAULT_ERROR_LISTENER = new Response.ErrorListener() {
         @Override
@@ -59,7 +62,7 @@ public class AIxNetworkManager {
     public static synchronized void createInstance(Context context){
         if(instance == null){
             instance = new AIxNetworkManager(context);
-            //instance.init();
+            //instance.start();
         }
     }
 
@@ -68,11 +71,11 @@ public class AIxNetworkManager {
     }
     //
 
-    public void init(){
+    public void start(){
         getRequestQueue().start();
     }
 
-    public RequestQueue getRequestQueue() {
+    protected RequestQueue getRequestQueue() {
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context.getApplicationContext(), new OkHttpStack(new OkHttpClient()));
         }
@@ -110,8 +113,8 @@ public class AIxNetworkManager {
      * @param tag associated with the Volley requests to be cancelled
      */
     public void cancelAllRequests(String tag) {
-        if (getRequestQueue() != null) {
-            getRequestQueue().cancelAll(tag);
+        if (requestQueue != null) {
+            requestQueue.cancelAll(tag);
         }
     }
 
@@ -127,64 +130,77 @@ public class AIxNetworkManager {
         getRequestQueue().getCache().remove(URLFactory.get().createGetAllTagsURL());
     }
 
-    public void requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
+    public Request requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
         GetPostsRequest request = new GetPostsRequest(listener, errorListener, postNum, lastPost, listingSource, order);
-        addRequest(request);
+        addRequest(request, TAG_GET_POSTS);
+        return request;
     }
 
-    public void requestPostCreation(Response.Listener<Post> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
+    public Request requestPostCreation(Response.Listener<Post> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
         PostCreationRequest request = new PostCreationRequest(listener, errorListener, postListing, content);
         addRequest(request);
+        return request;
     }
 
-    public void requestLikeChange(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
+    public Request requestLikeChange(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
         PutLikeRequest request = new PutLikeRequest(listener, errorListener, likeable, liked);
         addRequest(request, TAG_PUT_LIKE_CHANGE);
+        return request;
     }
 
-    public void requestLogin(Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
+    public Request requestLogin(Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
         LoginRequest request = new LoginRequest(listener, errorListener, deviceId);
         addRequest(request);
+        return request;
     }
 
-    public void requestTags(Response.Listener<Tag[]> listener, Response.ErrorListener errorListener){
+    public Request requestTags(Response.Listener<Tag[]> listener, Response.ErrorListener errorListener){
         GetTagsRequest request = new GetTagsRequest(listener, errorListener);
         addRequest(request);
+        return request;
     }
 
-    public void requestCityLocations(Response.Listener<Location[]> listener, Response.ErrorListener errorListener, City city){
+    public Request requestCityLocations(Response.Listener<Location[]> listener, Response.ErrorListener errorListener, City city){
         GetCityLocationsRequest request = new GetCityLocationsRequest(listener, errorListener, city);
         addRequest(request);
+        return request;
     }
 
-    public void requestLocation(Response.Listener<Location> listener, Response.ErrorListener errorListener, int locationId){
+    public Request requestLocation(Response.Listener<Location> listener, Response.ErrorListener errorListener, int locationId){
         GetLocationRequest request = new GetLocationRequest(listener, errorListener, locationId);
         addRequest(request);
+        return request;
     }
 
-    public void requestPostDeletion(Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {
+    public Request requestPostDeletion(Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {
         DeletePostRequest request = new DeletePostRequest(listener, errorListener, post);
         addRequest(request);
+        return request;
     }
 
-    public void requestIsUpToDate(Response.Listener<Boolean> listener, PostListing postListing) {
+    @Nullable
+    public Request requestIsUpToDate(Response.Listener<Boolean> listener, PostListing postListing) {
+        IsUpToDateRequest request = null;
         final Post newestPost = postListing.getNewestPost();
         if (newestPost == null){
             listener.onResponse(false);
         }
         else{
-            IsUpToDateRequest request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
-            addRequest(request);
+            request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
+            addRequest(request, TAG_UP_TO_DATE);
         }
+        return request;
     }
 
-    public void requestLikeStatus(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable){
+    public Request requestLikeStatus(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable){
         GetLikeStatusRequest request = new GetLikeStatusRequest(listener, errorListener, likeable);
         addRequest(request, TAG_GET_LIKE_STATUS);
+        return request;
     }
 
-    public void requestLikeCount(Response.Listener<Integer> listener, Response.ErrorListener errorListener, Likeable likeable){
+    public Request requestLikeCount(Response.Listener<Integer> listener, Response.ErrorListener errorListener, Likeable likeable){
         GetLikeCountRequest request = new GetLikeCountRequest(listener, errorListener, likeable);
         addRequest(request, TAG_GET_LIKE_COUNT);
+        return request;
     }
 }

@@ -3,9 +3,12 @@ package com.aix.city;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,10 +16,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
+import com.aix.city.core.data.Post;
+import com.aix.city.view.PostView;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -111,10 +118,12 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         likeButton.setOnClickListener(this);
 
         locationNameView.setText(location.getName());
-        String address = location.getStreet() + " " + location.getHouseNumber() + "\n" + location.getPlz() + " " + AIxDataManager.getInstance().getCity(location.getCityId()).getName();
+        String address = location.getStreet() + " " + location.getHouseNumber() + "\n" + location.getPostalCode() + " " + AIxDataManager.getInstance().getCity(location.getCityId()).getName();
         addressView.setText(address);
-        openHoursView.setText("17:00 - 02:00");
+        openHoursView.setText(location.getOpenHours());
         collapse();
+
+        registerForContextMenu(mainLayout);
 
         return mainLayout;
     }
@@ -223,5 +232,33 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
 
     public void refresh(){
         location.updateLikeable();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.context_location, menu);
+
+        for (int i = 0; i < menu.size(); i++){
+            MenuItem item = menu.getItem(i);
+            switch(item.getItemId()){
+                case R.id.context_edit_open_hours:
+                    if (location.isAuthorized()){
+                        item.setEnabled(true);
+                        item.setVisible(true);
+                    }
+                    break;
+            }
+        }
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.context_edit_open_hours:
+                return true;
+        }
+        return false;
     }
 }

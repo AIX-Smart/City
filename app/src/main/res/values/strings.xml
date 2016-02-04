@@ -47,4 +47,5 @@
     <string name="edit">Editieren</string>
     <string name="read_comments">Öffne Kommentare</string>
     <string name="open_location">Öffne Locationprofil</string>
+    <string name="edit_open_hours">Editiere Öffnungszeiten</string>
 </resources>

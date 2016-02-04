@@ -16,7 +16,6 @@ import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
-import com.aix.city.dummy.DummyContent;
 import com.aix.city.view.PostView;
 import com.aix.city.view.PostViewContext;
 

@@ -22,6 +22,7 @@ public abstract class Post extends Likeable implements Parcelable {
     private String content;
     private long creationTime;
     private int authorId;
+    private boolean isAuthenticated;
 
     //no-argument constructor for JSON
     protected Post(){
@@ -61,6 +62,10 @@ public abstract class Post extends Likeable implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public boolean isAuthenticated() {
+        return isAuthenticated;
     }
 
     @JsonIgnore

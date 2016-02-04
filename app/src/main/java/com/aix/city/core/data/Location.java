@@ -3,6 +3,7 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Likeable;
@@ -27,9 +28,10 @@ public class Location extends Likeable implements ListingSource, Searchable {
     private String street;
     private String houseNumber;
     private String phoneNumber;
-    private String plz;
+    private String postalCode;
+    private String imagePath;
     private String gps;
-    //TODO: öffnungszeiten
+    private String openHours;
 
     //no-argument constructor for JSON
     public Location(){}
@@ -45,7 +47,8 @@ public class Location extends Likeable implements ListingSource, Searchable {
         street = in.readString();
         houseNumber = in.readString();
         phoneNumber = in.readString();
-        plz = in.readString();
+        postalCode = in.readString();
+        openHours = in.readString();
         gps = in.readString();
     }
 
@@ -124,19 +127,33 @@ public class Location extends Likeable implements ListingSource, Searchable {
     }
 
     @NonNull
-    public String getPlz() {
-        if(plz == null){
-            plz = "52062";
+    public String getPostalCode() {
+        if(postalCode == null){
+            postalCode = "";
         }
-        return plz;
+        return postalCode;
     }
 
     @NonNull
     public String getGps() {
-        if(gps == null){
+        if (gps == null) {
             gps = "";
         }
         return gps;
+    }
+
+    @Nullable
+    public String getOpenHours() {
+        return openHours;
+    }
+
+    @Nullable
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setOpenHours(String openHours) {
+        this.openHours = openHours;
     }
 
     public void addTag(Tag tag) {
@@ -197,7 +214,8 @@ public class Location extends Likeable implements ListingSource, Searchable {
         dest.writeString(getStreet());
         dest.writeString(getHouseNumber());
         dest.writeString(getPhoneNumber());
-        dest.writeString(getPlz());
+        dest.writeString(getPostalCode());
+        dest.writeString(getOpenHours());
         dest.writeString(getGps());
     }
 

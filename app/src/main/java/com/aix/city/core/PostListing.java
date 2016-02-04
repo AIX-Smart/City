@@ -45,7 +45,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     private boolean waitingForInit = true;
     private boolean isLoadingNewerPosts = false;
     private boolean isLoadingPosts = false;
-    private Order order = null;
+    private Order order = Order.NEWEST_FIRST;
 
     public enum Order{
         NEWEST_FIRST,

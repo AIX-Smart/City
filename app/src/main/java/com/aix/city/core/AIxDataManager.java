@@ -9,7 +9,6 @@ import com.aix.city.core.data.City;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Tag;
 import com.aix.city.core.data.User;
-import com.aix.city.dummy.DummyContent;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -28,6 +27,8 @@ import java.util.Set;
  * Created by Thomas on 11.10.2015.
  */
 public class AIxDataManager extends Observable {
+
+    public static City AACHEN = new City(1, "Aachen");
 
     public static final String OBSERVER_KEY_CHANGED_TAGS = "tags";
     public static final String OBSERVER_KEY_CHANGED_LOCATIONS = "locations";
@@ -64,7 +65,7 @@ public class AIxDataManager extends Observable {
     }
 
     public void init(){
-        allCities.add(DummyContent.AACHEN);
+        allCities.add(AACHEN);
         currentCity = allCities.get(0);
 
         requestCityLocations(currentCity);
@@ -90,7 +91,7 @@ public class AIxDataManager extends Observable {
     @NonNull
     public City getCurrentCity() {
         if (currentCity == null){
-            currentCity = DummyContent.AACHEN;
+            currentCity = AACHEN;
         }
         return currentCity;
     }
@@ -135,7 +136,7 @@ public class AIxDataManager extends Observable {
     }
 
     public void requestCities(){
-        allCities.add(DummyContent.AACHEN);
+        allCities.add(AACHEN);
     }
 
     public void requestTags(){

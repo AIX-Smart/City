@@ -12,7 +12,6 @@ import java.util.Set;
 public class User {
 
     private int id;
-    private int permission;
     private List<Location> ownLocations;
     private transient Set<Location> favorites = null;
 
@@ -25,15 +24,10 @@ public class User {
     public User(int id, List<Location> ownLocations, int permission) {
         this.id = id;
         this.ownLocations = ownLocations;
-        this.permission = permission;
     }
 
     public int getId() {
         return id;
-    }
-
-    public int getPermission() {
-        return permission;
     }
 
     public List<Location> getOwnLocations() {
