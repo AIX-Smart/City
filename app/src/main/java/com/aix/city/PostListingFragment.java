@@ -23,6 +23,7 @@ import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.aix.city.view.MonochromePostAdapter;
 import com.aix.city.view.PostAdapter;
@@ -165,7 +166,12 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             mListView.setDividerHeight(0);
         }
         else{
-            mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor);
+            if (mPostListing.getListingSource() instanceof Event){
+                mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor, ((Event) mPostListing.getListingSource()).getLocation());
+            }
+            else{
+                mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor);
+            }
             mListView.setBackgroundColor(postColor);
         }
 
@@ -297,8 +303,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public void cancelRequests(){
-        AIxNetworkManager.getInstance().cancelAllRequests(AIxNetworkManager.TAG_UP_TO_DATE);
-        AIxNetworkManager.getInstance().cancelAllRequests(AIxNetworkManager.TAG_GET_POSTS);
+        AIxNetworkManager.getInstance().cancelAllRequests(this);
     }
 
     public void setOrder(PostListing.Order order) {
@@ -402,7 +407,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                                 }
                             }
                         };
-                        AIxNetworkManager.getInstance().requestIsUpToDate(upToDateListener, mPostListing);
+                        AIxNetworkManager.getInstance().requestIsUpToDate(this, upToDateListener, mPostListing);
                         break;
                     case POPULAR_FIRST:
                         break;

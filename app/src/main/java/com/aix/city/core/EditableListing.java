@@ -44,7 +44,7 @@ public abstract class EditableListing extends PostListing {
             };
 
             //send request to server
-            AIxNetworkManager.getInstance().requestPostCreation(listener, errorListener, this, content);
+            AIxNetworkManager.getInstance().requestPostCreation(this, listener, errorListener, this, content);
 
             //waiting for response
             setEditable(false);

@@ -6,29 +6,25 @@ import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 /**
  * Created by Thomas on 28.01.2016.
  */
-public class ImageViewTopCrop extends ImageView {
+public class NetworkImageViewTopCrop extends NetworkImageView {
 
-    public ImageViewTopCrop(Context context) {
+    public NetworkImageViewTopCrop(Context context) {
         super(context);
         setScaleType(ScaleType.MATRIX);
     }
 
-    public ImageViewTopCrop(Context context, AttributeSet attrs) {
+    public NetworkImageViewTopCrop(Context context, AttributeSet attrs) {
         super(context, attrs);
         setScaleType(ScaleType.MATRIX);
     }
 
-    public ImageViewTopCrop(Context context, AttributeSet attrs, int defStyleAttr) {
+    public NetworkImageViewTopCrop(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setScaleType(ScaleType.MATRIX);
-    }
-
-    @TargetApi(21)
-    public ImageViewTopCrop(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         setScaleType(ScaleType.MATRIX);
     }
 

@@ -26,7 +26,7 @@
     <string name="postDeletionMessage_failed">Löschung fehlgeschlagen</string>
     <string name="postDeletionMessage_not_allowed">Unerlaubte Löschung</string>
     <string name="btn_like_description">like button</string>
-    <string name="gps_description">gps</string>
+    <string name="source_icon_description">source icon</string>
     <string name="drawer_left_radio_popular_first_text">populärste zuerst</string>
     <string name="drawer_left_radio_newest_first_text">neueste zuerst</string>
     <string name="action_create">Post erstellen</string>
@@ -47,5 +47,5 @@
     <string name="edit">Editieren</string>
     <string name="read_comments">Öffne Kommentare</string>
     <string name="open_location">Öffne Locationprofil</string>
-    <string name="edit_open_hours">Editiere Öffnungszeiten</string>
+    <string name="edit_open_hours">Ändere Öffnungszeiten</string>
 </resources>

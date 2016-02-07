@@ -50,9 +50,10 @@ public class Location extends Likeable implements ListingSource, Searchable {
         postalCode = in.readString();
         openHours = in.readString();
         gps = in.readString();
+        imagePath = in.readString();
     }
 
-    public Location(int id, String name, int[] tags, String description, int cityId, String street, String houseNumber, String phoneNumber, boolean liked, int likeCount) {
+    public Location(int id, String name, int[] tags, String description, int cityId, String street, String houseNumber, String phoneNumber, boolean liked, int likeCount, String imagePath) {
         super(liked, likeCount);
         this.id = id;
         this.name = name;
@@ -62,6 +63,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
         this.street = street;
         this.houseNumber = houseNumber;
         this.phoneNumber = phoneNumber;
+        this.imagePath = imagePath;
     }
 
     public int getId() {
@@ -178,7 +180,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
 
     @JsonIgnore
     public boolean isAuthorized() {
-        return false;
+        return true;
     }
 
     @Override
@@ -217,6 +219,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
         dest.writeString(getPostalCode());
         dest.writeString(getOpenHours());
         dest.writeString(getGps());
+        dest.writeString(getImagePath());
     }
 
     public static final Parcelable.Creator<Location> CREATOR =

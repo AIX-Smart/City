@@ -1,14 +1,15 @@
 package com.aix.city;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.LruCache;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,14 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
-import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
-import com.aix.city.core.data.Post;
-import com.aix.city.view.PostView;
+import com.aix.city.view.NetworkImageViewTopCrop;
+import com.android.volley.toolbox.ImageLoader;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -35,7 +34,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
 
     public static final int MAX_HEIGHT_DP = 210;
     public static final int MIN_HEIGHT_DP = 150;
-    private static final int EXPAND_BUTTON_DELAY_MS = 600;
+    private static final int EXPAND_BUTTON_DELAY_MS = 500;
 
     private final Handler handler = new Handler();
     private final Runnable enableExpandButton = new Runnable() {
@@ -58,7 +57,9 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     private ImageButton gpsIcon_big;
     private ImageButton gpsIcon_small;
     private LinearLayout expandLayout;
+    private NetworkImageViewTopCrop backgroundImageView;
 
+    private ImageLoader imageLoader;
     private boolean expanded = false;
     private boolean expandButtonIsEnabled = true;
 
@@ -111,11 +112,24 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         expandLayout = (LinearLayout) mainLayout.findViewById((R.id.location_expand_layout));
         addressView = (TextView) expandLayout.findViewById((R.id.location_address));
         gpsIcon_small = (ImageButton) expandLayout.findViewById((R.id.location_gpsIcon_small));
+        backgroundImageView = (NetworkImageViewTopCrop) mainLayout.findViewById(R.id.location_background);
 
         expandButton.setOnClickListener(this);
         gpsIcon_big.setOnClickListener(this);
         gpsIcon_small.setOnClickListener(this);
         likeButton.setOnClickListener(this);
+
+        imageLoader = new ImageLoader(AIxNetworkManager.getInstance().getRequestQueue(), new ImageLoader.ImageCache() {
+            private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
+            public void putBitmap(String url, Bitmap bitmap) {
+                mCache.put(url, bitmap);
+            }
+            public Bitmap getBitmap(String url) {
+                return mCache.get(url);
+            }
+        });
+        //backgroundImageView.setDefaultImageResId(R.drawable.bar);
+        backgroundImageView.setImageUrl(location.getImagePath(), imageLoader);
 
         locationNameView.setText(location.getName());
         String address = location.getStreet() + " " + location.getHouseNumber() + "\n" + location.getPostalCode() + " " + AIxDataManager.getInstance().getCity(location.getCityId()).getName();
@@ -138,8 +152,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
 
     @Override
     public void onStop() {
-        AIxNetworkManager.getInstance().cancelAllRequests(AIxNetworkManager.TAG_GET_LIKE_COUNT);
-        AIxNetworkManager.getInstance().cancelAllRequests(AIxNetworkManager.TAG_GET_LIKE_STATUS);
+        //AIxNetworkManager.getInstance().cancelAllRequests(location);
         location.deleteObserver(this);
         super.onStop();
     }

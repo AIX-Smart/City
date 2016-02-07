@@ -9,7 +9,6 @@ import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.aix.city.core.AIxDataManager;
@@ -157,19 +156,19 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
                 }
                 break;
             case R.id.drawer_left_hungrig:
-                tag = AIxDataManager.getInstance().getTag(AIxDataManager.HUNGRIG_ID);
+                tag = AIxDataManager.getInstance().getTag(AIxDataManager.HUNGRIG);
                 if (tag != null){
                     mActivity.startActivity(tag);
                 }
                 break;
             case R.id.drawer_left_durstig:
-                tag = AIxDataManager.getInstance().getTag(AIxDataManager.DURSTIG_ID);
+                tag = AIxDataManager.getInstance().getTag(AIxDataManager.DURSTIG);
                 if (tag != null){
                     mActivity.startActivity(tag);
                 }
                 break;
             case R.id.drawer_left_party:
-                tag = AIxDataManager.getInstance().getTag(AIxDataManager.PARTY_ID);
+                tag = AIxDataManager.getInstance().getTag(AIxDataManager.PARTY);
                 if (tag != null){
                     mActivity.startActivity(tag);
                 }

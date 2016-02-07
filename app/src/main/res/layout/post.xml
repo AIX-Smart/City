@@ -83,11 +83,11 @@
         android:orientation="horizontal">
         
         <ImageButton
-            android:id="@+id/post_gpsIcon"
+            android:id="@+id/post_source_icon"
             android:layout_width="@dimen/post_comment_icon_size"
             android:layout_height="@dimen/post_comment_icon_size"
             android:background="@drawable/gps"
-            android:contentDescription="@string/gps_description"
+            android:contentDescription="@string/source_icon_description"
             android:focusable="false"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="0dp"

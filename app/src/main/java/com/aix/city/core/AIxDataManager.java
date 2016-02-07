@@ -36,9 +36,9 @@ public class AIxDataManager extends Observable {
     public static final Location EMPTY_LOCATION = new Location();
     public static final City EMPTY_CITY = new City(0, "");
     private static final int REQUEST_RETRY_DELAY = 2000;
-    public static final int HUNGRIG_ID = 2;
-    public static final int DURSTIG_ID = 1;
-    public static final int PARTY_ID = -1;
+    public static final String HUNGRIG = "Hungrig?";
+    public static final String DURSTIG = "Durstig?";
+    public static final String PARTY = "Party?";
     public static final int ALLES_ANDERE_ID = -1;
 
     private static AIxDataManager instance;
@@ -116,6 +116,14 @@ public class AIxDataManager extends Observable {
         return null;
     }
 
+    @Nullable
+    public Tag getTag(String name){
+        for(Tag tag: allTags){
+            if(tag.getName().equals(name)) return tag;
+        }
+        return null;
+    }
+
     @NonNull
     public Location getLocation(int locationId) {
         Location location = storedLocations.get(locationId);
@@ -164,7 +172,7 @@ public class AIxDataManager extends Observable {
             }
         };
 
-        AIxNetworkManager.getInstance().requestTags(listener, errorListener);
+        AIxNetworkManager.getInstance().requestTags(this, listener, errorListener);
     }
 
     public void requestCityLocations(City city){
@@ -194,7 +202,7 @@ public class AIxDataManager extends Observable {
             }
         };
 
-        AIxNetworkManager.getInstance().requestCityLocations(listener, errorListener, city);
+        AIxNetworkManager.getInstance().requestCityLocations(this, listener, errorListener, city);
     }
 
     public void requestLocation(final int locationId){
@@ -222,6 +230,13 @@ public class AIxDataManager extends Observable {
             }
         };
 
-        AIxNetworkManager.getInstance().requestLocation(listener, errorListener, locationId);
+        AIxNetworkManager.getInstance().requestLocation(this, listener, errorListener, locationId);
+    }
+
+    public void clearCache() {
+        AIxNetworkManager.getInstance().clearTagsCache();
+        AIxNetworkManager.getInstance().clearCityLocationsCache(currentCity);
+        requestTags();
+        requestCityLocations(currentCity);
     }
 }

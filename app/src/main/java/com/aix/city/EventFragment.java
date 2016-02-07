@@ -14,6 +14,7 @@ import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Event;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
 import com.aix.city.view.PostView;
@@ -130,6 +131,11 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
     @Override
     public void startActivity(ListingSource listingSource, int postColor) {
         //do nothing
+    }
+
+    @Override
+    public Location getSourceLocation() {
+        return null;
     }
 
     @Override

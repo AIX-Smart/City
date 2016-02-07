@@ -43,6 +43,7 @@ public abstract class Post extends Likeable implements Parcelable {
         content = in.readString();
         creationTime = in.readLong();
         authorId = in.readInt();
+        isAuthenticated = (in.readInt() != 0);
     }
 
     public String getContent() {
@@ -65,7 +66,8 @@ public abstract class Post extends Likeable implements Parcelable {
     }
 
     public boolean isAuthenticated() {
-        return isAuthenticated;
+        //TODO:
+        return true;//isAuthenticated;
     }
 
     @JsonIgnore
@@ -100,6 +102,7 @@ public abstract class Post extends Likeable implements Parcelable {
         dest.writeString(getContent());
         dest.writeLong(getCreationTime());
         dest.writeInt(getAuthorId());
+        dest.writeInt(isAuthenticated() ? 1 : 0);
     }
 
     public static final Parcelable.Creator<Post> CREATOR =

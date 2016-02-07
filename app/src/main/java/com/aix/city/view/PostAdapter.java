@@ -1,6 +1,7 @@
 package com.aix.city.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import com.aix.city.BaseListingActivity;
 import com.aix.city.PostListingFragment;
 import com.aix.city.R;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 
 import java.util.ArrayList;
@@ -154,6 +156,11 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
     @Override
     public void startActivity(ListingSource listingSource, int postColor){
         getActivity().startActivity(listingSource, postColor);
+    }
+
+    @Override
+    public Location getSourceLocation() {
+        return null;
     }
 
     public List<Post> getPosts() {

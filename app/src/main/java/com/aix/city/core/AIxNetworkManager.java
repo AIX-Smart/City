@@ -36,12 +36,6 @@ import com.squareup.okhttp.OkHttpClient;
  */
 public class AIxNetworkManager {
 
-    public static final String TAG_GET_LIKE_COUNT = "GetLikeCountRequest";
-    public static final String TAG_GET_LIKE_STATUS = "GetLikeStatusRequest";
-    public static final String TAG_PUT_LIKE_CHANGE = "PutLikeRequest";
-    public static final String TAG_GET_POSTS = "GetPostsRequest";
-    public static final String TAG_UP_TO_DATE = "IsUpToDateRequest";
-
     public static final Response.ErrorListener DEFAULT_ERROR_LISTENER = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -75,7 +69,7 @@ public class AIxNetworkManager {
         getRequestQueue().start();
     }
 
-    protected RequestQueue getRequestQueue() {
+    public RequestQueue getRequestQueue() {
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context.getApplicationContext(), new OkHttpStack(new OkHttpClient()));
         }
@@ -93,7 +87,7 @@ public class AIxNetworkManager {
      * @param request is the request to be added
      * @param tag is the tag identifying the request
      */
-    public void addRequest(Request<?> request, String tag) {
+    public void addRequest(Request<?> request, Object tag) {
         request.setTag(tag);
         addRequest(request);
     }
@@ -112,7 +106,7 @@ public class AIxNetworkManager {
      *
      * @param tag associated with the Volley requests to be cancelled
      */
-    public void cancelAllRequests(String tag) {
+    public void cancelAllRequests(Object tag) {
         if (requestQueue != null) {
             requestQueue.cancelAll(tag);
         }
@@ -130,56 +124,56 @@ public class AIxNetworkManager {
         getRequestQueue().getCache().remove(URLFactory.get().createGetAllTagsURL());
     }
 
-    public Request requestPosts(Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
+    public Request requestPosts(Object tag, Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
         GetPostsRequest request = new GetPostsRequest(listener, errorListener, postNum, lastPost, listingSource, order);
-        addRequest(request, TAG_GET_POSTS);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestPostCreation(Response.Listener<Post> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
+    public Request requestPostCreation(Object tag, Response.Listener<Post> listener, Response.ErrorListener errorListener, EditableListing postListing, String content){
         PostCreationRequest request = new PostCreationRequest(listener, errorListener, postListing, content);
-        addRequest(request);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestLikeChange(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
+    public Request requestLikeChange(Object tag, Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
         PutLikeRequest request = new PutLikeRequest(listener, errorListener, likeable, liked);
-        addRequest(request, TAG_PUT_LIKE_CHANGE);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestLogin(Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
+    public Request requestLogin(Object tag, Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
         LoginRequest request = new LoginRequest(listener, errorListener, deviceId);
-        addRequest(request);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestTags(Response.Listener<Tag[]> listener, Response.ErrorListener errorListener){
+    public Request requestTags(Object tag, Response.Listener<Tag[]> listener, Response.ErrorListener errorListener){
         GetTagsRequest request = new GetTagsRequest(listener, errorListener);
-        addRequest(request);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestCityLocations(Response.Listener<Location[]> listener, Response.ErrorListener errorListener, City city){
+    public Request requestCityLocations(Object tag, Response.Listener<Location[]> listener, Response.ErrorListener errorListener, City city){
         GetCityLocationsRequest request = new GetCityLocationsRequest(listener, errorListener, city);
-        addRequest(request);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestLocation(Response.Listener<Location> listener, Response.ErrorListener errorListener, int locationId){
+    public Request requestLocation(Object tag, Response.Listener<Location> listener, Response.ErrorListener errorListener, int locationId){
         GetLocationRequest request = new GetLocationRequest(listener, errorListener, locationId);
-        addRequest(request);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestPostDeletion(Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {
+    public Request requestPostDeletion(Object tag, Response.Listener<Post> listener, Response.ErrorListener errorListener, Post post) {
         DeletePostRequest request = new DeletePostRequest(listener, errorListener, post);
-        addRequest(request);
+        addRequest(request, tag);
         return request;
     }
 
     @Nullable
-    public Request requestIsUpToDate(Response.Listener<Boolean> listener, PostListing postListing) {
+    public Request requestIsUpToDate(Object tag, Response.Listener<Boolean> listener, PostListing postListing) {
         IsUpToDateRequest request = null;
         final Post newestPost = postListing.getNewestPost();
         if (newestPost == null){
@@ -187,20 +181,20 @@ public class AIxNetworkManager {
         }
         else{
             request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
-            addRequest(request, TAG_UP_TO_DATE);
+            addRequest(request, tag);
         }
         return request;
     }
 
-    public Request requestLikeStatus(Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable){
+    public Request requestLikeStatus(Object tag, Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable){
         GetLikeStatusRequest request = new GetLikeStatusRequest(listener, errorListener, likeable);
-        addRequest(request, TAG_GET_LIKE_STATUS);
+        addRequest(request, tag);
         return request;
     }
 
-    public Request requestLikeCount(Response.Listener<Integer> listener, Response.ErrorListener errorListener, Likeable likeable){
+    public Request requestLikeCount(Object tag, Response.Listener<Integer> listener, Response.ErrorListener errorListener, Likeable likeable){
         GetLikeCountRequest request = new GetLikeCountRequest(listener, errorListener, likeable);
-        addRequest(request, TAG_GET_LIKE_COUNT);
+        addRequest(request, tag);
         return request;
     }
 }

@@ -76,7 +76,7 @@ public abstract class Likeable extends Observable {
                 }
             };
 
-            AIxNetworkManager.getInstance().requestLikeChange(listener, errorListener, this, true);
+            AIxNetworkManager.getInstance().requestLikeChange(this, listener, errorListener, this, true);
         }
     }
 
@@ -98,7 +98,7 @@ public abstract class Likeable extends Observable {
                 }
             };
 
-            AIxNetworkManager.getInstance().requestLikeChange(listener, errorListener, this, false);
+            AIxNetworkManager.getInstance().requestLikeChange(this, listener, errorListener, this, false);
         }
     }
 
@@ -124,8 +124,8 @@ public abstract class Likeable extends Observable {
             }
         };
 
-        AIxNetworkManager.getInstance().requestLikeStatus(likeStatusListener, errorListener, this);
-        AIxNetworkManager.getInstance().requestLikeCount(likeCountListener, errorListener, this);
+        AIxNetworkManager.getInstance().requestLikeStatus(this, likeStatusListener, errorListener, this);
+        AIxNetworkManager.getInstance().requestLikeCount(this, likeCountListener, errorListener, this);
     }
 
     //implements Parcelable

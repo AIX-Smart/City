@@ -2,8 +2,6 @@ package com.aix.city.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -38,7 +36,9 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     private ImageButton likeButton;
     private TextView likeCounterView;
     private TextView creationTimeView;
-    private ImageButton gpsButton;
+    private ImageButton sourceIcon;
+
+    private boolean isPostChanged;
 
     public PostView(Context context) {
         super(context);
@@ -58,6 +58,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     public void setPost(Post post) {
         this.post = post;
+        isPostChanged = true;
     }
 
     public void init(PostViewContext postContext){
@@ -70,52 +71,72 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         likeButton = (ImageButton) findViewById(R.id.post_like_btn);
         likeCounterView = (TextView) findViewById(R.id.post_like_counter);
         creationTimeView = (TextView) findViewById(R.id.post_time);
-        gpsButton = (ImageButton) findViewById(R.id.post_gpsIcon);
+        sourceIcon = (ImageButton) findViewById(R.id.post_source_icon);
 
         this.setOnLongClickListener(this);
         locationNameView.setOnClickListener(this);
         commentLayout.setOnClickListener(this);
         likeButton.setOnClickListener(this);
-        gpsButton.setOnClickListener(this);
+        sourceIcon.setOnClickListener(this);
     }
 
     public void update(){
         contentView.setText(post.getContent());
         likeCounterView.setText(String.valueOf(post.getLikeCount()));
 
-        String dateString;
-        Calendar now = Calendar.getInstance(Locale.GERMAN);
-        Calendar creationTime = Calendar.getInstance(Locale.GERMAN);
-        creationTime.setTimeInMillis(post.getCreationTime());
-        boolean createdToday = now.get(Calendar.YEAR) == creationTime.get(Calendar.YEAR) &&
-                now.get(Calendar.DAY_OF_YEAR) == creationTime.get(Calendar.DAY_OF_YEAR);
-        if (createdToday){
-            dateString = FORMAT_TIME.format(creationTime.getTime());
-        }
-        else {
-            dateString = FORMAT_DATE.format(creationTime.getTime());
-        }
-        creationTimeView.setText(dateString);
+        if (isPostChanged){
+            String dateString;
+            Calendar now = Calendar.getInstance(Locale.GERMAN);
+            Calendar creationTime = Calendar.getInstance(Locale.GERMAN);
+            creationTime.setTimeInMillis(post.getCreationTime());
+            boolean createdToday = now.get(Calendar.YEAR) == creationTime.get(Calendar.YEAR) &&
+                    now.get(Calendar.DAY_OF_YEAR) == creationTime.get(Calendar.DAY_OF_YEAR);
+            if (createdToday){
+                dateString = FORMAT_TIME.format(creationTime.getTime());
+            }
+            else{
+                dateString = FORMAT_DATE.format(creationTime.getTime());
+            }
+            creationTimeView.setText(dateString);
 
-        setBackgroundColor(postContext.getPostColor(post));
+            setBackgroundColor(postContext.getPostColor(post));
 
-        if(post.isLiked()) {
+            if (post.isAuthenticated()){
+                if (post instanceof Event){
+                    locationNameView.setText(((Event) post).getLocation().getName());
+                }
+                else{
+                    if (postContext.getSourceLocation() != null){
+                        locationNameView.setText(postContext.getSourceLocation().getName());
+                    }
+                    else{
+                        sourceIcon.setVisibility(View.INVISIBLE);
+                        locationNameView.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+            else{
+                sourceIcon.setVisibility(View.INVISIBLE);
+                locationNameView.setVisibility(View.INVISIBLE);
+            }
+
+        }
+
+        if (post.isLiked()){
             likeButton.setSelected(true);
         }
-        else {
+        else{
             likeButton.setSelected(false);
         }
 
-        if(post instanceof Event){
-            final Event event = (Event) post;
-            locationNameView.setText(event.getLocation().getName());
-            commentCounterView.setText(String.valueOf(event.getCommentCount()));
+        if (post instanceof Event){
+            commentCounterView.setText(String.valueOf(((Event) post).getCommentCount()));
         }
         else{
-            locationNameView.setVisibility(View.INVISIBLE);
             commentLayout.setVisibility(View.INVISIBLE);
-            gpsButton.setVisibility(View.INVISIBLE);
         }
+
+        isPostChanged = false;
     }
 
     public void openLocation(){
@@ -154,7 +175,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         else if (v == likeButton){
             onLikeButtonClick();
         }
-        else if (v == gpsButton){
+        else if (v == sourceIcon){
             openLocation();
         }
     }

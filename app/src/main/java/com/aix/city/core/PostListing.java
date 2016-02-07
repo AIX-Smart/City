@@ -208,7 +208,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             };
 
             //send request to server
-            AIxNetworkManager.getInstance().requestPosts(listener, errorListener, POST_REQUEST_NUM, oldestPost, listingSource, order);
+            AIxNetworkManager.getInstance().requestPosts(this, listener, errorListener, POST_REQUEST_NUM, oldestPost, listingSource, order);
             return true;
         }
         return false;
@@ -234,23 +234,29 @@ public class PostListing extends Observable implements Observer, Parcelable {
             };
 
             //send request to server
-            AIxNetworkManager.getInstance().requestPosts(listener, errorListener, POST_REQUEST_NUM, null, listingSource, order);
+            AIxNetworkManager.getInstance().requestPosts(this, listener, errorListener, POST_REQUEST_NUM, null, listingSource, order);
             return true;
         }
         return false;
     }
 
+    public void cancelRequests(){
+        AIxNetworkManager.getInstance().cancelAllRequests(this);
+    }
+
     public void clear() {
+        cancelRequests();
         posts.clear();
         waitingForInit = true;
         finished = false;
+
+        setChanged();
+        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     public void refresh() {
         clear();
         loadInitialPosts();
-        setChanged();
-        notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
     }
 
     /**
@@ -290,7 +296,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
                 }
             };
             //send request to server
-            AIxNetworkManager.getInstance().requestPostDeletion(listener, errorListener, post);
+            AIxNetworkManager.getInstance().requestPostDeletion(this, listener, errorListener, post);
 
             return true;
         }

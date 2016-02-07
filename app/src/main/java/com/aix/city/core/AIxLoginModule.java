@@ -66,6 +66,6 @@ public class AIxLoginModule extends Observable {
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         //send request to server
-        AIxNetworkManager.getInstance().requestLogin(listener, errorListener, deviceId);
+        AIxNetworkManager.getInstance().requestLogin(this, listener, errorListener, deviceId);
     }
 }
