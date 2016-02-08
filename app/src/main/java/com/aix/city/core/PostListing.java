@@ -45,6 +45,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     private boolean waitingForInit = true;
     private boolean isLoadingNewerPosts = false;
     private boolean isLoadingPosts = false;
+    private int postNum = POST_REQUEST_NUM;
     private Order order = Order.NEWEST_FIRST;
 
     public enum Order{
@@ -111,6 +112,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
                 }
                 else{
                     //TODO: more new posts have to be loaded from the database
+                    refresh();
                 }
             }
         }
@@ -184,13 +186,20 @@ public class PostListing extends Observable implements Observer, Parcelable {
                 waitingForInit = false;
             }
             else{
-                oldestPost = posts.get(posts.size() - 1);
+                switch (order){
+                    case NEWEST_FIRST:
+                        oldestPost = posts.get(posts.size() - 1);
+                        break;
+                    case POPULAR_FIRST:
+                        postNum = postNum * 4;
+                        break;
+                }
             }
 
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
                 @Override
                 public void onResponse(Post[] response) {
-                    if(response.length < POST_REQUEST_NUM){
+                    if(response.length < postNum){
                         setFinished();
                     }
                     addPosts(response);
@@ -208,7 +217,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             };
 
             //send request to server
-            AIxNetworkManager.getInstance().requestPosts(this, listener, errorListener, POST_REQUEST_NUM, oldestPost, listingSource, order);
+            AIxNetworkManager.getInstance().requestPosts(this, listener, errorListener, postNum, oldestPost, listingSource, order);
             return true;
         }
         return false;
@@ -220,7 +229,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>() {
                 @Override
                 public void onResponse(Post[] response) {
-                    if (posts.size() > 0) {
+                    if (posts.size() != 0) {
                         addNewerPosts(response);
                     }
                     isLoadingNewerPosts = false;
@@ -234,7 +243,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
             };
 
             //send request to server
-            AIxNetworkManager.getInstance().requestPosts(this, listener, errorListener, POST_REQUEST_NUM, null, listingSource, order);
+            AIxNetworkManager.getInstance().requestPosts(this, listener, errorListener, postNum, null, listingSource, order);
             return true;
         }
         return false;
@@ -247,6 +256,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public void clear() {
         cancelRequests();
         posts.clear();
+        postNum = POST_REQUEST_NUM;
         waitingForInit = true;
         finished = false;
 

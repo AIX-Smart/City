@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="#fff"
+    android:layout_width="300dp"
+    android:paddingTop="10dp">
+
+    <EditText
+        android:id="@+id/txtMail"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="textEmailAddress"
+        android:hint="@string/email_address">
+        <requestFocus/>
+    </EditText>
+
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:hint="@string/password"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/buttonBarStyle">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+
+            <Button
+                android:id="@+id/btnAuthenticate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/authenticate"
+                android:visibility="visible"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+            <ProgressBar
+                android:id="@+id/auth_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible"
+                style="?android:attr/android:progressBarStyleSmall"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/cancel"
+            style="?android:attr/buttonBarButtonStyle"/>
+
+    </LinearLayout>
+
+</LinearLayout>

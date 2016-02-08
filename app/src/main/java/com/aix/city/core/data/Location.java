@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.EditableEventListing;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
@@ -29,7 +30,6 @@ public class Location extends Likeable implements ListingSource, Searchable {
     private String houseNumber;
     private String phoneNumber;
     private String postalCode;
-    private String imagePath;
     private String gps;
     private String openHours;
 
@@ -50,7 +50,6 @@ public class Location extends Likeable implements ListingSource, Searchable {
         postalCode = in.readString();
         openHours = in.readString();
         gps = in.readString();
-        imagePath = in.readString();
     }
 
     public Location(int id, String name, int[] tags, String description, int cityId, String street, String houseNumber, String phoneNumber, boolean liked, int likeCount, String imagePath) {
@@ -63,7 +62,6 @@ public class Location extends Likeable implements ListingSource, Searchable {
         this.street = street;
         this.houseNumber = houseNumber;
         this.phoneNumber = phoneNumber;
-        this.imagePath = imagePath;
     }
 
     public int getId() {
@@ -149,11 +147,6 @@ public class Location extends Likeable implements ListingSource, Searchable {
         return openHours;
     }
 
-    @Nullable
-    public String getImagePath() {
-        return imagePath;
-    }
-
     public void setOpenHours(String openHours) {
         this.openHours = openHours;
     }
@@ -180,7 +173,7 @@ public class Location extends Likeable implements ListingSource, Searchable {
 
     @JsonIgnore
     public boolean isAuthorized() {
-        return true;
+        return AIxLoginModule.getInstance().getLoggedInUser().isAuthorized(this);
     }
 
     @Override
@@ -219,7 +212,6 @@ public class Location extends Likeable implements ListingSource, Searchable {
         dest.writeString(getPostalCode());
         dest.writeString(getOpenHours());
         dest.writeString(getGps());
-        dest.writeString(getImagePath());
     }
 
     public static final Parcelable.Creator<Location> CREATOR =

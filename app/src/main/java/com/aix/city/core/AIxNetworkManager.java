@@ -1,16 +1,20 @@
 package com.aix.city.core;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.util.LruCache;
 
 import com.aix.city.comm.DeletePostRequest;
 import com.aix.city.comm.GetCityLocationsRequest;
+import com.aix.city.comm.GetIsAuthorizedRequest;
 import com.aix.city.comm.GetLikeCountRequest;
 import com.aix.city.comm.GetLikeStatusRequest;
 import com.aix.city.comm.GetLocationRequest;
 import com.aix.city.comm.GetPostsRequest;
 import com.aix.city.comm.GetTagsRequest;
-import com.aix.city.comm.IsUpToDateRequest;
+import com.aix.city.comm.GetIsUpToDateRequest;
+import com.aix.city.comm.PutAuthenticateRequest;
 import com.aix.city.comm.PutLikeRequest;
 import com.aix.city.comm.LoginRequest;
 import com.aix.city.comm.OkHttpStack;
@@ -25,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -46,6 +51,7 @@ public class AIxNetworkManager {
     private static AIxNetworkManager instance;
     private final Context context;
     private RequestQueue requestQueue;
+    private ImageLoader imageLoader;
 
 
     //Singleton methods and constructor
@@ -69,7 +75,7 @@ public class AIxNetworkManager {
         getRequestQueue().start();
     }
 
-    public RequestQueue getRequestQueue() {
+    protected RequestQueue getRequestQueue() {
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context.getApplicationContext(), new OkHttpStack(new OkHttpClient()));
         }
@@ -79,6 +85,21 @@ public class AIxNetworkManager {
 
     public Context getContext() {
         return context;
+    }
+
+    public ImageLoader getImageLoader() {
+        if (imageLoader == null){
+            imageLoader = new ImageLoader(getRequestQueue(), new ImageLoader.ImageCache() {
+                private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(16);
+                public void putBitmap(String url, Bitmap bitmap) {
+                    mCache.put(url, bitmap);
+                }
+                public Bitmap getBitmap(String url) {
+                    return mCache.get(url);
+                }
+            });
+        }
+        return imageLoader;
     }
 
     /**
@@ -116,12 +137,30 @@ public class AIxNetworkManager {
         getRequestQueue().getCache().clear();
     }
 
-    public void clearCityLocationsCache(City city){
-        getRequestQueue().getCache().remove(URLFactory.get().createGetCityLocationsURL(city));
+    public void invalidateCityLocationsCache(City city){
+        getRequestQueue().getCache().invalidate(URLFactory.get().createGetCityLocationsURL(city), true);
     }
 
-    public void clearTagsCache(){
-        getRequestQueue().getCache().remove(URLFactory.get().createGetAllTagsURL());
+    public void invalidateTagsCache(){
+        getRequestQueue().getCache().invalidate(URLFactory.get().createGetAllTagsURL(), true);
+    }
+
+    protected Request requestLogin(Object tag, Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
+        LoginRequest request = new LoginRequest(listener, errorListener, deviceId);
+        addRequest(request, tag);
+        return request;
+    }
+
+    protected Request requestAuthentication(Object tag, Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Location location, String mail, String password){
+        PutAuthenticateRequest request = new PutAuthenticateRequest(listener, errorListener, location, mail, password);
+        addRequest(request, tag);
+        return request;
+    }
+
+    protected Request requestIsAuthorized(Object tag, Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Location location, String mail, String password){
+        GetIsAuthorizedRequest request = new GetIsAuthorizedRequest(listener, errorListener, location);
+        addRequest(request, tag);
+        return request;
     }
 
     public Request requestPosts(Object tag, Response.Listener<Post[]> listener, Response.ErrorListener errorListener, int postNum, Post lastPost, ListingSource listingSource, PostListing.Order order){
@@ -138,12 +177,6 @@ public class AIxNetworkManager {
 
     public Request requestLikeChange(Object tag, Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Likeable likeable, boolean liked){
         PutLikeRequest request = new PutLikeRequest(listener, errorListener, likeable, liked);
-        addRequest(request, tag);
-        return request;
-    }
-
-    public Request requestLogin(Object tag, Response.Listener<User> listener, Response.ErrorListener errorListener, String deviceId){
-        LoginRequest request = new LoginRequest(listener, errorListener, deviceId);
         addRequest(request, tag);
         return request;
     }
@@ -174,13 +207,13 @@ public class AIxNetworkManager {
 
     @Nullable
     public Request requestIsUpToDate(Object tag, Response.Listener<Boolean> listener, PostListing postListing) {
-        IsUpToDateRequest request = null;
+        GetIsUpToDateRequest request = null;
         final Post newestPost = postListing.getNewestPost();
         if (newestPost == null){
             listener.onResponse(false);
         }
         else{
-            request = new IsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
+            request = new GetIsUpToDateRequest(listener, DEFAULT_ERROR_LISTENER, newestPost, postListing.getListingSource());
             addRequest(request, tag);
         }
         return request;

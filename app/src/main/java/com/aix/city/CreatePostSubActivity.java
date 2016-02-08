@@ -79,15 +79,17 @@ public class CreatePostSubActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (editText.getText().length() == 0) {
-                    if (sendItem.isEnabled()){
-                        sendItem.setEnabled(false);
-                        sendItem.setVisible(false);
-                    }
-                } else {
-                    if (!sendItem.isEnabled()){
-                        sendItem.setEnabled(true);
-                        sendItem.setVisible(true);
+                if (editText != null && sendItem != null){
+                    if (editText.getText().length() == 0) {
+                        if (sendItem.isEnabled()){
+                            sendItem.setEnabled(false);
+                            sendItem.setVisible(false);
+                        }
+                    } else {
+                        if (!sendItem.isEnabled()){
+                            sendItem.setEnabled(true);
+                            sendItem.setVisible(true);
+                        }
                     }
                 }
             }
@@ -102,7 +104,7 @@ public class CreatePostSubActivity extends AppCompatActivity {
 
     public void createPost(){
         //Ask the user for confirmation
-        new AlertDialog.Builder(new ContextThemeWrapper(CreatePostSubActivity.this, android.R.style.Theme_Holo_Dialog))
+        new AlertDialog.Builder(CreatePostSubActivity.this/*new ContextThemeWrapper(CreatePostSubActivity.this, android.R.style.Theme_Holo_Dialog)*/)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.create_post_dialog_title)
                         //.setMessage(R.string.create_post_dialog_text)

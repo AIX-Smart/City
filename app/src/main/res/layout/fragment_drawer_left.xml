@@ -7,15 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/drawer_left_background_color"
     android:padding="0dp"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context="com.aix.city.LeftDrawerFragment">
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <FrameLayout
             android:layout_width="match_parent"

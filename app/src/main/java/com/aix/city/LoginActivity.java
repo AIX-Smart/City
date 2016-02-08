@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         retryHandler.postDelayed(retryRunnable, LOGIN_RETRY_DELAY_MS);
 
         if (!loginFailed){
-            loginFailureToast = Toast.makeText(this, this.getResources().getString(R.string.loginFailure), Toast.LENGTH_LONG);
+            loginFailureToast = Toast.makeText(this, this.getResources().getString(R.string.connectionError), Toast.LENGTH_LONG);
             loginFailureToast.show();
             loginFailed = true;
         }

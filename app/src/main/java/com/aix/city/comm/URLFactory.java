@@ -34,6 +34,9 @@ public class URLFactory {
     public static final String NEW = "new";
     public static final String LIKE_COUNT = "likeCount";
     public static final String LIKE_STATUS = "isLiked";
+    public static final String DOWNLOAD_IMAGE = "downloadImage";
+    public static final String AUTHENTICATE = "authenticate";
+    public static final String IS_AUTHENTICATED = "isOwner";
 
     //"http://www.citevents.de:8080/service" as HttpUrl
     private HttpUrl serviceUrl;
@@ -179,6 +182,33 @@ public class URLFactory {
         }
         urlBuilder.addPathSegment(String.valueOf(post.getId()));
         urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser()));
+        return urlBuilder.build().toString();
+    }
+
+    public String createImageUrl(Location location) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(LOCATION);
+        urlBuilder.addPathSegment(String.valueOf(location.getId()));
+        urlBuilder.addPathSegment(DOWNLOAD_IMAGE);
+        return urlBuilder.build().toString();
+    }
+
+    public String createAuthenticateUrl(Location location, String mail) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(LOCATION);
+        urlBuilder.addPathSegment(String.valueOf(location.getId()));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        urlBuilder.addPathSegment(mail);
+        urlBuilder.addPathSegment(AUTHENTICATE);
+        return urlBuilder.build().toString();
+    }
+
+    public String createIsAuthorizedUrl(Location location) {
+        HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
+        urlBuilder.addPathSegment(LOCATION);
+        urlBuilder.addPathSegment(String.valueOf(location.getId()));
+        urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser().getId()));
+        urlBuilder.addPathSegment(IS_AUTHENTICATED);
         return urlBuilder.build().toString();
     }
 }

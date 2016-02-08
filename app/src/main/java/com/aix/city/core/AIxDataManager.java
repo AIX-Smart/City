@@ -15,7 +15,6 @@ import com.android.volley.VolleyError;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,9 +35,9 @@ public class AIxDataManager extends Observable {
     public static final Location EMPTY_LOCATION = new Location();
     public static final City EMPTY_CITY = new City(0, "");
     private static final int REQUEST_RETRY_DELAY = 2000;
-    public static final String HUNGRIG = "Hungrig?";
-    public static final String DURSTIG = "Durstig?";
-    public static final String PARTY = "Party?";
+    public static final String HUNGRIG = "Hungrig";
+    public static final String DURSTIG = "Durstig";
+    public static final String PARTY = "Party";
     public static final int ALLES_ANDERE_ID = -1;
 
     private static AIxDataManager instance;
@@ -119,7 +118,7 @@ public class AIxDataManager extends Observable {
     @Nullable
     public Tag getTag(String name){
         for(Tag tag: allTags){
-            if(tag.getName().equals(name)) return tag;
+            if(tag.getName().startsWith(name)) return tag;
         }
         return null;
     }
@@ -233,9 +232,9 @@ public class AIxDataManager extends Observable {
         AIxNetworkManager.getInstance().requestLocation(this, listener, errorListener, locationId);
     }
 
-    public void clearCache() {
-        AIxNetworkManager.getInstance().clearTagsCache();
-        AIxNetworkManager.getInstance().clearCityLocationsCache(currentCity);
+    public void refreshData() {
+        AIxNetworkManager.getInstance().invalidateTagsCache();
+        AIxNetworkManager.getInstance().invalidateCityLocationsCache(currentCity);
         requestTags();
         requestCityLocations(currentCity);
     }

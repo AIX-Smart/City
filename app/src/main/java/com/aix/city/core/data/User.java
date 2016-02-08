@@ -1,8 +1,11 @@
 package com.aix.city.core.data;
 
+import android.support.annotation.NonNull;
+
 import com.aix.city.core.AIxDataManager;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +15,7 @@ import java.util.Set;
 public class User {
 
     private int id;
-    private List<Location> ownLocations;
+    private List<Integer> ownLocationIds;
     private transient Set<Location> favorites = null;
 
     //no-argument constructor for JSON
@@ -21,17 +24,40 @@ public class User {
     /**
      * INTERNAL USE ONLY: use instead user.getData() or AIxDataManager.getInstance().createUser(...)
      */
-    public User(int id, List<Location> ownLocations, int permission) {
+    public User(int id, List<Integer> ownLocationIds, int permission) {
         this.id = id;
-        this.ownLocations = ownLocations;
+        this.ownLocationIds = ownLocationIds;
     }
 
     public int getId() {
         return id;
     }
 
-    public List<Location> getOwnLocations() {
-        return ownLocations;
+    @NonNull
+    public List<Integer> getOwnLocationIds() {
+        if (ownLocationIds == null){
+            ownLocationIds = new ArrayList<Integer>();
+        }
+        return ownLocationIds;
+    }
+
+    @JsonIgnore
+    public boolean isAuthorized(Location location){
+        return getOwnLocationIds().contains(location.getId());
+    }
+
+    @JsonIgnore
+    public void addLocation(Location location) {
+        getOwnLocationIds().add(location.getId());
+    }
+
+    @JsonIgnore
+    public List<Location> getOwnLocations(){
+        List<Location> list = new ArrayList<Location>();
+        for (int locationId : getOwnLocationIds()){
+            list.add(AIxDataManager.getInstance().getLocation(locationId));
+        }
+        return list;
     }
 
     @JsonIgnore

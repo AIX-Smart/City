@@ -8,4 +8,11 @@
         android:visible="false"
         android:title="@string/edit_open_hours"/>
 
+    <item
+        android:id="@+id/context_authenticate"
+        android:orderInCategory="1"
+        android:enabled="false"
+        android:visible="false"
+        android:title="@string/authenticate"/>
+
 </menu>

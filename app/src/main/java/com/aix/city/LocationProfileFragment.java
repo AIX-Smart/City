@@ -1,23 +1,29 @@
 package com.aix.city;
 
-import android.graphics.Bitmap;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.LruCache;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.aix.city.comm.URLFactory;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
+import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
@@ -34,7 +40,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
 
     public static final int MAX_HEIGHT_DP = 210;
     public static final int MIN_HEIGHT_DP = 150;
-    private static final int EXPAND_BUTTON_DELAY_MS = 500;
+    private static final int EXPAND_BUTTON_DELAY_MS = 400;
 
     private final Handler handler = new Handler();
     private final Runnable enableExpandButton = new Runnable() {
@@ -59,7 +65,8 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     private LinearLayout expandLayout;
     private NetworkImageViewTopCrop backgroundImageView;
 
-    private ImageLoader imageLoader;
+    private AuthenticationDialog authDialog;
+    private ProgressDialog progressDialog;
     private boolean expanded = false;
     private boolean expandButtonIsEnabled = true;
 
@@ -119,17 +126,9 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         gpsIcon_small.setOnClickListener(this);
         likeButton.setOnClickListener(this);
 
-        imageLoader = new ImageLoader(AIxNetworkManager.getInstance().getRequestQueue(), new ImageLoader.ImageCache() {
-            private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
-            public void putBitmap(String url, Bitmap bitmap) {
-                mCache.put(url, bitmap);
-            }
-            public Bitmap getBitmap(String url) {
-                return mCache.get(url);
-            }
-        });
-        //backgroundImageView.setDefaultImageResId(R.drawable.bar);
-        backgroundImageView.setImageUrl(location.getImagePath(), imageLoader);
+        final String imageUrl = URLFactory.get().createImageUrl(location);
+        final ImageLoader imageLoader = AIxNetworkManager.getInstance().getImageLoader();
+        backgroundImageView.setImageUrl(imageUrl, imageLoader);
 
         locationNameView.setText(location.getName());
         String address = location.getStreet() + " " + location.getHouseNumber() + "\n" + location.getPostalCode() + " " + AIxDataManager.getInstance().getCity(location.getCityId()).getName();
@@ -193,6 +192,17 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
             likeButton.setSelected(false);
         }
         likeCounter.setText(String.valueOf(location.getLikeCount()));
+    }
+
+    public void editOpenHours(){
+        //TODO:
+    }
+
+    public void authenticate() {
+        authDialog = new AuthenticationDialog(getActivity());
+        authDialog.setLocation(location);
+
+        authDialog.show();
     }
 
     @Override
@@ -260,6 +270,12 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
                         item.setVisible(true);
                     }
                     break;
+                case R.id.context_authenticate:
+                    if (!location.isAuthorized()){
+                        item.setEnabled(true);
+                        item.setVisible(true);
+                    }
+                    break;
             }
         }
 
@@ -270,6 +286,10 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.context_edit_open_hours:
+                editOpenHours();
+                return true;
+            case R.id.context_authenticate:
+                authenticate();
                 return true;
         }
         return false;
