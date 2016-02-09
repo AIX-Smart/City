@@ -194,6 +194,10 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         likeCounter.setText(String.valueOf(location.getLikeCount()));
     }
 
+    private void editDescription() {
+        //TODO:
+    }
+
     public void editOpenHours(){
         //TODO:
     }
@@ -260,18 +264,25 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.context_location, menu);
+        boolean isAuthorized = location.isAuthorized();
 
         for (int i = 0; i < menu.size(); i++){
             MenuItem item = menu.getItem(i);
             switch(item.getItemId()){
+                case R.id.context_edit_description:
+                    if (isAuthorized){
+                        item.setEnabled(true);
+                        item.setVisible(true);
+                    }
+                    break;
                 case R.id.context_edit_open_hours:
-                    if (location.isAuthorized()){
+                    if (isAuthorized){
                         item.setEnabled(true);
                         item.setVisible(true);
                     }
                     break;
                 case R.id.context_authenticate:
-                    if (!location.isAuthorized()){
+                    if (!isAuthorized){
                         item.setEnabled(true);
                         item.setVisible(true);
                     }
@@ -285,6 +296,9 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.context_edit_description:
+                editDescription();
+                return true;
             case R.id.context_edit_open_hours:
                 editOpenHours();
                 return true;

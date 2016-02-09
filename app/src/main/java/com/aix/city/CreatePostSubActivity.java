@@ -105,7 +105,7 @@ public class CreatePostSubActivity extends AppCompatActivity {
     public void createPost(){
         //Ask the user for confirmation
         new AlertDialog.Builder(CreatePostSubActivity.this/*new ContextThemeWrapper(CreatePostSubActivity.this, android.R.style.Theme_Holo_Dialog)*/)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                //.setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.create_post_dialog_title)
                         //.setMessage(R.string.create_post_dialog_text)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {

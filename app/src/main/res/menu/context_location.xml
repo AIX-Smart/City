@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/context_edit_description"
+        android:orderInCategory="1"
+        android:enabled="false"
+        android:visible="false"
+        android:title="@string/edit_description"/>
+
+    <item
         android:id="@+id/context_edit_open_hours"
         android:orderInCategory="1"
         android:enabled="false"

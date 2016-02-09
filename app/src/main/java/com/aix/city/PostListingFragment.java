@@ -1,6 +1,9 @@
 package com.aix.city;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
@@ -476,24 +479,33 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        Post post;
-        PostView postView;
+        final Post post = mAdapter.getItem(info.position);
+        final PostView postView = (PostView) info.targetView;
         switch (item.getItemId()){
             case R.id.context_read_comments:
-                postView = (PostView) info.targetView;
                 postView.openComments();
                 return true;
             case R.id.context_open_location:
-                postView = (PostView) info.targetView;
                 postView.openLocation();
                 return true;
             case R.id.context_edit:
-                post = mAdapter.getItem(info.position);
                 editPost(post);
                 return true;
             case R.id.context_delete:
-                post = mAdapter.getItem(info.position);
-                deletePost(post);
+                //Ask the user for confirmation
+                new AlertDialog.Builder(getActivity())
+                        //.setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.delete_post_dialog_title)
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deletePost(post);
+                            }
+
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
                 return true;
             default:
                 return super.onContextItemSelected(item);

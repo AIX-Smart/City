@@ -16,6 +16,7 @@ public class User {
 
     private int id;
     private List<Integer> ownLocationIds;
+    private boolean isAdmin = true;
     private transient Set<Location> favorites = null;
 
     //no-argument constructor for JSON
@@ -33,6 +34,10 @@ public class User {
         return id;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
     @NonNull
     public List<Integer> getOwnLocationIds() {
         if (ownLocationIds == null){
@@ -43,6 +48,11 @@ public class User {
 
     @JsonIgnore
     public boolean isAuthorized(Location location){
+        return isAdmin || isOwner(location);
+    }
+
+    @JsonIgnore
+    public boolean isOwner(Location location){
         return getOwnLocationIds().contains(location.getId());
     }
 
