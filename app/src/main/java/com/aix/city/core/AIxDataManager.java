@@ -38,7 +38,7 @@ public class AIxDataManager extends Observable {
     public static final String HUNGRIG = "Hungrig";
     public static final String DURSTIG = "Durstig";
     public static final String PARTY = "Party";
-    public static final int ALLES_ANDERE_ID = -1;
+    public static final String ALLES_ANDERE_ID = "Alles Andere";
 
     private static AIxDataManager instance;
     private final Context context;
@@ -47,6 +47,9 @@ public class AIxDataManager extends Observable {
     private List<Tag> allTags = new ArrayList<Tag>();
     private List<City> allCities = new ArrayList<City>();
     private Map<Integer, Location> storedLocations = new HashMap<Integer, Location>();
+
+    private boolean IsTagRequestActive = false;
+    private boolean IsLocationRequestActive = false;
 
 
 
@@ -118,7 +121,7 @@ public class AIxDataManager extends Observable {
     @Nullable
     public Tag getTag(String name){
         for(Tag tag: allTags){
-            if(tag.getName().startsWith(name)) return tag;
+            if(tag.getName().toLowerCase().startsWith(name.toLowerCase())) return tag;
         }
         return null;
     }
@@ -148,88 +151,103 @@ public class AIxDataManager extends Observable {
 
     public void requestTags(){
 
-        final Runnable requestRetry = new Runnable() {
-            @Override
-            public void run() {
-                requestTags();
-            }
-        };
-        requestRetryHandler.removeCallbacks(requestRetry);
+        if (!IsTagRequestActive){
+            IsTagRequestActive = true;
+            final Runnable requestRetry = new Runnable() {
+                @Override
+                public void run() {
+                    requestTags();
+                }
+            };
+            requestRetryHandler.removeCallbacks(requestRetry);
 
-        Response.Listener<Tag[]> listener = new Response.Listener<Tag[]>(){
-            @Override
-            public void onResponse(Tag[] response) {
-                allTags = Arrays.asList(response);
-                setChanged();
-                notifyObservers(OBSERVER_KEY_CHANGED_TAGS);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
-            }
-        };
+            Response.Listener<Tag[]> listener = new Response.Listener<Tag[]>(){
+                @Override
+                public void onResponse(Tag[] response) {
+                    allTags = Arrays.asList(response);
+                    setChanged();
+                    notifyObservers(OBSERVER_KEY_CHANGED_TAGS);
+                    IsTagRequestActive = false;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    IsTagRequestActive = false;
+                    requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
+                }
+            };
 
-        AIxNetworkManager.getInstance().requestTags(this, listener, errorListener);
+            AIxNetworkManager.getInstance().requestTags(this, listener, errorListener);
+        }
     }
 
     public void requestCityLocations(City city){
 
-        final Runnable requestRetry = new Runnable() {
-            @Override
-            public void run() {
-                requestCityLocations(getCurrentCity());
-            }
-        };
-        requestRetryHandler.removeCallbacks(requestRetry);
-
-        Response.Listener<Location[]> listener = new Response.Listener<Location[]>(){
-            @Override
-            public void onResponse(Location[] response) {
-                for (int i = 0; i < response.length; i++){
-                    storedLocations.put(response[i].getId(), response[i]);
+        if (!IsLocationRequestActive){
+            IsLocationRequestActive = true;
+            final Runnable requestRetry = new Runnable() {
+                @Override
+                public void run() {
+                    requestCityLocations(getCurrentCity());
                 }
-                setChanged();
-                notifyObservers(OBSERVER_KEY_CHANGED_LOCATIONS);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
-            }
-        };
+            };
+            requestRetryHandler.removeCallbacks(requestRetry);
 
-        AIxNetworkManager.getInstance().requestCityLocations(this, listener, errorListener, city);
+            Response.Listener<Location[]> listener = new Response.Listener<Location[]>(){
+                @Override
+                public void onResponse(Location[] response) {
+                    for (int i = 0; i < response.length; i++){
+                        storedLocations.put(response[i].getId(), response[i]);
+                    }
+                    setChanged();
+                    notifyObservers(OBSERVER_KEY_CHANGED_LOCATIONS);
+                    IsLocationRequestActive = false;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    IsLocationRequestActive = false;
+                    requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
+                }
+            };
+
+            AIxNetworkManager.getInstance().requestCityLocations(this, listener, errorListener, city);
+        }
     }
 
     public void requestLocation(final int locationId){
 
-        final Runnable requestRetry = new Runnable() {
-            @Override
-            public void run() {
-                requestLocation(locationId);
-            }
-        };
-        requestRetryHandler.removeCallbacks(requestRetry);
+        if (!IsLocationRequestActive){
+            IsLocationRequestActive = true;
+            final Runnable requestRetry = new Runnable() {
+                @Override
+                public void run() {
+                    requestLocation(locationId);
+                }
+            };
+            requestRetryHandler.removeCallbacks(requestRetry);
 
-        Response.Listener<Location> listener = new Response.Listener<Location>(){
-            @Override
-            public void onResponse(Location response) {
-                storedLocations.put(response.getId(), response);
-                setChanged();
-                notifyObservers(OBSERVER_KEY_CHANGED_LOCATIONS);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
-            }
-        };
+            Response.Listener<Location> listener = new Response.Listener<Location>(){
+                @Override
+                public void onResponse(Location response) {
+                    storedLocations.put(response.getId(), response);
+                    setChanged();
+                    notifyObservers(OBSERVER_KEY_CHANGED_LOCATIONS);
+                    IsLocationRequestActive = false;
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    IsLocationRequestActive = false;
+                    requestRetryHandler.postDelayed(requestRetry, REQUEST_RETRY_DELAY);
+                }
+            };
 
-        AIxNetworkManager.getInstance().requestLocation(this, listener, errorListener, locationId);
+            AIxNetworkManager.getInstance().requestLocation(this, listener, errorListener, locationId);
+        }
     }
 
     public void refreshData() {

@@ -16,7 +16,7 @@ public class User {
 
     private int id;
     private List<Integer> ownLocationIds;
-    private boolean isAdmin = true;
+    private transient boolean isAdmin = false;
     private transient Set<Location> favorites = null;
 
     //no-argument constructor for JSON
@@ -34,16 +34,22 @@ public class User {
         return id;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
     @NonNull
     public List<Integer> getOwnLocationIds() {
         if (ownLocationIds == null){
             ownLocationIds = new ArrayList<Integer>();
         }
         return ownLocationIds;
+    }
+
+    @JsonIgnore
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    @JsonIgnore
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     @JsonIgnore

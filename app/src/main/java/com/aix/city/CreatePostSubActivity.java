@@ -10,11 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 import com.aix.city.core.data.Event;
@@ -79,21 +76,25 @@ public class CreatePostSubActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (editText != null && sendItem != null){
-                    if (editText.getText().length() == 0) {
-                        if (sendItem.isEnabled()){
-                            sendItem.setEnabled(false);
-                            sendItem.setVisible(false);
-                        }
-                    } else {
-                        if (!sendItem.isEnabled()){
-                            sendItem.setEnabled(true);
-                            sendItem.setVisible(true);
-                        }
-                    }
-                }
+                updateActionVisibility();
             }
         });
+    }
+
+    public void updateActionVisibility(){
+        if (editText != null && sendItem != null){
+            if (editText.getText().length() == 0) {
+                if (sendItem.isEnabled()){
+                    sendItem.setEnabled(false);
+                    sendItem.setVisible(false);
+                }
+            } else {
+                if (!sendItem.isEnabled()){
+                    sendItem.setEnabled(true);
+                    sendItem.setVisible(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -103,8 +104,15 @@ public class CreatePostSubActivity extends AppCompatActivity {
     }
 
     public void createPost(){
+
+        String content = editText.getText().toString();
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_EXTRA_POST_CONTENT, content);
+        setResult(SUCCESS_RETURN_CODE, intent);
+        finish();
+        /*
         //Ask the user for confirmation
-        new AlertDialog.Builder(CreatePostSubActivity.this/*new ContextThemeWrapper(CreatePostSubActivity.this, android.R.style.Theme_Holo_Dialog)*/)
+        new AlertDialog.Builder(CreatePostSubActivity.this*//*new ContextThemeWrapper(CreatePostSubActivity.this, android.R.style.Theme_Holo_Dialog)*//*)
                 //.setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.create_post_dialog_title)
                         //.setMessage(R.string.create_post_dialog_text)
@@ -121,7 +129,7 @@ public class CreatePostSubActivity extends AppCompatActivity {
 
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .show();
+                .show();*/
     }
 
     @Override
@@ -129,7 +137,13 @@ public class CreatePostSubActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.create_post, menu);
         sendItem = menu.findItem(R.id.action_send);
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        updateActionVisibility();
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

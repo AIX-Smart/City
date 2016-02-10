@@ -151,7 +151,7 @@ public class AIxNetworkManager {
         return request;
     }
 
-    protected Request requestAuthentication(Object tag, Response.Listener<Boolean> listener, Response.ErrorListener errorListener, Location location, String mail, String password){
+    protected Request requestAuthentication(Object tag, Response.Listener<Boolean[]> listener, Response.ErrorListener errorListener, Location location, String mail, String password){
         PutAuthenticateRequest request = new PutAuthenticateRequest(listener, errorListener, location, mail, password);
         addRequest(request, tag);
         return request;

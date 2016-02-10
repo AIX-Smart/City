@@ -1,29 +1,22 @@
 package com.aix.city;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aix.city.comm.URLFactory;
 import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
-import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.data.Location;
@@ -38,9 +31,10 @@ import java.util.Observer;
  */
 public class LocationProfileFragment extends ListingSourceFragment implements View.OnClickListener, Observer{
 
-    public static final int MAX_HEIGHT_DP = 210;
-    public static final int MIN_HEIGHT_DP = 150;
+    private static final int NOT_INITIALIZED = -1;
     private static final int EXPAND_BUTTON_DELAY_MS = 400;
+    private static int MAX_HEIGHT = NOT_INITIALIZED;
+    private static int MIN_HEIGHT = NOT_INITIALIZED;
 
     private final Handler handler = new Handler();
     private final Runnable enableExpandButton = new Runnable() {
@@ -89,6 +83,13 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (MAX_HEIGHT == NOT_INITIALIZED){
+            MAX_HEIGHT = getContext().getResources().getDimensionPixelSize(R.dimen.location_profile_max_height);
+        }
+        if (MIN_HEIGHT == NOT_INITIALIZED){
+            MIN_HEIGHT = getContext().getResources().getDimensionPixelSize(R.dimen.location_profile_min_height);
+        }
 
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
@@ -159,7 +160,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     public void expand(){
 
         ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
-        params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MAX_HEIGHT_DP, getResources().getDisplayMetrics());
+        params.height = MAX_HEIGHT;
         mainLayout.setLayoutParams(params);
 
         expandLayout.setVisibility(View.VISIBLE);
@@ -173,7 +174,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     public void collapse(){
 
         ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
-        params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_DP, getResources().getDisplayMetrics());
+        params.height = MIN_HEIGHT;
         mainLayout.setLayoutParams(params);
 
         expandLayout.setVisibility(View.GONE);
@@ -269,7 +270,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         for (int i = 0; i < menu.size(); i++){
             MenuItem item = menu.getItem(i);
             switch(item.getItemId()){
-                case R.id.context_edit_description:
+                /*case R.id.context_edit_description:
                     if (isAuthorized){
                         item.setEnabled(true);
                         item.setVisible(true);
@@ -280,7 +281,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
                         item.setEnabled(true);
                         item.setVisible(true);
                     }
-                    break;
+                    break;*/
                 case R.id.context_authenticate:
                     if (!isAuthorized){
                         item.setEnabled(true);

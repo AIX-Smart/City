@@ -14,32 +14,32 @@ public abstract class Likeable extends Observable {
 
     public static final String OBSERVER_KEY_CHANGED_LIKESTATUS = "likeStatus";
 
-    private boolean liked; //current user has already liked this post
+    private boolean isLiked; //current user has already liked this post
     private int likeCount;
 
     public Likeable(){
 
     }
 
-    public Likeable(boolean liked, int likeCount) {
-        this.liked = liked;
+    public Likeable(boolean isLiked, int likeCount) {
+        this.isLiked = isLiked;
         this.likeCount = likeCount;
     }
 
     //implements Parcelable
     public Likeable(Parcel in){
-        liked = (in.readInt() != 0);
+        isLiked = (in.readInt() != 0);
         likeCount = in.readInt();
     }
 
     public boolean isLiked() {
-        return liked;
+        return isLiked;
     }
 
     /**Internal use only!*/
-    public void rawSetLiked(boolean liked) {
-        if(this.liked != liked){
-            this.liked = liked;
+    public void rawSetIsLiked(boolean liked) {
+        if(this.isLiked != liked){
+            this.isLiked = liked;
             setChanged();
         }
     }
@@ -65,7 +65,7 @@ public abstract class Likeable extends Observable {
                 @Override
                 public void onResponse(Boolean response) {
                     if (!isLiked()) rawSetLikeCount(futureLikeCount);
-                    rawSetLiked(true);
+                    rawSetIsLiked(true);
                     notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
@@ -87,7 +87,7 @@ public abstract class Likeable extends Observable {
                 @Override
                 public void onResponse(Boolean response) {
                     if (isLiked()) rawSetLikeCount(futureLikeCount);
-                    rawSetLiked(false);
+                    rawSetIsLiked(false);
                     notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
                 }
             };
@@ -106,7 +106,7 @@ public abstract class Likeable extends Observable {
         Response.Listener<Boolean> likeStatusListener = new Response.Listener<Boolean>(){
             @Override
             public void onResponse(Boolean response) {
-                rawSetLiked(response);
+                rawSetIsLiked(response);
                 notifyObservers(OBSERVER_KEY_CHANGED_LIKESTATUS);
             }
         };

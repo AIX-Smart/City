@@ -1,6 +1,7 @@
 package com.aix.city;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.AIxDataManager;
@@ -11,9 +12,12 @@ import com.aix.city.core.AIxLoginModule;
  */
 public class AIxApplication extends Application {
 
+    private static Context mContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
 
         // Initialize the singletons so their instances
         // are bound to the application process.
@@ -27,5 +31,7 @@ public class AIxApplication extends Application {
         super.onTerminate();
     }
 
-
+    public static Context getContext(){
+        return mContext;
+    }
 }

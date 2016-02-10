@@ -30,8 +30,7 @@ public class AIxJsonRequest<T> extends JsonRequest<T> {
      * @param shouldCache
      *            Whether or not responses to this request should be cached
      */
-    public AIxJsonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean shouldCache)
-    {
+    public AIxJsonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener, boolean shouldCache) {
         super(method, url, (requestData == null) ? null : Mapper.string(requestData), listener, errorListener);
         this.responseType = responseType;
         this.setShouldCache(shouldCache);

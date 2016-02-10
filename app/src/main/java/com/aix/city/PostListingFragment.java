@@ -3,7 +3,6 @@ package com.aix.city;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
@@ -19,14 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aix.city.core.AIxDataManager;
-import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.Likeable;
 import com.aix.city.core.PostListing;
-import com.aix.city.core.data.Comment;
 import com.aix.city.core.data.Event;
-import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.aix.city.view.MonochromePostAdapter;
 import com.aix.city.view.PostAdapter;
@@ -261,8 +257,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
         super.onStart();
 
-        setLoading(mPostListing.isWaitingForInit());
-        setFinished(mPostListing.isFinished());
+        setIsLoading(mPostListing.isWaitingForInit());
+        setIsFinished(mPostListing.isFinished());
 
         mUpdateTaskHandler.post(mUpdateTask);
     }
@@ -312,17 +308,17 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void setOrder(PostListing.Order order) {
         if (order != mPostListing.getOrder()){
             cancelRequests();
-            setFinished(false);
-            setLoading(true);
             mPostListing.setOrder(order);
+            setIsFinished(false);
+            setIsLoading(true);
         }
     }
 
-    public void setLoading(boolean isLoading){
+    public void setIsLoading(boolean isLoading){
         this.mIsLoading = isLoading;
     }
 
-    public void setFinished(boolean finished){
+    public void setIsFinished(boolean finished){
         if (finished){
             mListView.removeFooterView(mLoadingPanel);
             if (mPostListing.getPosts().isEmpty()){
@@ -344,8 +340,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void refresh(){
         if (!isLoading()){
             cancelRequests();
-            setLoading(true);
-            setFinished(false);
+            setIsLoading(true);
+            setIsFinished(false);
             mPostListing.refresh();
         }
     }
@@ -355,7 +351,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public void loadOlderPosts(){
-        setLoading(true);
+        setIsLoading(true);
         mPostListing.loadPosts();
     }
 
@@ -367,7 +363,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             switch (key) {
                 case PostListing.OBSERVER_KEY_CHANGED_DATASET:
                     mAdapter.notifyDataSetChanged();
-                    setLoading(false);
+                    setIsLoading(false);
                     if (!mPostListing.getPosts().isEmpty()) {
                         mEmptyView.setVisibility(View.GONE);
                     }
@@ -382,8 +378,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                     mAdapter.updateVisibleViews();
                     break;
                 case PostListing.OBSERVER_KEY_FINISHED:
-                    setLoading(false);
-                    setFinished(true);
+                    setIsLoading(false);
+                    setIsFinished(true);
                     break;
             }
         }
@@ -391,7 +387,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     public void update(){
         if (mPostListing.isWaitingForInit()){
-            setLoading(true);
+            setIsLoading(true);
             mPostListing.loadInitialPosts();
         }
         else{
@@ -454,12 +450,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                     case R.id.context_open_location:
                         if (post instanceof Event){
                             item.setTitle("Öffne " + ((Event) post).getLocation().getName() + "-Profil");
-                            item.setVisible(true);
-                            item.setEnabled(true);
-                        }
-                        break;
-                    case R.id.context_edit:
-                        if (AIxLoginModule.getInstance().getLoggedInUser().getId() == post.getAuthorId()){
                             item.setVisible(true);
                             item.setEnabled(true);
                         }

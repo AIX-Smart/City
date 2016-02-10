@@ -27,9 +27,9 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public static final int PARCEL_DESCRIPTION_EDITABLE_EVENT_LISTING = 1;
     public static final int PARCEL_DESCRIPTION_EDITABLE_COMMENT_LISTING = 2;
 
-    public static final String OBSERVER_KEY_CHANGED_DATASET = "dataSet";
-    public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "editabilty";
-    public static final String OBSERVER_KEY_FINISHED = "finished";
+    public static final String OBSERVER_KEY_CHANGED_DATASET = "PostListing.dataSet";
+    public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "PostListing.editabilty";
+    public static final String OBSERVER_KEY_FINISHED = "PostListing.isFinished";
 
     public final Handler requestRetryHandler = new Handler();
     public static final Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -41,8 +41,8 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     private List<Post> posts  = new ArrayList<Post>();
     private ListingSource listingSource;
-    private boolean finished = false;
-    private boolean waitingForInit = true;
+    private boolean isFinished = false;
+    private boolean isWaitingForInit = true;
     private boolean isLoadingNewerPosts = false;
     private boolean isLoadingPosts = false;
     private int postNum = POST_REQUEST_NUM;
@@ -65,8 +65,8 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public PostListing(Parcel in){
         in.readTypedList(posts, Post.CREATOR);
         listingSource = in.readParcelable(ListingSource.class.getClassLoader());
-        finished = (in.readInt() != 0);
-        waitingForInit = (in.readInt() != 0);
+        isFinished = (in.readInt() != 0);
+        isWaitingForInit = (in.readInt() != 0);
     }
 
     public ListingSource getListingSource() {
@@ -145,16 +145,16 @@ public class PostListing extends Observable implements Observer, Parcelable {
     }
 
     public boolean isFinished() {
-        return finished;
+        return isFinished;
     }
 
     public boolean isWaitingForInit() {
-        return waitingForInit;
+        return isWaitingForInit;
     }
 
     public void setFinished() {
-        if(!finished) {
-            finished = true;
+        if(!isFinished) {
+            isFinished = true;
             setChanged();
             notifyObservers(OBSERVER_KEY_FINISHED);
         }
@@ -172,7 +172,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     }
 
     public void loadInitialPosts() {
-        if (waitingForInit){
+        if (isWaitingForInit){
             loadPosts();
         }
     }
@@ -183,7 +183,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
             Post oldestPost = null;
             if(posts.isEmpty()){
-                waitingForInit = false;
+                isWaitingForInit = false;
             }
             else{
                 switch (order){
@@ -210,7 +210,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (posts.isEmpty() && !isFinished()){
-                        waitingForInit = true;
+                        isWaitingForInit = true;
                     }
                     isLoadingPosts = false;
                 }
@@ -257,8 +257,8 @@ public class PostListing extends Observable implements Observer, Parcelable {
         cancelRequests();
         posts.clear();
         postNum = POST_REQUEST_NUM;
-        waitingForInit = true;
-        finished = false;
+        isWaitingForInit = true;
+        isFinished = false;
 
         setChanged();
         notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
@@ -354,7 +354,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         dest.writeTypedList(getPosts());
         dest.writeParcelable(getListingSource(), flags);
         dest.writeInt(isFinished() ? 1 : 0);
-        dest.writeInt(waitingForInit ? 1 : 0);
+        dest.writeInt(isWaitingForInit ? 1 : 0);
     }
 
     public static final Parcelable.Creator<PostListing> CREATOR =

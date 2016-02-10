@@ -323,6 +323,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
                     fragment.refresh();
                 }
                 getPostListingFragment().refresh();
+                AIxDataManager.getInstance().refreshData();
                 return true;
         }
         // If we got here, the user's action was not recognized.

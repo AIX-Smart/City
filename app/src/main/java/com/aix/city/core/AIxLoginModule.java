@@ -76,13 +76,20 @@ public class AIxLoginModule extends Observable {
 
     public void authenticate(final Location location, String mail, String password){
 
-        Response.Listener<Boolean> listener = new Response.Listener<Boolean>() {
+        Response.Listener<Boolean[]> listener = new Response.Listener<Boolean[]>() {
             @Override
-            public void onResponse(Boolean response) {
+            public void onResponse(Boolean[] response) {
                 setChanged();
-                if (response){
-                    loggedInUser.addLocation(location);
-                    invalidateUserCache();
+                boolean isOwner = response[0];
+                boolean isAdmin = response[1];
+                if (isOwner || isAdmin){
+                    if (isOwner){
+                        loggedInUser.addLocation(location);
+                        invalidateUserCache();
+                    }
+                    else{
+                        loggedInUser.setIsAdmin(true);
+                    }
                     notifyObservers(OBSERVER_KEY_AUTHENTICATE_SUCCESS);
                 }
                 else{
