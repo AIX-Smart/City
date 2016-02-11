@@ -68,6 +68,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/post_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:paddingBottom="3dp"

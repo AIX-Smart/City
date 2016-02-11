@@ -11,7 +11,7 @@ import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.aix.city.BaseListingActivity;
+import com.aix.city.AIxMainActivity;
 import com.aix.city.R;
 import com.aix.city.core.data.Tag;
 
@@ -94,7 +94,7 @@ public class TagAdapter extends ArrayAdapter<Tag> implements Filterable {
     }
 
     public void startBaseListingActivity(Tag tag){
-        BaseListingActivity activity = (BaseListingActivity) fragment.getActivity();
+        AIxMainActivity activity = (AIxMainActivity) fragment.getActivity();
         activity.startActivity(tag);
     }
 

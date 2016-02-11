@@ -1,16 +1,16 @@
 package com.aix.city.view;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.aix.city.BaseListingActivity;
+import com.aix.city.AIxMainActivity;
 import com.aix.city.PostListingFragment;
 import com.aix.city.R;
 import com.aix.city.core.ListingSource;
+import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 
@@ -30,16 +30,27 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
 
     private final PostListingFragment fragment;
     private final List<Post> posts;
-    private Map<Post, Integer> postColorMap = new HashMap<Post, Integer>();
+    private final Map<Post, Integer> postColorMap_newest = new HashMap<Post, Integer>();
+    private final Map<Post, Integer> postColorMap_popular = new HashMap<Post, Integer>();
+    private Map<Post, Integer> postColorMap = postColorMap_newest;
     private final Set<PostView> createdViews = new HashSet<PostView>();
 
     private Post firstColoredPost = null;
     private Post lastColoredPost = null;
 
     public PostAdapter(PostListingFragment fragment, List<Post> posts) {
+        this(fragment, posts, null, PostListingFragment.DEFAULT_COLOR_VALUE);
+    }
+
+    public PostAdapter(PostListingFragment fragment, List<Post> posts, Post linkedPost, int postColor) {
         super(fragment.getContext(), -1, posts);
         this.fragment = fragment;
         this.posts = posts;
+        if (linkedPost != null){
+            postColorMap.put(linkedPost, postColor);
+            firstColoredPost = linkedPost;
+            lastColoredPost = linkedPost;
+        }
 
         if (POST_COLORS.isEmpty()){
             POST_COLORS.add(fragment.getContext().getResources().getColor(R.color.post_color_blue));
@@ -66,7 +77,7 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
 
         final Post post = getItem(position);
         postView.setPost(post);
-        dyePost(post);
+        //dyePost(post);
         postView.update();
 
         return postView;
@@ -92,6 +103,11 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
 
             if (!posts.contains(post)){
                 throw new IllegalArgumentException();
+            }
+            if (firstColoredPost != null && !posts.contains(firstColoredPost)){
+                postColorMap.clear();
+                firstColoredPost = null;
+                lastColoredPost = null;
             }
 
             int colorIndex;
@@ -135,7 +151,9 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
 
     @Override
     public int getPostColor(Post post){
-        return postColorMap.get(post);
+        int index = post.hashCode() % POST_COLORS.size();
+        return POST_COLORS.get(index);
+        //return postColorMap.get(post);
     }
 
     @Override
@@ -144,18 +162,18 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
     }
 
     @Override
-    public BaseListingActivity getActivity() {
-        return (BaseListingActivity) fragment.getActivity();
+    public AIxMainActivity getActivity() {
+        return (AIxMainActivity) fragment.getActivity();
     }
 
     @Override
     public void startActivity(ListingSource listingSource){
-        getActivity().startActivity(listingSource);
+        fragment.startActivity(listingSource, PostListingFragment.DEFAULT_COLOR_VALUE, null);
     }
 
     @Override
-    public void startActivity(ListingSource listingSource, int postColor){
-        getActivity().startActivity(listingSource, postColor);
+    public void startActivity(ListingSource listingSource, int postColor, Post linkedPost) {
+        fragment.startActivity(listingSource, postColor, linkedPost);
     }
 
     @Override
@@ -169,9 +187,20 @@ public class PostAdapter extends ArrayAdapter<Post> implements PostViewContext {
 
     @Override
     public void notifyDataSetChanged() {
+        postColorMap_popular.clear();
         super.notifyDataSetChanged();
     }
 
+    public void setOrder(PostListing.Order order){
+        switch (order){
+            case NEWEST_FIRST:
+                postColorMap = postColorMap_newest;
+                break;
+            case POPULAR_FIRST:
+                postColorMap = postColorMap_popular;
+                break;
+        }
+    }
 
 }
 

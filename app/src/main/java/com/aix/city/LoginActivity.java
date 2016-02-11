@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     }
 
     public void finishLoginActivity(){
-        Intent intent = new Intent(this, BaseListingActivity.class);
+        Intent intent = new Intent(this, AIxMainActivity.class);
         startActivity(intent);
         finish();
     }

@@ -21,6 +21,8 @@ import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxNetworkManager;
 import com.aix.city.core.EditableCommentListing;
 import com.aix.city.core.Likeable;
+import com.aix.city.core.ListingSource;
+import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
@@ -43,24 +45,6 @@ import java.util.Observer;
  */
 public class PostListingFragment extends ListFragment implements Observer, AbsListView.OnScrollListener {
 
-    //bundle argument key for creation
-    public static final String ARG_POST_LISTING = "PostListingFragment.PostListing";
-    //optional bundle argument key for creation
-    public static final String ARG_POST_COLOR = "PostListingFragment.color";
-    public static final int DEFAULT_COLOR_VALUE = 0xffffffff;
-    public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
-    //timer delay for update requests in milliseconds
-    public static final int UPDATE_DELAY_MS = 8000;
-    //handler for timed updates
-    private final Handler mUpdateTaskHandler = new Handler();
-    private final Runnable mUpdateTask = new Runnable() {
-        @Override
-        public void run() {
-            update();
-            mUpdateTaskHandler.postDelayed(this, UPDATE_DELAY_MS);
-        }
-    };
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -75,42 +59,64 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         public void onFragmentInteraction(String key);
     }
 
+    //bundle argument key for creation
+    public static final String ARG_POST_LISTING = "PostListingFragment.postListing";
+    public static final String ARG_LINKED_POST = "PostListingFragment.linkedPost";
+    //optional bundle argument key for creation
+    public static final String ARG_POST_COLOR = "PostListingFragment.color";
+    public static final int DEFAULT_COLOR_VALUE = 0xffffffff;
+    public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
+    //timer delay for update requests in milliseconds
+    public static final int UPDATE_DELAY_MS = 8000;
+    //handler for timed updates
+    private final Handler updateTaskHandler = new Handler();
+    private final Runnable updateTask = new Runnable() {
+        @Override
+        public void run() {
+            update();
+            updateTaskHandler.postDelayed(this, UPDATE_DELAY_MS);
+        }
+    };
+
     /**
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
-    private PostListing mPostListing;
-    private int postColor;
+    private PostListing postListing;
+    private int postColor = DEFAULT_COLOR_VALUE;
+    private Post linkedPost = null;
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener listener;
 
     /**
      * The fragment's ListView/GridView.
      */
-    private ListView mListView;
+    private ListView listView;
 
-    private TextView mEmptyView;
+    private TextView emptyView;
 
-    private View mLoadingPanel;
+    private View loadingPanel;
 
     //true if fragment waits for a response of the server
-    private boolean mIsLoading = false;
-
-
+    private boolean isLoading = false;
+    private boolean isErrorOccured = false;
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private PostAdapter mAdapter;
+    private PostAdapter adapter;
+
+
 
     public static PostListingFragment newInstance(PostListing postListing) {
-        return newInstance(postListing, DEFAULT_COLOR_VALUE);
+        return newInstance(postListing, DEFAULT_COLOR_VALUE, null);
     }
 
-    public static PostListingFragment newInstance(PostListing postListing, int postColor) {
+    public static PostListingFragment newInstance(PostListing postListing, int postColor, Post linkedPost) {
         PostListingFragment fragment = new PostListingFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_LISTING, postListing);
         args.putInt(ARG_POST_COLOR, postColor);
+        args.putParcelable(ARG_LINKED_POST, linkedPost);
         fragment.setArguments(args);
         return fragment;
     }
@@ -123,21 +129,22 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     }
 
     public PostListing getPostListing() {
-        return mPostListing;
+        return postListing;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mListener = (OnFragmentInteractionListener) getActivity();
+        listener = (OnFragmentInteractionListener) getActivity();
 
         //get instance data
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_POST_LISTING);
             postColor = getArguments().getInt(ARG_POST_COLOR, DEFAULT_COLOR_VALUE);
+            linkedPost = getArguments().getParcelable(ARG_LINKED_POST);
             if(obj != null && obj instanceof PostListing){
-                mPostListing = (PostListing)obj;
+                postListing = (PostListing)obj;
             }
             else{
                 throw new IllegalStateException();
@@ -154,31 +161,31 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         View view = inflater.inflate(R.layout.fragment_listing, container, false);
 
         // Set the adapter
-        mListView = (ListView) view.findViewById(android.R.id.list);
-        mEmptyView = (TextView)view.findViewById(R.id.emptyText);
-        mLoadingPanel = inflater.inflate(R.layout.list_footer_loading, mListView, false);
+        listView = (ListView) view.findViewById(android.R.id.list);
+        emptyView = (TextView)view.findViewById(R.id.emptyText);
+        loadingPanel = inflater.inflate(R.layout.list_footer_loading, listView, false);
 
         //create postview-adapter
-        if (postColor == DEFAULT_COLOR_VALUE){
-            mAdapter = new PostAdapter(this, mPostListing.getPosts());
-            mListView.setDivider(null);
-            mListView.setDividerHeight(0);
+        if (postListing.getListingSource().getType() == ListingSourceType.EVENT){
+            adapter = new MonochromePostAdapter(this, postListing.getPosts(), postColor, ((Event) postListing.getListingSource()).getLocation());
         }
         else{
-            if (mPostListing.getListingSource() instanceof Event){
-                mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor, ((Event) mPostListing.getListingSource()).getLocation());
+            if (linkedPost == null){
+                adapter = new PostAdapter(this, postListing.getPosts());
             }
-            else{
-                mAdapter = new MonochromePostAdapter(this, mPostListing.getPosts(), postColor);
+            else {
+                adapter = new PostAdapter(this, postListing.getPosts(), linkedPost, postColor);
             }
-            mListView.setBackgroundColor(postColor);
+            //listView.setDivider(null);
+            //listView.setDividerHeight(0);
         }
+        listView.setBackgroundColor(postColor);
 
-        mListView.addFooterView(mLoadingPanel);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnScrollListener(this);
-        mEmptyView.setVisibility(View.GONE);
-        registerForContextMenu(mListView);
+        listView.addFooterView(loadingPanel);
+        listView.setAdapter(adapter);
+        listView.setOnScrollListener(this);
+        emptyView.setVisibility(View.GONE);
+        registerForContextMenu(listView);
 
         return view;
     }
@@ -186,7 +193,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_POST_LISTING, mPostListing);
+        outState.putParcelable(ARG_POST_LISTING, postListing);
     }
 
     public void createPost(String postContent) {
@@ -195,8 +202,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             public void run() {
                 final String message = getResources().getString(R.string.postCreationMessage_successful);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                if (mPostListing instanceof EditableCommentListing){
-                    final Event event = ((EditableCommentListing)mPostListing).getEvent();
+                if (postListing instanceof EditableCommentListing){
+                    final Event event = ((EditableCommentListing) postListing).getEvent();
                     event.setCommentCount(event.getCommentCount() + 1);
                 }
             }
@@ -209,7 +216,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             }
         };
 
-        boolean isCreationAllowed = mPostListing.createPost(postContent, successCommand, errorCommand);
+        boolean isCreationAllowed = postListing.createPost(postContent, successCommand, errorCommand);
 
         if (!isCreationAllowed){
             final String message = getResources().getString(R.string.postCreationMessage_not_allowed);
@@ -223,8 +230,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             public void run() {
                 final String message = getResources().getString(R.string.postDeletionMessage_successful);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                if (mPostListing instanceof EditableCommentListing){
-                    final Event event = ((EditableCommentListing)mPostListing).getEvent();
+                if (postListing instanceof EditableCommentListing){
+                    final Event event = ((EditableCommentListing) postListing).getEvent();
                     event.setCommentCount(event.getCommentCount() - 1);
                 }
             }
@@ -237,7 +244,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
             }
         };
 
-        boolean isDeletionAllowed = mPostListing.deletePost(post, successCommand, errorCommand);
+        boolean isDeletionAllowed = postListing.deletePost(post, successCommand, errorCommand);
 
         if (!isDeletionAllowed){
             final String message = getResources().getString(R.string.postDeletionMessage_not_allowed);
@@ -252,31 +259,32 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     @Override
     public void onStart() {
-        mPostListing.addObserver(this);
+        postListing.addObserver(this);
         AIxDataManager.getInstance().addObserver(this);
+        isErrorOccured = false;
 
         super.onStart();
 
-        setIsLoading(mPostListing.isWaitingForInit());
-        setIsFinished(mPostListing.isFinished());
+        setIsLoading(postListing.isWaitingForInit());
+        setIsFinished(postListing.isFinished());
 
-        mUpdateTaskHandler.post(mUpdateTask);
+        updateTaskHandler.post(updateTask);
     }
 
     @Override
     public void onStop() {
-        mUpdateTaskHandler.removeCallbacks(mUpdateTask);
+        updateTaskHandler.removeCallbacks(updateTask);
         cancelRequests();
         super.onStop();
 
-        mPostListing.deleteObserver(this);
+        postListing.deleteObserver(this);
         AIxDataManager.getInstance().deleteObserver(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.updateVisibleViews();
+        adapter.updateVisibleViews();
     }
 
     @Override
@@ -288,7 +296,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            listener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -298,61 +306,73 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
 
     public void cancelRequests(){
         AIxNetworkManager.getInstance().cancelAllRequests(this);
     }
 
-    public void setOrder(PostListing.Order order) {
-        if (order != mPostListing.getOrder()){
-            cancelRequests();
-            mPostListing.setOrder(order);
-            setIsFinished(false);
-            setIsLoading(true);
-        }
-    }
-
-    public void setIsLoading(boolean isLoading){
-        this.mIsLoading = isLoading;
-    }
-
-    public void setIsFinished(boolean finished){
-        if (finished){
-            mListView.removeFooterView(mLoadingPanel);
-            if (mPostListing.getPosts().isEmpty()){
-                mEmptyView.setVisibility(View.VISIBLE);
-            }
-        }
-        else{
-            if (mListView.getFooterViewsCount() == 0){
-                mListView.addFooterView(mLoadingPanel);
-            }
-            mEmptyView.setVisibility(View.GONE);
-        }
-    }
-
-    public boolean isLoading(){
-        return mIsLoading;
+    private void clear(){
+        cancelRequests();
+        setIsLoading(true);
+        setIsFinished(false);
+        isErrorOccured = false;
     }
 
     public void refresh(){
         if (!isLoading()){
-            cancelRequests();
-            setIsLoading(true);
-            setIsFinished(false);
-            mPostListing.refresh();
+            clear();
+            postListing.refresh();
         }
     }
 
+    public void setOrder(PostListing.Order order) {
+        if (order != postListing.getOrder()){
+            clear();
+            postListing.setOrder(order);
+            adapter.setOrder(order);
+        }
+    }
+
+    public void setIsLoading(boolean isLoading){
+        this.isLoading = isLoading;
+    }
+
+    public void setIsFinished(boolean finished){
+        if (finished){
+            listView.removeFooterView(loadingPanel);
+            if (postListing.getPosts().isEmpty()){
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        }
+        else{
+            if (listView.getFooterViewsCount() == 0){
+                listView.addFooterView(loadingPanel);
+            }
+            emptyView.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean isLoading(){
+        return isLoading;
+    }
+
     public void loadNewerPosts(){
-        mPostListing.loadNewerPosts();
+        postListing.loadNewerPosts();
     }
 
     public void loadOlderPosts(){
         setIsLoading(true);
-        mPostListing.loadPosts();
+        postListing.loadPosts();
+    }
+
+    public AIxMainActivity getAIxActivity() {
+        return (AIxMainActivity) getActivity();
+    }
+
+    public void startActivity(ListingSource listingSource, int postColor, Post link) {
+        getAIxActivity().startActivity(listingSource, postColor, link);
     }
 
     @Override
@@ -362,37 +382,40 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
             switch (key) {
                 case PostListing.OBSERVER_KEY_CHANGED_DATASET:
-                    mAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                     setIsLoading(false);
-                    if (!mPostListing.getPosts().isEmpty()) {
-                        mEmptyView.setVisibility(View.GONE);
+                    if (!postListing.getPosts().isEmpty()) {
+                        emptyView.setVisibility(View.GONE);
                     }
                     break;
                 case INTERACTION_KEY_CHANGED_EDITABILITY:
-                    mListener.onFragmentInteraction(PostListing.OBSERVER_KEY_CHANGED_EDITABILITY);
+                    listener.onFragmentInteraction(PostListing.OBSERVER_KEY_CHANGED_EDITABILITY);
                     break;
                 case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
-                    mAdapter.updateVisibleViews();
+                    adapter.updateVisibleViews();
                     break;
                 case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
-                    mAdapter.updateVisibleViews();
+                    adapter.updateVisibleViews();
                     break;
                 case PostListing.OBSERVER_KEY_FINISHED:
                     setIsLoading(false);
                     setIsFinished(true);
+                    break;
+                case PostListing.OBSERVER_KEY_CONNECTION_ERROR:
+                    isErrorOccured = true;
                     break;
             }
         }
     }
 
     public void update(){
-        if (mPostListing.isWaitingForInit()){
+        if (postListing.isWaitingForInit()){
             setIsLoading(true);
-            mPostListing.loadInitialPosts();
+            postListing.loadInitialPosts();
         }
         else{
-            if (!mPostListing.isEmpty()){
-                PostListing.Order order = mPostListing.getOrder();
+            if (!postListing.isEmpty()){
+                PostListing.Order order = postListing.getOrder();
                 if (order == null){
                     order = PostListing.Order.NEWEST_FIRST;
                 }
@@ -406,7 +429,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                                 }
                             }
                         };
-                        AIxNetworkManager.getInstance().requestIsUpToDate(this, upToDateListener, mPostListing);
+                        AIxNetworkManager.getInstance().requestIsUpToDate(this, upToDateListener, postListing);
                         break;
                     case POPULAR_FIRST:
                         break;
@@ -418,10 +441,13 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-        if(!isLoading() && !mPostListing.isFinished() && visibleItemCount != 0 && !mPostListing.isEmpty()){
-            final int lastVisibleItem = firstVisibleItem + visibleItemCount;
-            if(lastVisibleItem == totalItemCount) {
-                loadOlderPosts();
+        if (!postListing.isFinished() && visibleItemCount != 0 && !postListing.isEmpty()) {
+            if (!isLoading() || isErrorOccured) {
+                final int lastVisibleItem = firstVisibleItem + visibleItemCount;
+                if (lastVisibleItem == totalItemCount) {
+                    loadOlderPosts();
+                    isErrorOccured = false;
+                }
             }
         }
     }
@@ -435,7 +461,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId() == android.R.id.list){
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            Post post = mAdapter.getItem(info.position);
+            Post post = adapter.getItem(info.position);
             getActivity().getMenuInflater().inflate(R.menu.context_post, menu);
 
             for (int i = 0; i < menu.size(); i++){
@@ -448,7 +474,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                         }
                         break;
                     case R.id.context_open_location:
-                        if (post instanceof Event){
+                        if (post instanceof Event && !((Event) post).getLocation().equals(postListing.getListingSource())){
                             item.setTitle("Öffne " + ((Event) post).getLocation().getName() + "-Profil");
                             item.setVisible(true);
                             item.setEnabled(true);
@@ -469,7 +495,7 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        final Post post = mAdapter.getItem(info.position);
+        final Post post = adapter.getItem(info.position);
         final PostView postView = (PostView) info.targetView;
         switch (item.getItemId()){
             case R.id.context_read_comments:

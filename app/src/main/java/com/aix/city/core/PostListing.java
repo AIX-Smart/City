@@ -30,6 +30,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public static final String OBSERVER_KEY_CHANGED_DATASET = "PostListing.dataSet";
     public static final String OBSERVER_KEY_CHANGED_EDITABILITY = "PostListing.editabilty";
     public static final String OBSERVER_KEY_FINISHED = "PostListing.isFinished";
+    public static final String OBSERVER_KEY_CONNECTION_ERROR = "PostListing.error";
 
     public final Handler requestRetryHandler = new Handler();
     public static final Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -196,23 +197,30 @@ public class PostListing extends Observable implements Observer, Parcelable {
                 }
             }
 
+            final Order oldOrder = order;
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>(){
                 @Override
                 public void onResponse(Post[] response) {
-                    if(response.length < postNum){
-                        setFinished();
+                    if (order == oldOrder){
+                        if(response.length < postNum){
+                            setFinished();
+                        }
+                        addPosts(response);
+                        isLoadingPosts = false;
                     }
-                    addPosts(response);
-                    isLoadingPosts = false;
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (posts.isEmpty() && !isFinished()){
-                        isWaitingForInit = true;
+                    if (order == oldOrder){
+                        if (posts.isEmpty() && !isFinished()){
+                            isWaitingForInit = true;
+                        }
+                        isLoadingPosts = false;
+                        setChanged();
+                        notifyObservers(OBSERVER_KEY_CONNECTION_ERROR);
                     }
-                    isLoadingPosts = false;
                 }
             };
 
@@ -226,19 +234,25 @@ public class PostListing extends Observable implements Observer, Parcelable {
     public boolean loadNewerPosts() {
         if (!isEmpty() && !isLoadingNewerPosts) {
             isLoadingNewerPosts = true;
+
+            final Order oldOrder = order;
             Response.Listener<Post[]> listener = new Response.Listener<Post[]>() {
                 @Override
                 public void onResponse(Post[] response) {
-                    if (posts.size() != 0) {
-                        addNewerPosts(response);
+                    if (order == oldOrder) {
+                        if (posts.size() != 0) {
+                            addNewerPosts(response);
+                        }
+                        isLoadingNewerPosts = false;
                     }
-                    isLoadingNewerPosts = false;
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    isLoadingNewerPosts = false;
+                    if (order == oldOrder) {
+                        isLoadingNewerPosts = false;
+                    }
                 }
             };
 
@@ -257,6 +271,8 @@ public class PostListing extends Observable implements Observer, Parcelable {
         cancelRequests();
         posts.clear();
         postNum = POST_REQUEST_NUM;
+        isLoadingNewerPosts = false;
+        isLoadingPosts = false;
         isWaitingForInit = true;
         isFinished = false;
 
@@ -271,7 +287,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
 
     /**
      *  creates a new Post in this listing and sends it to the server.
-        Does nothing if posts cannot be created in this context.
+     Does nothing if posts cannot be created in this context.
      * @param content content/message of the created Post
      * @param successCommand will be executed if the creation was successful
      *@param errorCommand will be executed if an error occurred

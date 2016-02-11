@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Location;
+import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
 import com.aix.city.core.data.User;
 import com.android.volley.Response;

@@ -41,7 +41,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     private RadioButton popularFirstButton;
     private SearchSuggestionAdapter searchAdapter;
 
-    private BaseListingActivity mActivity;
+    private AIxMainActivity mActivity;
 
     /**
      * Use this factory method to create a new instance of
@@ -127,7 +127,7 @@ public class LeftDrawerFragment extends Fragment implements Observer, View.OnCli
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mActivity = (BaseListingActivity) activity;
+            mActivity = (AIxMainActivity) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");

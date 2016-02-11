@@ -8,16 +8,13 @@ import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.ThemedSpinnerAdapter;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.FilterQueryProvider;
 import android.widget.TextView;
 
-import com.aix.city.BaseListingActivity;
 import com.aix.city.R;
-import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.ListingSource;
 import com.aix.city.core.Searchable;
 

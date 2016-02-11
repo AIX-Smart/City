@@ -55,4 +55,5 @@
     <string name="authentification_incorrect">Inkorrekte E-Mail-Adresse oder Passwort</string>
     <string name="delete_post_dialog_title">Lösche Post</string>
     <string name="edit_description">Editiere Beschreibung</string>
+    <string name="location_expand_description">expandButton</string>
 </resources>

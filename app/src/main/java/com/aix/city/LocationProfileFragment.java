@@ -53,6 +53,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
     private ImageView expandMoreIcon;
     private ImageView expandLessIcon;
     private TextView openHoursView;
+    private TextView openText;
     private TextView addressView;
     private ImageButton gpsIcon_big;
     private ImageButton gpsIcon_small;
@@ -116,6 +117,7 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         expandLessIcon = (ImageView) mainLayout.findViewById(R.id.location_expand_less);
         expandButton = (ImageButton) mainLayout.findViewById(R.id.location_expand_button);
         openHoursView = (TextView) mainLayout.findViewById((R.id.location_open_hours));
+        openText = (TextView) mainLayout.findViewById((R.id.location_open_text));
         gpsIcon_big = (ImageButton) mainLayout.findViewById((R.id.location_gpsIcon_big));
         expandLayout = (LinearLayout) mainLayout.findViewById((R.id.location_expand_layout));
         addressView = (TextView) expandLayout.findViewById((R.id.location_address));
@@ -126,63 +128,75 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
         gpsIcon_big.setOnClickListener(this);
         gpsIcon_small.setOnClickListener(this);
         likeButton.setOnClickListener(this);
+        registerForContextMenu(mainLayout);
 
         final String imageUrl = URLFactory.get().createImageUrl(location);
         final ImageLoader imageLoader = AIxNetworkManager.getInstance().getImageLoader();
         backgroundImageView.setImageUrl(imageUrl, imageLoader);
 
-        locationNameView.setText(location.getName());
-        String address = location.getStreet() + " " + location.getHouseNumber() + "\n" + location.getPostalCode() + " " + AIxDataManager.getInstance().getCity(location.getCityId()).getName();
-        addressView.setText(address);
-        openHoursView.setText(location.getOpenHours());
         collapse();
-
-        registerForContextMenu(mainLayout);
 
         return mainLayout;
     }
 
     @Override
     public void onStart() {
-        location.updateLikeable();
         super.onStart();
         location.addObserver(this);
-        updateLikeViews();
+        AIxDataManager.getInstance().addObserver(this);
+        update();
     }
 
     @Override
     public void onStop() {
         //AIxNetworkManager.getInstance().cancelAllRequests(location);
         location.deleteObserver(this);
+        AIxDataManager.getInstance().deleteObserver(this);
         super.onStop();
     }
 
     public void expand(){
-
-        ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
-        params.height = MAX_HEIGHT;
-        mainLayout.setLayoutParams(params);
 
         expandLayout.setVisibility(View.VISIBLE);
         gpsIcon_big.setVisibility(View.GONE);
         expandMoreIcon.setVisibility(View.INVISIBLE);
         expandLessIcon.setVisibility(View.VISIBLE);
 
+        ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
+        params.height = MAX_HEIGHT;
+        mainLayout.setLayoutParams(params);
+
         expanded = true;
     }
 
     public void collapse(){
-
-        ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
-        params.height = MIN_HEIGHT;
-        mainLayout.setLayoutParams(params);
 
         expandLayout.setVisibility(View.GONE);
         gpsIcon_big.setVisibility(View.VISIBLE);
         expandMoreIcon.setVisibility(View.VISIBLE);
         expandLessIcon.setVisibility(View.INVISIBLE);
 
+        ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
+        params.height = MIN_HEIGHT;
+        mainLayout.setLayoutParams(params);
+
         expanded = false;
+    }
+
+    public void update(){
+        location.updateLikeable();
+        updateLikeViews();
+        locationNameView.setText(location.getName());
+        String address = location.getStreet() + " " + location.getHouseNumber() + "\n" + location.getPostalCode() + " " + AIxDataManager.getInstance().getCity(location.getCityId()).getName();
+        addressView.setText(address);
+        if (location.getOpenHours() == null){
+            openText.setVisibility(View.INVISIBLE);
+            openHoursView.setText("");
+        }
+        else {
+            openText.setVisibility(View.VISIBLE);
+            openHoursView.setText(location.getOpenHours());
+        }
     }
 
     public void updateLikeViews(){
@@ -247,6 +261,9 @@ public class LocationProfileFragment extends ListingSourceFragment implements Vi
             switch (data.toString()){
                 case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
                     updateLikeViews();
+                    break;
+                case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
+                    update();
                     break;
             }
         }

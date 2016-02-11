@@ -1,9 +1,12 @@
 package com.aix.city.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +39,8 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     private ImageButton likeButton;
     private TextView likeCounterView;
     private TextView creationTimeView;
-    private ImageButton sourceIcon;
+    private ImageView sourceButton;
+    //private ImageButton commentButton;
 
     private boolean isPostChanged;
 
@@ -65,19 +69,25 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         this.postContext = postContext;
 
         contentView = (TextView) findViewById(R.id.post_content);
-        locationNameView = (TextView) findViewById(R.id.post_location_name);
-        commentLayout = (LinearLayout) findViewById(R.id.post_comments);
-        commentCounterView = (TextView) commentLayout.findViewById(R.id.post_comments_counter);
         likeButton = (ImageButton) findViewById(R.id.post_like_btn);
         likeCounterView = (TextView) findViewById(R.id.post_like_counter);
-        creationTimeView = (TextView) findViewById(R.id.post_time);
-        sourceIcon = (ImageButton) findViewById(R.id.post_source_icon);
+        LinearLayout bottomLayout = (LinearLayout) findViewById(R.id.post_bottom_layout);
+        sourceButton = (ImageView) bottomLayout.findViewById(R.id.post_source_icon);
+        locationNameView = (TextView) bottomLayout.findViewById(R.id.post_location_name);
+        commentLayout = (LinearLayout) bottomLayout.findViewById(R.id.post_comments);
+        //commentButton = (ImageButton) bottomLayout.findViewById(R.id.post_comments_icon);
+        commentCounterView = (TextView) commentLayout.findViewById(R.id.post_comments_counter);
+        creationTimeView = (TextView) bottomLayout.findViewById(R.id.post_time);
 
         this.setOnLongClickListener(this);
         locationNameView.setOnClickListener(this);
         commentLayout.setOnClickListener(this);
         likeButton.setOnClickListener(this);
-        sourceIcon.setOnClickListener(this);
+        sourceButton.setOnClickListener(this);
+
+        //expandTouchArea(this, bottomLayout, 10, 0, 0, 0);
+        //expandTouchArea(bottomLayout, commentButton, 10, 0, 0, 0);
+        //expandTouchArea(bottomLayout, locationNameView, 10, 0, 0, 0);
     }
 
     public void update(){
@@ -109,13 +119,13 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
                         locationNameView.setText(postContext.getSourceLocation().getName());
                     }
                     else{
-                        sourceIcon.setVisibility(View.INVISIBLE);
+                        sourceButton.setVisibility(View.INVISIBLE);
                         locationNameView.setVisibility(View.INVISIBLE);
                     }
                 }
             }
             else{
-                sourceIcon.setVisibility(View.INVISIBLE);
+                sourceButton.setVisibility(View.INVISIBLE);
                 locationNameView.setVisibility(View.INVISIBLE);
             }
 
@@ -142,7 +152,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         if(post instanceof Event) {
             final Location location = ((Event)post).getLocation();
             if (location != AIxDataManager.EMPTY_LOCATION) {
-                postContext.startActivity(location);
+                postContext.startActivity(location, postContext.getPostColor(post), post);
             }
         }
     }
@@ -150,7 +160,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     public void openComments(){
         if(post instanceof Event) {
             final Event event = (Event)post;
-            postContext.startActivity(event, postContext.getPostColor(post));
+            postContext.startActivity(event, postContext.getPostColor(post), null);
         }
     }
 
@@ -165,17 +175,19 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     @Override
     public void onClick(View v) {
-        if (v == locationNameView){
-            openLocation();
-        }
-        else if (v == commentLayout){
-            openComments();
-        }
-        else if (v == likeButton){
-            onLikeButtonClick();
-        }
-        else if (v == sourceIcon){
-            openLocation();
+        switch (v.getId()){
+            case R.id.post_location_name:
+                openLocation();
+                break;
+            case R.id.post_comments:
+                openComments();
+                break;
+            case R.id.post_like_btn:
+                onLikeButtonClick();
+                break;
+            case R.id.post_source_icon:
+                openLocation();
+                break;
         }
     }
 
@@ -195,5 +207,30 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     @Override
     public boolean onLongClick(View v) {
         return false;
+    }
+
+    public static void expandTouchArea(final View parent, final View child, final int top, final int bottom, final int left, final int right) {
+        parent.post(new Runnable() {
+            @Override
+            public void run() {
+                Rect rect = new Rect();
+                child.getHitRect(rect);
+                rect.top -= top;
+                rect.bottom += bottom;
+                rect.left -= left;
+                rect.right += right;
+
+                TouchDelegateComposite delegate;
+                if (parent.getTouchDelegate() != null && parent.getTouchDelegate() instanceof TouchDelegateComposite){
+                    delegate = (TouchDelegateComposite)parent.getTouchDelegate();
+                }
+                else {
+                    delegate = new TouchDelegateComposite(parent);
+                }
+                delegate.addDelegate(new TouchDelegate(rect, child));
+
+                parent.setTouchDelegate(delegate);
+            }
+        });
     }
 }

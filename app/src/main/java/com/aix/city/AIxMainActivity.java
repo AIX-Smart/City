@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,13 +24,15 @@ import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
+import com.aix.city.core.data.Post;
 import com.aix.city.core.data.Tag;
 
 
-public class BaseListingActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
+public class AIxMainActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
 
-    public final static String INTENT_EXTRA_LISTING_SOURCE = "com.aix.city.core.ListingSource";
+    public final static String INTENT_EXTRA_LISTING_SOURCE = "AIxMainActivity.ListingSource";
     public final static String INTENT_EXTRA_COLOR = PostListingFragment.ARG_POST_COLOR;
+    public final static String INTENT_EXTRA_LINKED_POST = "AIxMainActivity.linkedPost";
     public final static int DEFAULT_COLOR_VALUE = PostListingFragment.DEFAULT_COLOR_VALUE;
     public final static String POST_LISTING_FRAGMENT_TAG = "PostListingFragment";
     public final static String LISTING_SOURCE_FRAGMENT_TAG = "ListingSourceFragment";
@@ -45,12 +46,12 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     private ListingSource listingSource;
     private Menu menu;
 
-    public BaseListingActivity(){}
+    public AIxMainActivity(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base_listing);
+        setContentView(R.layout.activity_main);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
@@ -129,6 +130,13 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         transaction.commit();
     }
 
+    @Override
+    protected void onDestroy() {
+        getPostListing().cancelRequests();
+        getPostListingFragment().cancelRequests();
+        super.onDestroy();
+    }
+
     public void createPost(String content){
         getPostListingFragment().createPost(content);
     }
@@ -172,7 +180,8 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
         if (fragment == null){
             int postColor = getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE);
-            fragment = PostListingFragment.newInstance(getListingSource().createPostListing(), postColor);
+            Post linkedPost = getIntent().getParcelableExtra(INTENT_EXTRA_LINKED_POST);
+            fragment = PostListingFragment.newInstance(getListingSource().createPostListing(), postColor, linkedPost);
         }
 
         if (fragment instanceof PostListingFragment){
@@ -189,18 +198,21 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
     }
 
     public void startActivity(ListingSource ls){
-        startActivity(ls, DEFAULT_COLOR_VALUE);
+        startActivity(ls, DEFAULT_COLOR_VALUE, null);
     }
 
-    public void startActivity(ListingSource ls, int postColor){
+    public void startActivity(ListingSource ls, int postColor, Post link){
         if (!ls.equals(getListingSource())){
             mainLayout.requestFocus();
             drawerLayout.closeDrawers();
 
-            Intent intent = new Intent(this, BaseListingActivity.class);
-            intent.putExtra(BaseListingActivity.INTENT_EXTRA_LISTING_SOURCE, ls);
+            Intent intent = new Intent(this, AIxMainActivity.class);
+            intent.putExtra(AIxMainActivity.INTENT_EXTRA_LISTING_SOURCE, ls);
             if (postColor != DEFAULT_COLOR_VALUE){
                 intent.putExtra(INTENT_EXTRA_COLOR, postColor);
+            }
+            if (link != null){
+                intent.putExtra(INTENT_EXTRA_LINKED_POST, link);
             }
             this.startActivity(intent);
             switch(getListingSource().getType()){
@@ -231,7 +243,7 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         if (key != null){
             switch(key){
                 /*case ListingSourceFragment.INTERACTION_KEY_BACK:
-                    Intent intent = new Intent(this, BaseListingActivity.class);
+                    Intent intent = new Intent(this, AIxMainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -330,21 +342,6 @@ public class BaseListingActivity extends AppCompatActivity implements PostListin
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
     }
-
-    /*@Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == android.R.id.list){
-            getPostListingFragment().onCreateContextMenu(menu, v, menuInfo);
-        }
-        else{
-            super.onCreateContextMenu(menu, v, menuInfo);
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        return getPostListingFragment().onContextItemSelected(item);
-    }*/
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
