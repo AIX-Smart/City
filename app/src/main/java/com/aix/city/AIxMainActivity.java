@@ -123,6 +123,12 @@ public class AIxMainActivity extends AppCompatActivity implements PostListingFra
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        getPostListing().updateLikes();
+    }
+
+    @Override
     protected void onDestroy() {
         getPostListing().cancelRequests();
         getPostListingFragment().cancelRequests();

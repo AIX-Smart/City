@@ -157,7 +157,15 @@ public class URLFactory {
 
     public String createGetLikeStatusURL(Likeable likeable) {
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
-        urlBuilder.addPathSegment(LOCATION);
+        if (likeable instanceof Location){
+            urlBuilder.addPathSegment(LOCATION);
+        }
+        else if (likeable instanceof Event) {
+            urlBuilder.addPathSegment(EVENT);
+        }
+        else if (likeable instanceof Comment) {
+            urlBuilder.addPathSegment(COMMENT);
+        }
         urlBuilder.addPathSegment(String.valueOf(likeable.getId()));
         urlBuilder.addPathSegment(String.valueOf(AIxLoginModule.getInstance().getLoggedInUser()));
         urlBuilder.addPathSegment(LIKE_STATUS);
@@ -166,7 +174,15 @@ public class URLFactory {
 
     public String createGetLikeCountURL(Likeable likeable) {
         HttpUrl.Builder urlBuilder = serviceUrl.newBuilder();
-        urlBuilder.addPathSegment(LOCATION);
+        if (likeable instanceof Location){
+            urlBuilder.addPathSegment(LOCATION);
+        }
+        else if (likeable instanceof Event) {
+            urlBuilder.addPathSegment(EVENT);
+        }
+        else if (likeable instanceof Comment) {
+            urlBuilder.addPathSegment(COMMENT);
+        }
         urlBuilder.addPathSegment(String.valueOf(likeable.getId()));
         urlBuilder.addPathSegment(LIKE_COUNT);
         return urlBuilder.build().toString();

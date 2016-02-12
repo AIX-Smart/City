@@ -359,6 +359,12 @@ public class PostListing extends Observable implements Observer, Parcelable {
         return posts.isEmpty();
     }
 
+    public void updateLikes() {
+        for (Post post : posts){
+            post.updateLikeable();
+        }
+    }
+
     @Override
     public void update(Observable observable, Object data) {
         setChanged();
