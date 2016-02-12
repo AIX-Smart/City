@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.aix.city.R;
 import com.aix.city.core.AIxDataManager;
+import com.aix.city.core.Likeable;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -20,11 +21,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Thomas on 17.10.2015.
  */
-public class PostView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
+public class PostView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener, Observer {
 
     private static final DateFormat FORMAT_TIME = new SimpleDateFormat("HH:mm", Locale.GERMAN);
     private static final DateFormat FORMAT_DATE = new SimpleDateFormat("dd/MM", Locale.GERMAN);
@@ -43,6 +46,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     //private ImageButton commentButton;
 
     private boolean isPostChanged;
+    private boolean isLiked;
 
     public PostView(Context context) {
         super(context);
@@ -61,8 +65,15 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     }
 
     public void setPost(Post post) {
-        this.post = post;
-        isPostChanged = true;
+        if (this.post == null || !post.equals(this.post)){
+            if (this.post != null){
+                this.post.deleteObserver(this);
+            }
+            post.addObserver(this);
+            this.post = post;
+            isPostChanged = true;
+            isLiked = post.isLiked();
+        }
     }
 
     public void init(PostViewContext postContext){
@@ -130,7 +141,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
         }
 
-        if (post.isLiked()){
+        if (isLiked){
             likeButton.setSelected(true);
         }
         else{
@@ -166,10 +177,18 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     public void onLikeButtonClick(){
         if (likeButton.isSelected()){
-            post.resetLike();
+            if (post.isLiked()){
+                post.resetLike();
+                isLiked = false;
+                update();
+            }
         }
         else{
-            post.setLike();
+            if (!post.isLiked()){
+                post.setLike();
+                isLiked = true;
+                update();
+            }
         }
     }
 
@@ -202,6 +221,22 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
 
     public TextView getContentView() {
         return contentView;
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if (data != null){
+            switch (data.toString()){
+                case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
+                    isLiked = post.isLiked();
+                    update();
+                    break;
+                case Likeable.OBSERVER_KEY_LIKE_ERROR:
+                    isLiked = post.isLiked();
+                    update();
+                    break;
+            }
+        }
     }
 
     @Override

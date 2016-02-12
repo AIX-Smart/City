@@ -364,9 +364,9 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
                 case INTERACTION_KEY_CHANGED_EDITABILITY:
                     listener.onFragmentInteraction(PostListing.OBSERVER_KEY_CHANGED_EDITABILITY);
                     break;
-                case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
+                /*case Likeable.OBSERVER_KEY_CHANGED_LIKESTATUS:
                     adapter.updateVisibleViews();
-                    break;
+                    break;*/
                 case AIxDataManager.OBSERVER_KEY_CHANGED_LOCATIONS:
                     adapter.updateVisibleViews();
                     break;
