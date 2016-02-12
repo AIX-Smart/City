@@ -4,6 +4,9 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aix.city.core.data.Comment;
+import com.aix.city.core.data.Event;
+import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -80,7 +83,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
         if (postArray.length > 0) {
             getPosts().addAll(Arrays.asList(postArray));
             for (Post post : postArray) {
-                post.addObserver(this);
+                initPost(post);
             }
             setChanged();
             notifyObservers(OBSERVER_KEY_CHANGED_DATASET);
@@ -101,7 +104,7 @@ public class PostListing extends Observable implements Observer, Parcelable {
                 else {
                     //post is new
                     newPostList.add(post);
-                    post.addObserver(this);
+                    initPost(post);
                 }
             }
 
@@ -119,6 +122,9 @@ public class PostListing extends Observable implements Observer, Parcelable {
         }
     }
 
+    protected void initPost(Post post) {
+        post.addObserver(this);
+    }
 
     public void addPost(Post post){
         getPosts().add(post);

@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.comm.PostCreationRequest;
@@ -45,4 +46,18 @@ public class EditableEventListing extends EditableListing {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
     }
+
+    public static final Parcelable.Creator<EditableEventListing> CREATOR =
+            new Parcelable.Creator<EditableEventListing>(){
+
+                @Override
+                public EditableEventListing createFromParcel(Parcel source) {
+                    return new EditableEventListing(source);
+                }
+
+                @Override
+                public EditableEventListing[] newArray(int size) {
+                    return new EditableEventListing[size];
+                }
+            };
 }

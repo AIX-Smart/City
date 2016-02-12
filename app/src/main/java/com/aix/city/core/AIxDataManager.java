@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.aix.city.R;
 import com.aix.city.core.data.City;
 import com.aix.city.core.data.Location;
 import com.aix.city.core.data.Post;
@@ -40,6 +41,7 @@ public class AIxDataManager extends Observable {
     public static final String DURSTIG = "Durstig";
     public static final String PARTY = "Party";
     public static final String ALLES_ANDERE_ID = "Alles Andere";
+    private static final List<Integer> POST_COLORS = new ArrayList<Integer>();
 
     private static AIxDataManager instance;
     private final Context context;
@@ -58,12 +60,18 @@ public class AIxDataManager extends Observable {
     //Singleton methods and constructor
     private AIxDataManager(Context context) {
         this.context = context;
+
+        if (POST_COLORS.isEmpty()){
+            POST_COLORS.add(context.getResources().getColor(R.color.post_color_blue));
+            POST_COLORS.add(context.getResources().getColor(R.color.post_color_yellow));
+            POST_COLORS.add(context.getResources().getColor(R.color.post_color_green));
+            POST_COLORS.add(context.getResources().getColor(R.color.post_color_red));
+        }
     }
 
     public static synchronized void createInstance(Context context){
         if(instance == null){
             instance = new AIxDataManager(context);
-            //instance.init()
         }
     }
 
@@ -144,6 +152,14 @@ public class AIxDataManager extends Observable {
     public Set<Location> getFavorites(User user){
         //load stored favorite-list
         return new HashSet<Location>();
+    }
+
+    public static int getPostColor(int index){
+        return POST_COLORS.get(index);
+    }
+
+    public static int getPostColorSize(){
+        return POST_COLORS.size();
     }
 
     public void requestCities(){

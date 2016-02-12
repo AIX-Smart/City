@@ -29,13 +29,11 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
     private AIxMainActivity activity;
     private PostView eventView;
     private Event event;
-    private int postColor;
 
-    public static EventFragment newInstance(Event event, int postColor) {
+    public static EventFragment newInstance(Event event) {
         EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_LISTING_SOURCE, event);
-        args.putInt(ARG_POST_COLOR, postColor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +53,7 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
         eventView = (PostView) view.findViewById(R.id.post);
         final LinearLayout commentLayout = (LinearLayout) view.findViewById(R.id.fragment_event_comments);
 
-        view.setBackgroundColor(postColor);
+        view.setBackgroundColor(event.getColor());
         eventView.init(this);
         eventView.setPost(event);
         eventView.setCommentLayout(commentLayout);
@@ -70,8 +68,7 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
 
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_LISTING_SOURCE);
-            postColor = getArguments().getInt(ARG_POST_COLOR, PostListingFragment.DEFAULT_COLOR_VALUE);
-            if (obj != null && obj instanceof Event && postColor != PostListingFragment.DEFAULT_COLOR_VALUE) {
+            if (obj != null && obj instanceof Event) {
                 event = ((Event) obj);
             }
             else{
@@ -109,29 +106,12 @@ public class EventFragment extends ListingSourceFragment implements PostViewCont
 
     @Override
     public int getPostColor(Post post) {
-        return postColor;
-    }
-
-    @Override
-    public void putPostColor(Post post, int color) {
-        if (post.equals(event)){
-            postColor = color;
-        }
+        return post.getColor();
     }
 
     @Override
     public void startActivity(ListingSource listingSource) {
         //do nothing
-    }
-
-    @Override
-    public void startActivity(ListingSource listingSource, int postColor, Post linkedPost) {
-        //do nothing
-    }
-
-    @Override
-    public Location getSourceLocation() {
-        return null;
     }
 
     @Override

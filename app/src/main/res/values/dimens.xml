@@ -12,7 +12,7 @@
     <dimen name="post_location_text_size">16sp</dimen>
     <dimen name="post_time_text_size">36sp</dimen>
     <dimen name="post_content_text_size">22sp</dimen>
-    <dimen name="post_comment_icon_size">22dp</dimen>
+    <dimen name="post_comment_icon_size">24dp</dimen>
     <dimen name="post_comment_counter_text_size">14sp</dimen>
     <dimen name="drawer_left_text_size">22sp</dimen>
     <dimen name="location_profile_min_height">150dp</dimen>

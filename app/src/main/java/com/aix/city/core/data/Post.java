@@ -3,6 +3,7 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aix.city.core.AIxDataManager;
 import com.aix.city.core.AIxLoginModule;
 import com.aix.city.core.Likeable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +23,7 @@ public abstract class Post extends Likeable implements Parcelable {
     private String content;
     private long creationTime;
     private int authorId;
-    private boolean isAuthenticated;
+    private boolean authenticated;
 
     //no-argument constructor for JSON
     protected Post(){
@@ -43,7 +44,7 @@ public abstract class Post extends Likeable implements Parcelable {
         content = in.readString();
         creationTime = in.readLong();
         authorId = in.readInt();
-        isAuthenticated = (in.readInt() != 0);
+        authenticated = (in.readInt() != 0);
     }
 
     public String getContent() {
@@ -66,8 +67,18 @@ public abstract class Post extends Likeable implements Parcelable {
     }
 
     public boolean isAuthenticated() {
-        //TODO:
-        return true;//isAuthenticated;
+        return authenticated;
+    }
+
+    @JsonIgnore
+    public Location getLocation(){
+        return null;
+    }
+
+    @JsonIgnore
+    public int getColor(){
+        int index = id % AIxDataManager.getPostColorSize();
+        return AIxDataManager.getPostColor(index);
     }
 
     @JsonIgnore

@@ -59,6 +59,11 @@ public class Event extends Post implements ListingSource {
     }
 
     @Override
+    public boolean isAuthenticated() {
+        return true;//super.isAuthenticated();
+    }
+
+    @Override
     public boolean isDeletionAllowed(){
         return super.isDeletionAllowed() || getLocation().isAuthorized();
     }

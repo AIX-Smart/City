@@ -15,16 +15,7 @@ public interface PostViewContext {
 
     int getPostColor(Post post);
 
-    void putPostColor(Post post, int color);
-
     void startActivity(ListingSource listingSource);
-
-    void startActivity(ListingSource listingSource, int postColor, Post linkedPost);
-
-    @Nullable
-    Location getSourceLocation();
-
-    Activity getActivity();
 
     Context getContext();
 }

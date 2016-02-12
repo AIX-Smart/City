@@ -3,12 +3,16 @@ package com.aix.city.core.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.aix.city.core.AIxDataManager;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by Thomas on 11.10.2015.
  */
 public class Comment extends Post {
 
-    int eventId;
+    private int eventId;
+    private transient Location location = null;
 
     //no-argument constructor for JSON
     private Comment(){}
@@ -33,6 +37,28 @@ public class Comment extends Post {
     @Override
     public boolean isComment(){
         return true;
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        return false;//super.isAuthenticated();
+    }
+
+    @JsonIgnore
+    public Location getLocation() {
+        return location;
+    }
+
+    @JsonIgnore
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    @JsonIgnore
+    public int getColor() {
+        int index = eventId % AIxDataManager.getPostColorSize();
+        return AIxDataManager.getPostColor(index);
     }
 
     @Override

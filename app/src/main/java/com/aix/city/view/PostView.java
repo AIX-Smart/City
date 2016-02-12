@@ -109,24 +109,23 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
             creationTimeView.setText(dateString);
 
             setBackgroundColor(postContext.getPostColor(post));
+            setAlpha(1.0f);
 
             if (post.isAuthenticated()){
-                if (post instanceof Event){
-                    locationNameView.setText(((Event) post).getLocation().getName());
+                if (post.getLocation() != null) {
+                    sourceButton.setBackgroundResource(R.drawable.gps);
+                    locationNameView.setText(post.getLocation().getName());
+                    sourceButton.setVisibility(View.VISIBLE);
                 }
                 else{
-                    if (postContext.getSourceLocation() != null){
-                        locationNameView.setText(postContext.getSourceLocation().getName());
-                    }
-                    else{
-                        sourceButton.setVisibility(View.INVISIBLE);
-                        locationNameView.setVisibility(View.INVISIBLE);
-                    }
+                    sourceButton.setVisibility(View.INVISIBLE);
+                    locationNameView.setText("");
                 }
             }
             else{
-                sourceButton.setVisibility(View.INVISIBLE);
-                locationNameView.setVisibility(View.INVISIBLE);
+                sourceButton.setBackgroundResource(R.drawable.ic_person_white_24dp);
+                sourceButton.setVisibility(View.VISIBLE);
+                locationNameView.setText("");
             }
 
         }
@@ -143,6 +142,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         }
         else{
             commentLayout.setVisibility(View.INVISIBLE);
+            setAlpha(0.9f);
         }
 
         isPostChanged = false;
@@ -152,7 +152,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         if(post instanceof Event) {
             final Location location = ((Event)post).getLocation();
             if (location != AIxDataManager.EMPTY_LOCATION) {
-                postContext.startActivity(location, postContext.getPostColor(post), post);
+                postContext.startActivity(location);
             }
         }
     }
@@ -160,7 +160,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     public void openComments(){
         if(post instanceof Event) {
             final Event event = (Event)post;
-            postContext.startActivity(event, postContext.getPostColor(post), null);
+            postContext.startActivity(event);
         }
     }
 

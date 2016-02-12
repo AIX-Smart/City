@@ -1,6 +1,7 @@
 package com.aix.city.core;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.aix.city.comm.AIxJsonRequest;
 import com.aix.city.comm.PostCreationRequest;
@@ -35,6 +36,11 @@ public class EditableCommentListing extends EditableListing {
         return event;
     }
 
+    @Override
+    protected void initPost(Post post) {
+        super.initPost(post);
+        ((Comment) post).setLocation(event.getLocation());
+    }
 
     @Override
     public int describeContents() {
@@ -45,4 +51,19 @@ public class EditableCommentListing extends EditableListing {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
     }
+
+    public static final Parcelable.Creator<EditableCommentListing> CREATOR =
+            new Parcelable.Creator<EditableCommentListing>(){
+
+                @Override
+                public EditableCommentListing createFromParcel(Parcel source) {
+                    return new EditableCommentListing(source);
+                }
+
+                @Override
+                public EditableCommentListing[] newArray(int size) {
+                    return new EditableCommentListing[size];
+                }
+            };
+
 }

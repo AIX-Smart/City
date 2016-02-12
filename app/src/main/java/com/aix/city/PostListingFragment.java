@@ -26,7 +26,6 @@ import com.aix.city.core.ListingSourceType;
 import com.aix.city.core.PostListing;
 import com.aix.city.core.data.Event;
 import com.aix.city.core.data.Post;
-import com.aix.city.view.MonochromePostAdapter;
 import com.aix.city.view.PostAdapter;
 import com.aix.city.view.PostView;
 import com.android.volley.Response;
@@ -61,10 +60,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
     //bundle argument key for creation
     public static final String ARG_POST_LISTING = "PostListingFragment.postListing";
-    public static final String ARG_LINKED_POST = "PostListingFragment.linkedPost";
-    //optional bundle argument key for creation
-    public static final String ARG_POST_COLOR = "PostListingFragment.color";
-    public static final int DEFAULT_COLOR_VALUE = 0xffffffff;
     public static final String INTERACTION_KEY_CHANGED_EDITABILITY = "PostListingFragment.editabilty";
     //timer delay for update requests in milliseconds
     public static final int UPDATE_DELAY_MS = 8000;
@@ -82,8 +77,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
      * The PostListing-object which contains the posts. It is observed by this fragment.
      */
     private PostListing postListing;
-    private int postColor = DEFAULT_COLOR_VALUE;
-    private Post linkedPost = null;
 
     private OnFragmentInteractionListener listener;
 
@@ -108,15 +101,9 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
 
 
     public static PostListingFragment newInstance(PostListing postListing) {
-        return newInstance(postListing, DEFAULT_COLOR_VALUE, null);
-    }
-
-    public static PostListingFragment newInstance(PostListing postListing, int postColor, Post linkedPost) {
         PostListingFragment fragment = new PostListingFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_POST_LISTING, postListing);
-        args.putInt(ARG_POST_COLOR, postColor);
-        args.putParcelable(ARG_LINKED_POST, linkedPost);
         fragment.setArguments(args);
         return fragment;
     }
@@ -141,8 +128,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         //get instance data
         if (getArguments() != null) {
             Object obj = getArguments().getParcelable(ARG_POST_LISTING);
-            postColor = getArguments().getInt(ARG_POST_COLOR, DEFAULT_COLOR_VALUE);
-            linkedPost = getArguments().getParcelable(ARG_LINKED_POST);
             if(obj != null && obj instanceof PostListing){
                 postListing = (PostListing)obj;
             }
@@ -166,20 +151,9 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         loadingPanel = inflater.inflate(R.layout.list_footer_loading, listView, false);
 
         //create postview-adapter
-        if (postListing.getListingSource().getType() == ListingSourceType.EVENT){
-            adapter = new MonochromePostAdapter(this, postListing.getPosts(), postColor, ((Event) postListing.getListingSource()).getLocation());
-        }
-        else{
-            if (linkedPost == null){
-                adapter = new PostAdapter(this, postListing.getPosts());
-            }
-            else {
-                adapter = new PostAdapter(this, postListing.getPosts(), linkedPost, postColor);
-            }
-            //listView.setDivider(null);
-            //listView.setDividerHeight(0);
-        }
-        listView.setBackgroundColor(postColor);
+        adapter = new PostAdapter(this, postListing.getPosts());
+        //listView.setDivider(null);
+        //listView.setDividerHeight(0);
 
         listView.addFooterView(loadingPanel);
         listView.setAdapter(adapter);
@@ -331,7 +305,6 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         if (order != postListing.getOrder()){
             clear();
             postListing.setOrder(order);
-            adapter.setOrder(order);
         }
     }
 
@@ -371,8 +344,8 @@ public class PostListingFragment extends ListFragment implements Observer, AbsLi
         return (AIxMainActivity) getActivity();
     }
 
-    public void startActivity(ListingSource listingSource, int postColor, Post link) {
-        getAIxActivity().startActivity(listingSource, postColor, link);
+    public void startActivity(ListingSource listingSource) {
+        getAIxActivity().startActivity(listingSource);
     }
 
     @Override

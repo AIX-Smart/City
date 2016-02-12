@@ -31,9 +31,6 @@ import com.aix.city.core.data.Tag;
 public class AIxMainActivity extends AppCompatActivity implements PostListingFragment.OnFragmentInteractionListener, LeftDrawerFragment.OnFragmentInteractionListener {
 
     public final static String INTENT_EXTRA_LISTING_SOURCE = "AIxMainActivity.ListingSource";
-    public final static String INTENT_EXTRA_COLOR = PostListingFragment.ARG_POST_COLOR;
-    public final static String INTENT_EXTRA_LINKED_POST = "AIxMainActivity.linkedPost";
-    public final static int DEFAULT_COLOR_VALUE = PostListingFragment.DEFAULT_COLOR_VALUE;
     public final static String POST_LISTING_FRAGMENT_TAG = "PostListingFragment";
     public final static String LISTING_SOURCE_FRAGMENT_TAG = "ListingSourceFragment";
     public static final int CREATE_POST_REQUEST_CODE = 100;
@@ -110,19 +107,14 @@ public class AIxMainActivity extends AppCompatActivity implements PostListingFra
     protected void createMainLayout(){
         //get or create fragments with data
         PostListingFragment postListingFragment = getPostListingFragment();
+        ListingSourceFragment listingSourceFragment = ListingSourceFragment.newInstance(getListingSource());
 
         // Create transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Replace fragment container with actual fragment
-        switch(getListingSource().getType()){
-            case LOCATION:
-                transaction.replace(R.id.fragment_container_top, LocationProfileFragment.newInstance((Location)getListingSource()), LISTING_SOURCE_FRAGMENT_TAG);
-                break;
-            case EVENT:
-                int postColor = getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE);
-                transaction.replace(R.id.fragment_container_top, EventFragment.newInstance((Event)getListingSource(), postColor), LISTING_SOURCE_FRAGMENT_TAG);
-                break;
+        if (listingSourceFragment != null){
+            transaction.replace(R.id.fragment_container_top, listingSourceFragment, LISTING_SOURCE_FRAGMENT_TAG);
         }
         transaction.replace(R.id.fragment_container_bottom, postListingFragment, POST_LISTING_FRAGMENT_TAG);
 
@@ -179,9 +171,7 @@ public class AIxMainActivity extends AppCompatActivity implements PostListingFra
     public PostListingFragment getPostListingFragment(){
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(POST_LISTING_FRAGMENT_TAG);
         if (fragment == null){
-            int postColor = getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE);
-            Post linkedPost = getIntent().getParcelableExtra(INTENT_EXTRA_LINKED_POST);
-            fragment = PostListingFragment.newInstance(getListingSource().createPostListing(), postColor, linkedPost);
+            fragment = PostListingFragment.newInstance(getListingSource().createPostListing());
         }
 
         if (fragment instanceof PostListingFragment){
@@ -198,22 +188,13 @@ public class AIxMainActivity extends AppCompatActivity implements PostListingFra
     }
 
     public void startActivity(ListingSource ls){
-        startActivity(ls, DEFAULT_COLOR_VALUE, null);
-    }
-
-    public void startActivity(ListingSource ls, int postColor, Post link){
         if (!ls.equals(getListingSource())){
             mainLayout.requestFocus();
             drawerLayout.closeDrawers();
 
             Intent intent = new Intent(this, AIxMainActivity.class);
             intent.putExtra(AIxMainActivity.INTENT_EXTRA_LISTING_SOURCE, ls);
-            if (postColor != DEFAULT_COLOR_VALUE){
-                intent.putExtra(INTENT_EXTRA_COLOR, postColor);
-            }
-            if (link != null){
-                intent.putExtra(INTENT_EXTRA_LINKED_POST, link);
-            }
+
             this.startActivity(intent);
             switch(getListingSource().getType()){
                 case EVENT:
@@ -325,7 +306,6 @@ public class AIxMainActivity extends AppCompatActivity implements PostListingFra
             case R.id.action_create_comment:
                 Intent intent = new Intent(this, CreatePostSubActivity.class);
                 intent.putExtra(CreatePostSubActivity.INTENT_EXTRA_LISTING_SOURCE, getListingSource());
-                intent.putExtra(INTENT_EXTRA_COLOR, getIntent().getIntExtra(INTENT_EXTRA_COLOR, DEFAULT_COLOR_VALUE));
                 startActivityForResult(intent, CREATE_POST_REQUEST_CODE);
                 return true;
 

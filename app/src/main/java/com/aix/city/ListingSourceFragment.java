@@ -17,6 +17,21 @@ public abstract class ListingSourceFragment extends Fragment {
 
     public final static String ARG_LISTING_SOURCE = "listingSource";
 
+    public static ListingSourceFragment newInstance(ListingSource listingSource) {
+        ListingSourceFragment fragment;
+        switch(listingSource.getType()){
+            case LOCATION:
+                fragment = LocationProfileFragment.newInstance((Location) listingSource);
+                break;
+            case EVENT:
+                fragment = EventFragment.newInstance((Event) listingSource);
+                break;
+            default:
+                fragment = null;
+        }
+        return fragment;
+    }
+
     public ListingSourceFragment() {
     }
 
