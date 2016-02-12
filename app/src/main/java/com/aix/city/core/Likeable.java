@@ -14,32 +14,32 @@ public abstract class Likeable extends Observable {
 
     public static final String OBSERVER_KEY_CHANGED_LIKESTATUS = "likeStatus";
 
-    private boolean isLiked; //current user has already liked this post
+    private boolean liked; //current user has already liked this post
     private int likeCount;
 
     public Likeable(){
 
     }
 
-    public Likeable(boolean isLiked, int likeCount) {
-        this.isLiked = isLiked;
+    public Likeable(boolean liked, int likeCount) {
+        this.liked = liked;
         this.likeCount = likeCount;
     }
 
     //implements Parcelable
     public Likeable(Parcel in){
-        isLiked = (in.readInt() != 0);
+        liked = (in.readInt() != 0);
         likeCount = in.readInt();
     }
 
     public boolean isLiked() {
-        return isLiked;
+        return liked;
     }
 
     /**Internal use only!*/
     public void rawSetIsLiked(boolean liked) {
-        if(this.isLiked != liked){
-            this.isLiked = liked;
+        if(this.liked != liked){
+            this.liked = liked;
             setChanged();
         }
     }

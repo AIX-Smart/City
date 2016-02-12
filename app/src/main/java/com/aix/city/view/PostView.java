@@ -91,8 +91,6 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
     }
 
     public void update(){
-        contentView.setText(post.getContent());
-        likeCounterView.setText(String.valueOf(post.getLikeCount()));
         if (isPostChanged){
             String dateString;
             Calendar now = Calendar.getInstance(Locale.GERMAN);
@@ -129,6 +127,9 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
             }
 
         }
+
+        contentView.setText(post.getContent());
+        likeCounterView.setText(String.valueOf(post.getLikeCount()));
 
         if (post.isLiked()){
             likeButton.setSelected(true);
