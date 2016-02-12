@@ -60,7 +60,7 @@ public class Event extends Post implements ListingSource {
 
     @Override
     public boolean isAuthenticated() {
-        return true;//super.isAuthenticated();
+        return super.isAuthenticated();
     }
 
     @Override

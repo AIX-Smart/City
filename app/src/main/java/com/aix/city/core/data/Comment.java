@@ -41,7 +41,7 @@ public class Comment extends Post {
 
     @Override
     public boolean isAuthenticated() {
-        return false;//super.isAuthenticated();
+        return super.isAuthenticated();
     }
 
     @JsonIgnore

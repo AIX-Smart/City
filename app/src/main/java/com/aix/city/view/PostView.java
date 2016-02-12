@@ -142,7 +142,7 @@ public class PostView extends LinearLayout implements View.OnClickListener, View
         }
         else{
             commentLayout.setVisibility(View.INVISIBLE);
-            setAlpha(0.9f);
+            setAlpha(0.7f);
         }
 
         isPostChanged = false;
